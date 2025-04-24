@@ -22,3 +22,4 @@ jobs:
           PLUGIN_MYANIMELIST: true
           PLUGIN_MYANIMELIST_SECTIONS: statistics,manga_bar,anime_bar
           PLUGIN_MYANIMELIST_USERNAME:  cutilizer
+          PLUGIN_MAL_HIDE_HEADER: true
