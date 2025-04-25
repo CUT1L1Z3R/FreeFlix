@@ -25,21 +25,11 @@ const API_KEY = 'e79515e88dfd7d9f6eeca36e49101ac2';
   return allResults;
 }
 
-// Banner feature
-function displayBanner(movies) {
-  if (!movies || movies.length === 0) return;
-  const pick = movies[Math.floor(Math.random() * movies.length)];
-  const banner = document.querySelector('.banner');
-  if (pick && pick.backdrop_path) {
-    banner.style.backgroundImage = `linear-gradient(120deg, #2c3e50bb 60%, #800080 100%), url('${IMG_URL}${pick.backdrop_path}')`;
-    banner.querySelector('h1').textContent = pick.title || pick.name || 'Welcome to FreeFlixx';
-    banner.querySelector('p').textContent = truncate(pick.overview, 150) || 'Stream trending movies, TV shows, and Anime';
-  }
-}
-    //function displayBanner(item) {
-      //document.getElementById('banner').style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
-      //document.getElementById('banner-title').textContent = item.title || item.name;
-    //}
+
+    function displayBanner(item) {
+      document.getElementById('banner').style.backgroundImage = `url(${IMG_URL}${item.backdrop_path})`;
+      document.getElementById('banner-title').textContent = item.title || item.name;
+    }
 
     function displayList(items, containerId) {
       const container = document.getElementById(containerId);
@@ -124,7 +114,7 @@ function displayBanner(movies) {
       const tvShows = await fetchTrending('tv');
       const anime = await fetchTrendingAnime();
 
-      displayBanner(movies);
+      displayBanner(movies[Math.floor(Math.random() * movies.length)]);
       displayList(movies, 'movies-list');
       displayList(tvShows, 'tvshows-list');
       displayList(anime, 'anime-list');
