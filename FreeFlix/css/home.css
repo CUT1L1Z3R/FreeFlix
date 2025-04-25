@@ -34,7 +34,11 @@
     .row h2 {
       margin-bottom: 10px;
     }
-
+   .website-logo {
+  width: 200px; /* Or any desired width */
+  height: auto; /* Maintain aspect ratio */
+  max-width: 100%; /* Prevent it from overflowing the container */
+}
     .list {
       display: flex;
       overflow-x: auto;
