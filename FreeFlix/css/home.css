@@ -34,11 +34,14 @@
     .row h2 {
       margin-bottom: 10px;
     }
-   #logo img {
+   .logo img {
     height: 80px;
     max-height: 80px;
     width: auto;
 }
+
+    .logo-trans { min-width: 100px; }
+
     .list {
       display: flex;
       overflow-x: auto;
