@@ -124,7 +124,7 @@ function displayBanner(movies) {
       const tvShows = await fetchTrending('tv');
       const anime = await fetchTrendingAnime();
 
-      displayBanner(movies[Math.floor(Math.random() * movies.length)]);
+      displayBanner(movies);
       displayList(movies, 'movies-list');
       displayList(tvShows, 'tvshows-list');
       displayList(anime, 'anime-list');
