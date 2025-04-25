@@ -222,11 +222,11 @@
   }
 }
 
-@media (max-width: 480px) {
-  .banner h1 {
-    font-size: 20px;
-    padding: 5px;
-  }
+@media (max-width:480px) {
+  .banner { height: 90px; font-size: 0.88em; }
+  .list img { width: 60px; }
+  .modal-content { padding: 8px; }
+}
 
   .row h2 {
     font-size: 18px;
