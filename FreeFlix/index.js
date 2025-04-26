@@ -69,25 +69,43 @@ function fetchMedia(containerClass, endpoint, mediaType) {
                 });
 
                 if (containerClass === 'netflix-container') {
-                    const randomIndex = Math.floor(Math.random() * fetchResults.length);
-                    const randomMovie = fetchResults[randomIndex];
+    const banner = document.getElementById('banner');
+    const play = document.getElementById('play-button');
+    const info = document.getElementById('more-info');
+    const title = document.getElementById('banner-title');
 
-                    const banner = document.getElementById('banner');
-                    const play = document.getElementById('play-button');
-                    const info = document.getElementById('more-info');
-                    const title = document.getElementById('banner-title');
+    // Pick multiple random movies (like 5)
+    const bannerMovies = [];
+    for (let i = 0; i < 5; i++) {
+        const randomIndex = Math.floor(Math.random() * fetchResults.length);
+        bannerMovies.push(fetchResults[randomIndex]);
+    }
 
-                    banner.src = `https://image.tmdb.org/t/p/original/${randomMovie.backdrop_path}`;
-                    title.textContent = randomMovie.title || randomMovie.name;
+    let currentBannerIndex = 0;
 
-                    function redirectToMovieDetails() {
-                        const media_Type = randomMovie.media_type || mediaType;
-                        window.location.href = `movie_details/movie_details.html?media=${media_Type}&id=${randomMovie.id}`;
-                    }
+    function displayBanner(index) {
+        const movie = bannerMovies[index];
+        banner.src = `https://image.tmdb.org/t/p/original/${movie.backdrop_path}`;
+        title.textContent = movie.title || movie.name;
 
-                    play.addEventListener('click', redirectToMovieDetails);
-                    info.addEventListener('click', redirectToMovieDetails);
-                }
+        // Update click events
+        function redirectToMovieDetails() {
+            const media_Type = movie.media_type || mediaType;
+            window.location.href = `movie_details/movie_details.html?media=${media_Type}&id=${movie.id}`;
+        }
+        play.onclick = redirectToMovieDetails;
+        info.onclick = redirectToMovieDetails;
+    }
+
+    // Initial banner
+    displayBanner(currentBannerIndex);
+
+    // Change banner every 5 seconds
+    setInterval(() => {
+        currentBannerIndex = (currentBannerIndex + 1) % bannerMovies.length;
+        displayBanner(currentBannerIndex);
+    }, 5000);
+}
             })
             .catch(error => {
                 console.error(error);
