@@ -37,13 +37,13 @@ body {
   color: rgb(255, 255, 255);
   border: 1px solid transparent;
   border-radius: 6px;
-  background-color: rgb(141, 22, 201);
+  background-color: rgb(140, 82, 255);
 }
 
 .watchList-Btn:hover {
-  color: rgb(141, 22, 2012);
+  color: rgb(140, 82, 255);
   background-color: black;
-  border: 1px solid rgb(141, 22, 201);
+  border: 1px solid rgb(140, 82, 255);
   cursor: pointer;
 }
 
