@@ -15,8 +15,8 @@ h1 {
     width: 100vw;
     height: 70px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: left;
 }
 
 /* Logo styling */
