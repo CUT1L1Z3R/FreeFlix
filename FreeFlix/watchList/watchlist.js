@@ -3,11 +3,7 @@ const watchListItems = document.getElementById('watchList-Items');
 
 // Function to display the list of WatchList
 function showWatchListItems() {
-    // Retrieve WatchList from local storage or use an empty array
-    const watchListItems = document.getElementById('watchList-Items');
-
-// Function to display the list of WatchList items
-function showWatchListItems() {
+    
     // Retrieve WatchList from local storage or use an empty array
     const storedWatchList = JSON.parse(localStorage.getItem('watchlist')) || [];
 
