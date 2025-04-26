@@ -39,7 +39,8 @@ async function fetchVideoDetails(id) {
 }
 
 document.getElementById('change-server-btn').addEventListener('click', () => {
-  document.getElementById('server-selector').style.display = 'block';
+    const serverSelector = document.getElementById('server-selector');
+    serverSelector.style.display = (serverSelector.style.display === 'block') ? 'none' : 'block';
 });
 
 document.getElementById('server-selector').addEventListener('click', (e) => {
@@ -49,7 +50,8 @@ document.getElementById('server-selector').addEventListener('click', (e) => {
 });
 
 document.getElementById('server').addEventListener('change', () => {
-  document.getElementById('server-selector').style.display = 'none';
+    changeServer();
+    document.getElementById('server-selector').style.display = 'none'; // Hide dropdown after selection
 });
 
 // Function to handle video source change based on selected server
