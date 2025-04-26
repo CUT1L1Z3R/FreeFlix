@@ -25,6 +25,7 @@ h1 {
     cursor: pointer;
     float: left;
     margin-left: 20px;
+    align-items: left;
 }
 
 .back-button {
