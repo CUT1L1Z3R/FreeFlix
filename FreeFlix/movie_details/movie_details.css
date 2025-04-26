@@ -16,16 +16,14 @@ h1 {
     height: 70px;
     display: flex;
     align-items: left;
-    justify-content: left;
+    justify-content: center;
 }
 
 /* Logo styling */
 .logo {
     width: 120px;
     cursor: pointer;
-    float: left;
-    margin-left: 20px;
-    align-items: left;
+    margin: 15px 0px;
 }
 
 .back-button {
