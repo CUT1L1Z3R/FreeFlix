@@ -173,6 +173,7 @@ iframe {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: none; /* Initially hidden */
 }
 
 .server-selector-header {
@@ -278,15 +279,15 @@ iframe {
   margin-right: 10px; /* Add a margin to the label */
 }
 
-.server-selector select {
-  padding: 5px;
-  font-size: 12px;
+.server-selector-select {
+  padding: 10px;
+  font-size: 14px;
   background-color: #444;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  width: 80px; /* Set the width to 80px */
+  width: 200px;  /* Adjust width as necessary */
 }
 
 .server-selector select:focus {
