@@ -76,12 +76,6 @@ async function changeServer() {
             console.error("Selected server is not supported.");
             break;
     }
-
-<script>
-    document.getElementById('back-button').addEventListener('click', function() {
-        history.back();
-    });
-</script>
     
     // If no URL was created, fallback to a default one
     if (!embedURL) {
