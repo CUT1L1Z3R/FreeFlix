@@ -68,18 +68,14 @@ function fetchMedia(containerClass, endpoint, mediaType) {
                     });
                 });
 
-                if (containerClass === 'netflix-container') {
+                if (containerClass === 'trending-container') {
     const banner = document.getElementById('banner');
     const play = document.getElementById('play-button');
     const info = document.getElementById('more-info');
     const title = document.getElementById('banner-title');
 
-    // Pick multiple random movies (like 5)
-    const bannerMovies = [];
-    for (let i = 0; i < 5; i++) {
-        const randomIndex = Math.floor(Math.random() * fetchResults.length);
-        bannerMovies.push(fetchResults[randomIndex]);
-    }
+    // Get all trending movies
+    const bannerMovies = fetchResults.slice(0, 10); // Take first 10 trending movies
 
     let currentBannerIndex = 0;
 
@@ -88,16 +84,16 @@ function fetchMedia(containerClass, endpoint, mediaType) {
         banner.src = `https://image.tmdb.org/t/p/original/${movie.backdrop_path}`;
         title.textContent = movie.title || movie.name;
 
-        // Update click events
+        // Update button click events
         function redirectToMovieDetails() {
-            const media_Type = movie.media_type || mediaType;
+            const media_Type = movie.media_type || 'movie'; // fallback to movie
             window.location.href = `movie_details/movie_details.html?media=${media_Type}&id=${movie.id}`;
         }
         play.onclick = redirectToMovieDetails;
         info.onclick = redirectToMovieDetails;
     }
 
-    // Initial banner
+    // Show first banner
     displayBanner(currentBannerIndex);
 
     // Change banner every 5 seconds
