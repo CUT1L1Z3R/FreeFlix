@@ -3,47 +3,39 @@ const watchListItems = document.getElementById('watchList-Items');
 
 // Function to display the list of WatchList
 function showWatchListItems() {
-    
     // Retrieve WatchList from local storage or use an empty array
     const storedWatchList = JSON.parse(localStorage.getItem('watchlist')) || [];
 
     if (storedWatchList.length === 0) {
-        // Show a message indicating that the WatchList is empty
         const emptyMessage = document.createElement('p');
-        emptyMessage.textContent = "It's lonely here. Add some Movies  or Tv shows to WatchList!";
+        emptyMessage.textContent = "It's lonely here. Add some Movies  or Tv shows to WatchList !";
         watchListItems.appendChild(emptyMessage);
     } else {
-        // Loop through each movie/Tv show in the WatchList
         storedWatchList.forEach(movie => {
-            // Create a new element for each movie/Tv show
             const shortenedTitle = movie.title || movie.name;
             const date = movie.release_date || movie.first_air_date;
             const watchList_Item = document.createElement('div');
             watchList_Item.classList.add('watchlist-item');
             watchList_Item.innerHTML = `<div class="search-item-thumbnail">
-                    <img src="https://image.tmdb.org/t/p/original${movie.poster_path}"
-                    </div>
-                <div class="search-item-thumbnail">
-                    <img src="${movie.poster_path || movie.backdrop_path}" alt="Poster Image">
+                    <img src="https://image.tmdb.org/t/p/original${movie.poster_path}">
                 </div>
                 <div class="search-item-info">
                     <h3>${shortenedTitle}</h3>
                     <h4>Year : ${date}</h4>
                 </div>
-                <button class="removeBtn" id="${movie.id}">Remove From WatchList</button>
-            `;
+                <button class="removeBtn" id="${movie.id}">Remove From WatchList</button>`;
             watchListItems.appendChild(watchList_Item);
 
             // Add a click event listener to the remove button
             const removeBtn = watchList_Item.querySelector('.removeBtn');
             removeBtn.addEventListener('click', () => removeMovieFromWatchList(movie.id));
 
-            // Add a click event listener to navigate to the respective movie details page
-            const thumbnail = watchList_Item.querySelector('.search-item-thumbnail img');
+            // Add a click event listener to navigate to respestive movie details page
+            const thumbnail = watchList_Item.querySelector('.search-item-thumbnail');
             thumbnail.addEventListener('click', () => {
                 // Construct the URL for the movie details page with the TMDb ID and Media_Type as a parameter
-                const movieDetailsURL = `../movie_details/movie_details.html?mediamovie.media_type}&=${movie.id}`;
- window.location.href = movieDetailsURL;
+                const movieDetailsURL = `../movie_details/movie_details.html?media=${movie.media_type}&id=${movie.id}`;
+                window.location.href = movieDetailsURL;
             });
         });
     }
