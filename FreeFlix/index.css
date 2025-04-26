@@ -37,13 +37,13 @@ body {
   color: rgb(255, 255, 255);
   border: 1px solid transparent;
   border-radius: 6px;
-  background-color: rgb(140, 82, 255);
+  background-color: rgb(141, 22, 201);
 }
 
 .watchList-Btn:hover {
   color: rgb(140, 82, 255);
   background-color: black;
-  border: 1px solid rgb(140, 82, 255);
+  border: 1px solid rgb(141, 22, 201);
   cursor: pointer;
 }
 
@@ -220,7 +220,7 @@ input::-webkit-input-placeholder {
 }
 
 #play-button {
-  background-color: #8c52ff;
+  background-color: #8d16c9;
   color: #000;
   padding: 7px 25px;
 }
