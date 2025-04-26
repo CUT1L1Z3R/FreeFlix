@@ -87,12 +87,8 @@ async function changeServer() {
 
     // Ensure iframe is visible and correctly sized
     iframe.style.display = "block";  // Show the iframe
-    iframe.style.width = "100%"; // or adjust to a fixed size
-    iframe.style.height = "400px"; // or adjust height as needed
-
-    // Hide the movie poster when the video is playing
-    moviePoster.style.display = "none";  // Hide the movie poster image
-}
+    iframe.style.width = "80%"; // or adjust to a fixed size
+    iframe.style.height = "250px"; // or adjust height as needed
 
 // Function to display movie details on the page
 async function displayMovieDetails() {
