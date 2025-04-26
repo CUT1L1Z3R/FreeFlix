@@ -21,6 +21,8 @@ h1 {
 
 /* Logo styling */
 .logo {
+    width: 120px;
+    cursor: pointer;
     float: left;
     margin-left: 20px;
 }
