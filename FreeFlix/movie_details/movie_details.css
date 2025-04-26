@@ -26,6 +26,20 @@ h1 {
     margin: 15px 0px;
 }
 
+.back-button {
+    background-color: purple;
+    color: white;
+    border none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.back-button:hover {
+    background-color: #7a288a;
+}
+
 /* Movie details container */
 .movie-details {
     margin: 20px 0px;
