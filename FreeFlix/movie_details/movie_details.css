@@ -21,9 +21,8 @@ h1 {
 
 /* Logo styling */
 .logo {
-    width: 120px;
-    cursor: pointer;
-    margin: 15px 0px;
+    float: left;
+    margin-left: 20px;
 }
 
 .back-button {
