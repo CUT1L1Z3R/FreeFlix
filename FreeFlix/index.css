@@ -20,6 +20,25 @@ body {
   z-index: 2;
 }
 
+.genre-selector {
+  margin: 80px 15px 20px 15px; /* adjust depending on your layout */
+}
+
+#genreDropdown {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+  border: 1px solid #8d16c9;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#genreDropdown option {
+  background: #0c0c0c;
+  color: white;
+}
+
 /* Logo styles */
 #netflix-logo {
   margin: 15px 0 15px 1.5%;
