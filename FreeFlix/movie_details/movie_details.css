@@ -1,0 +1,450 @@
+/* Global styles for body and text elements */
+body,
+p,
+h1 {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Header styling */
+.header {
+    width: 100vw;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo styling */
+.logo {
+    width: 120px;
+    cursor: pointer;
+    margin: 15px 0px;
+}
+
+/* Movie details container */
+.movie-details {
+    margin: 20px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    box-sizing: border-box;
+}
+
+/* Movie poster styling */
+.movie-poster {
+    width: 750px;
+    height: 460px;
+}
+
+/* iframe */
+iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#moviePoster {
+    width: 100%;
+    height: 100%;
+}
+
+/* Movie information section */
+.movie-info {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Movie title styling */
+.movie-info h1 {
+    color: #a209da;
+    font-size: 46px;
+}
+
+/* Plot styling */
+#plot {
+    color: white;
+    line-height: 1.4;
+    font-size: 18px;
+    text-align: justify;
+}
+
+/* Movie data styling */
+.movie-data {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+/* Design class styling */
+.design {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    color: white;
+}
+
+/* Styling for bold text elements */
+span {
+    font-weight: bold;
+    color: #a209da;
+}
+
+p {
+    font-weight: bold;
+}
+
+/* Movie poster and video container */
+.movie-poster {
+  position: relative;
+  width: 60%; /* Reduce the width to 80% */
+  height: auto;
+}
+
+/* Server selector dropdown styles */
+#server-selector {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #810c7d;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.server-selector-header {
+  background-color: #540151;
+  padding: 10px;
+  border-bottom: 1px solid #41013f;
+}
+
+.server-selector-header h2 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #41013f;
+}
+
+.server-selector-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #41013f;
+  color: #fff;
+  padding: 10px;
+  border: 1px solid #41013f;
+  border-radius: 5px;
+  display: none;
+}
+
+.server-selector-dropdown label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.server-selector-dropdown select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #41013f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.server-selector-content {
+  padding: 20px;
+}
+
+.server-selector-content label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.server-selector-content select {
+  padding: 10px;
+  font-size: 14px;
+  background-color: #30012f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* Compact change server button styling */
+/* Change server button styles */
+.change-server-btn {
+  background-color: #a209da;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.change-server-btn:hover {
+  background-color: transparent;
+  border-color: #7a288a; /* Change border color to purple */
+  outline: 2px solid #7a288a; /* Add purple outline */
+}
+
+.change-server-btn:active {
+  background-color: transparent;
+  border-color: #7a288a; /* Change border color to purple */
+  outline: 2px solid #7a288a; /* Add purple outline */
+}
+
+.server-selector label {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px; /* Add a margin to the label */
+}
+
+.server-selector select {
+  padding: 5px;
+  font-size: 12px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 80px; /* Set the width to 80px */
+}
+
+.server-selector select:focus {
+  outline: none;
+  background-color: #555;
+}
+
+.server-selector button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 60px; /* Set the width to 60px */
+}
+
+.server-selector button:hover {
+  background-color: #3e8e41;
+}
+
+/* Position the server-selector below the video */
+.movie-poster {
+  position: relative;
+}
+
+.server-selector {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* Iframe to display video */
+#iframe {
+  width: 100%;
+  height: 100px; /* Reduce the height to 300px */
+  display: block;
+  margin-bottom: 10px; /* Add a margin to the iframe */
+}
+
+/* Styling for the change server dropdown */
+.server-selector {
+  margin-top: 20px; /* Space between the video and the dropdown */
+  text-align: bottom; /* Center the dropdown */
+  padding: 10px;
+  background-color: #222; /* Optional: Set background to differentiate the dropdown */
+  border-radius: 5px;
+}
+
+.server-selector label {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.server-selector select {
+  padding: 8px;
+  font-size: 14px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.server-selector select:focus {
+  outline: none;
+  background-color: #555;
+}
+
+/* Show server selector dropdown on click */
+.change-server-btn:hover + .server-selector-dropdown {
+  display: block;
+}
+
+/* watchList button styling */
+.watchListBtn {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 20px;
+    text-align: center;
+    background: rgb(141, 22, 201);
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+/* watchList button hover styling */
+.watchListBtn:hover {
+    background: black;
+    color: rgb(141, 22, 201);
+    border: 1px solid rgb(141, 22, 201)
+}
+
+
+/* ----Media Queries---- */
+
+@media only screen and (max-width: 560px) {
+    .movie-details {
+        flex-direction: column;
+        margin-top: 0;
+        gap: 15px;
+    }
+
+    .movie-poster {
+        width: 100%;
+        height: 280px;
+    }
+
+    .movie-info {
+        width: 90%;
+        margin: auto;
+        gap: 15px;
+    }
+
+    .movie-data {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media screen and (min-width:561px) and (max-width:740px) {
+    .movie-details {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .movie-poster {
+        width: 100%;
+        height: 360px;
+    }
+
+    .movie-info {
+        width: 90%;
+        margin: auto;
+        gap: 15px;
+    }
+
+    .movie-data {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media screen and (min-width:741px) and (max-width:840px) {
+    .movie-details {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .movie-poster {
+        width: 100%;
+    }
+
+    .movie-info {
+        width: 95%;
+        margin: auto;
+        gap: 15px;
+    }
+
+    .movie-data {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media screen and (min-width:841px) and (max-width:924px) {
+    .movie-poster {
+        width: 500px;
+        height: 400px;
+    }
+
+    .movie-info {
+        width: 36%;
+        gap: 15px;
+    }
+
+    .movie-data {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media screen and (min-width:925px) and (max-width:1024px) {
+    .movie-poster {
+        width: 550px;
+    }
+
+    .movie-info {
+        width: 38%;
+        gap: 15px;
+    }
+
+    .movie-data {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media screen and (min-width:1025px) and (max-width:1300px) {
+    .movie-poster {
+        width: 600px;
+    }
+
+    .movie-info {
+        width: 39%;
+        gap: 15px;
+    }
+
+    .rating-data {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
