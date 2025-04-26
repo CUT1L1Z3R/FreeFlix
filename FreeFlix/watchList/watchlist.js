@@ -20,7 +20,9 @@ function showWatchListItems() {
             const date = movie.release_date || movie.first_air_date;
             const watchList_Item = document.createElement('div');
             watchList_Item.classList.add('watchlist-item');
-            watchList_Item.innerHTML = `
+            watchList_Item.innerHTML = `<div class="search-item-thumbnail">
+                    <img src="https://image.tmdb.org/t/p/original${movie.poster_path}"
+                    </div>
                 <div class="search-item-thumbnail">
                     <img src="${movie.poster_path || movie.backdrop_path}" alt="Poster Image">
                 </div>
