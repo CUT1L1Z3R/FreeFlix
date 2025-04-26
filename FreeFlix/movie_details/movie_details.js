@@ -78,9 +78,13 @@ async function changeServer() {
     }
 
     // If no URL was created, fallback to a default one
-    if (!embedURL) {
-        embedURL = "https://defaultserver.com/defaultEmbedUrl";  // Example fallback
-    }
+    function updateIframeSource(embedURL) {
+    iframe.src = embedURL;
+    iframe.style.display = "block";
+    iframe.style.width = "90%";
+    iframe.style.height = "250px"; // Adjusted height to 250px
+    moviePoster.style.display = "none";
+}
 
     // Update the iframe source with the correct video URL
     iframe.src = embedURL;
