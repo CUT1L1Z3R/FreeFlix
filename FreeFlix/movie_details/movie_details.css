@@ -55,14 +55,14 @@ iframe {
 /* Add margin space to the iframe */
 iframe {
     margin-left: 20px; /* Add a 20px margin to the left of the iframe */
-    margin-right: 20px; /* Add a 20px margin to the right of the iframe */
+    margin-right: 40px; /* Add a 20px margin to the right of the iframe */
     margin-bottom: 20px; /* Add a 20px margin to the bottom of the iframe */
 }
 
 /* Add margin space to the text elements */
 .movie-info {
     margin-left: 20px; /* Add a 20px margin to the left of the text elements */
-    margin-right: 20px; /* Add a 20px margin to the right of the text elements */
+    margin-right: 40px; /* Add a 20px margin to the right of the text elements */
 }
 
 /* Add margin space to the plot element */
