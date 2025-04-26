@@ -125,6 +125,11 @@ p {
     }
 }
 
+iframe {
+    width: 80vw;
+    height: 150vh;
+}
+
 /* Server selector dropdown styles */
 #server-selector {
   position: absolute;
