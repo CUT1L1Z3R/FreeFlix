@@ -52,10 +52,9 @@ iframe {
     height: 100%;
 }
 
-/* Add this to your CSS file */
-
 /* Add margin space to the iframe */
 iframe {
+    margin-left: 20px; /* Add a 20px margin to the left of the iframe */
     margin-right: 20px; /* Add a 20px margin to the right of the iframe */
     margin-bottom: 20px; /* Add a 20px margin to the bottom of the iframe */
 }
