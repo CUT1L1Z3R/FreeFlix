@@ -78,23 +78,18 @@ async function changeServer() {
     }
 
     // If no URL was created, fallback to a default one
-    function updateIframeSource(embedURL) {
-    iframe.src = embedURL;
-    iframe.style.display = "block";
-    iframe.style.width = "80%"; // Reduced width to 80%
-    iframe.style.height = "200px"; // Reduced height to 200px
-    moviePoster.style.display = "none";
-}
+    if (!embedURL) {
+        embedURL = "https://defaultserver.com/defaultEmbedUrl";  // Example fallback
+    }
 
     // Update the iframe source with the correct video URL
     iframe.src = embedURL;
 
     // Ensure iframe is visible and correctly sized
-    iframe.style.display = "block";
-    iframe.style.width = "80%"; // Reduced width to 80%
-    iframe.style.height = "200px"; // Reduced height to 200px
-    moviePoster.style.display = "none";
-}
+    iframe.style.display = "block";  // Show the iframe
+    iframe.style.width = "100%"; // or adjust to a fixed size
+    iframe.style.height = "400px"; // or adjust height as needed
+
     // Hide the movie poster when the video is playing
     moviePoster.style.display = "none";  // Hide the movie poster image
 }
