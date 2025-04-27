@@ -77,20 +77,28 @@ function fetchMedia(containerClass, endpoint, mediaType) {
             .then(data => {
                 const fetchResults = data.results;
                 fetchResults.forEach(item => {
-                    const itemElement = document.createElement('div');
-                    const imageUrl = containerClass === 'netflix-container' ? item.poster_path : item.backdrop_path;
+    const itemElement = document.createElement('div');
+    const imageUrl = containerClass === 'netflix-container' ? item.poster_path : item.backdrop_path;
 
-                    // Exclude Netflix Originals from adding the title and rating below the poster
-                    if (containerClass !== 'netflix-container') {
-                        itemElement.innerHTML = `
-                            <div class="movie-poster-container">
-                                <img src="https://image.tmdb.org/t/p/w500${imageUrl}" alt="${item.title || item.name}" class="movie-poster">
-                                <div class="movie-info">
-                                    <h3 class="movie-title">${item.title || item.name}</h3>
-                                    <p class="movie-rating">Rating: ${item.vote_average || 'N/A'}</p>
-                                </div>
-                            </div>
-                        `;
+    // Create a new container for each movie that includes the image, title, and rating inside the poster
+    itemElement.innerHTML = `
+        <div class="movie-poster-container">
+            <img src="https://image.tmdb.org/t/p/w500${imageUrl}" alt="${item.title || item.name}" class="movie-poster">
+            <div class="movie-info">
+                <h3 class="movie-title">${item.title || item.name}</h3>
+                <p class="movie-rating">Rating: ${item.vote_average || 'N/A'}</p>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(itemElement);
+
+    itemElement.addEventListener('click', () => {
+        const media_Type = item.media_type || mediaType;
+        window.location.href = `movie_details/movie_details.html?media=${media_Type}&id=${item.id}`;
+    });
+});
+
                     } else {
                         // For Netflix Originals, only display the poster (no title and rating below it)
                         itemElement.innerHTML = `
