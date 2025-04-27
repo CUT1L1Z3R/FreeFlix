@@ -20,7 +20,7 @@ window.addEventListener('scroll', () => {
 
     if (currentScrollTop > lastScrollTop) {
         // Scrolling down: hide the header and search button
-        header.style.transform = "translateY(-90%)"; // Move the entire header out of view
+        header.style.transform = "translateY(-99%)"; // Move the entire header out of view
     } else {
         // Scrolling up: show the header and search button
         header.style.transform = "translateY(0)"; // Reset the header position to the top
