@@ -208,7 +208,7 @@ iframe {
   top: 100%;
   left: 0;
   background-color: #41013f;
-  color: #fff;
+  color: #c5fad5;
   padding: 10px;
   border: 1px solid #41013f;
   border-radius: 5px;
@@ -225,7 +225,7 @@ iframe {
   padding: 10px;
   font-size: 14px;
   background-color: #41013f;
-  color: #fff;
+  color: #c5fad5;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -244,7 +244,7 @@ iframe {
   padding: 10px;
   font-size: 14px;
   background-color: #30012f;
-  color: #fff;
+  color: #c5fad5;
   border: none;
   border-radius: 5px;
   cursor: pointer;
