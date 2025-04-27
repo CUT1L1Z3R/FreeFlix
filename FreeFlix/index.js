@@ -17,15 +17,15 @@ let lastScrollTop = 0; // Keep track of the last scroll position
 // Function to handle scroll events
 window.addEventListener('scroll', () => {
     let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
+
     if (currentScrollTop > lastScrollTop) {
-        // Scrolling down: hide the header
-        header.style.top = "-70px"; // Move the header out of view (assuming the header height is 70px)
+        // Scrolling down: hide the header and search button
+        header.style.transform = "translateY(-100%)"; // Move the entire header out of view
     } else {
-        // Scrolling up: show the header
-        header.style.top = "0px"; // Reset the header position to the top
+        // Scrolling up: show the header and search button
+        header.style.transform = "translateY(0)"; // Reset the header position to the top
     }
-    
+
     lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // Prevent negative scroll value
 });
 
