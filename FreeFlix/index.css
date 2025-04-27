@@ -137,37 +137,46 @@ input::-webkit-input-placeholder {
   height: auto;
   display: block;
   border-radius: 10px;
+  transition: transform 0.3s ease-in-out; /* Optional: Add some animation for hover effect */
 }
 
-/* Styling for the movie info (title and rating) below the poster */
+/* Styling for the movie info (title and rating) inside the poster */
 .movie-info {
-  display: flex;
-  justify-content: space-between;  /* Title left, Rating right */
-  align-items: center;  /* Vertically center the text */
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.6); /* Dark background for readability */
+  position: absolute;
+  bottom: 0; /* Align it at the bottom of the poster */
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark background for readability */
   color: white;
+  padding: 5px;
   text-align: center;
   border-radius: 0 0 10px 10px; /* Optional: Rounded corners */
-  font-size: 14px;
-  margin-top: 10px;  /* Add space between poster and info */
+  font-size: 12px;  /* Smaller font size */
 }
 
-/* Movie title styling (on the left side) */
+/* Movie title styling (on the left side inside the poster) */
 .movie-title {
-  font-size: 14px;
+  font-size: 12px;  /* Smaller font size */
   font-weight: bold;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Text shadow for better readability */
-  flex: 1; /* Title takes available space */
+  text-align: left; /* Align title to the left */
+  padding-left: 10px; /* Add padding to the left */
+  overflow: hidden; /* Ensures title does not overflow */
+  white-space: nowrap; /* Prevents wrapping of the title */
+  text-overflow: ellipsis; /* Adds '...' for overflowing text */
 }
 
-/* Movie rating styling (on the right side) */
+/* Movie rating styling (on the right side inside the poster) */
 .movie-rating {
-  font-size: 12px;
+  font-size: 12px; /* Smaller font size */
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Text shadow for better readability */
   text-align: right; /* Align rating to the right */
+  padding-right: 10px; /* Add padding to the right */
+  overflow: hidden;
+  white-space: nowrap; /* Prevents wrapping of the rating */
+  text-overflow: ellipsis; /* Adds '...' for overflowing text */
 }
 
 /* Exclude title and rating for Netflix Originals */
