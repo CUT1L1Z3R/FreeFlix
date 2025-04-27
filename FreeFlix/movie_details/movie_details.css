@@ -288,6 +288,7 @@ iframe {
   border-radius: 5px;
   cursor: pointer;
   width: 200px;  /* Adjust width as necessary */
+  font-weight: bold;
 }
 
 .server-selector select:focus {
