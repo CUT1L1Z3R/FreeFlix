@@ -123,67 +123,6 @@ input::-webkit-input-placeholder {
   cursor: pointer;
 }
 
-/* Styling for the movie poster container */
-.movie-poster-container {
-  position: relative;
-  display: inline-block;
-  margin: 10px;
-  width: 200px; /* Set width for better control */
-}
-
-/* Movie poster image styling */
-.movie-poster {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 10px;
-  transition: transform 0.3s ease-in-out; /* Optional: Add some animation for hover effect */
-}
-
-/* Styling for the movie info (title and rating) inside the poster */
-.movie-info {
-  position: absolute;
-  bottom: 0; /* Align it at the bottom of the poster */
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Dark background for readability */
-  color: white;
-  padding: 5px;
-  text-align: center;
-  border-radius: 0 0 10px 10px; /* Optional: Rounded corners */
-  font-size: 12px;  /* Smaller font size */
-}
-
-/* Movie title styling (on the left side inside the poster) */
-.movie-title {
-  font-size: 12px;  /* Smaller font size */
-  font-weight: bold;
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Text shadow for better readability */
-  text-align: left; /* Align title to the left */
-  padding-left: 10px; /* Add padding to the left */
-  overflow: hidden; /* Ensures title does not overflow */
-  white-space: nowrap; /* Prevents wrapping of the title */
-  text-overflow: ellipsis; /* Adds '...' for overflowing text */
-}
-
-/* Movie rating styling (on the right side inside the poster) */
-.movie-rating {
-  font-size: 12px; /* Smaller font size */
-  margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Text shadow for better readability */
-  text-align: right; /* Align rating to the right */
-  padding-right: 10px; /* Add padding to the right */
-  overflow: hidden;
-  white-space: nowrap; /* Prevents wrapping of the rating */
-  text-overflow: ellipsis; /* Adds '...' for overflowing text */
-}
-
-/* Exclude title and rating for Netflix Originals */
-.netflix-container .movie-info {
-  display: none; /* Hide movie info (title and rating) for Netflix Originals */
-}
-
 /* Thumbnail styles */
 .search-item-thumbnail {
   width: 10%;
