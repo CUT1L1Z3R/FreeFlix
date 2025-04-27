@@ -93,6 +93,7 @@ function fetchMedia(containerClass, endpoint, mediaType) {
 
     container.appendChild(itemElement);
 
+    // Add click event to redirect to the movie details page
     itemElement.addEventListener('click', () => {
         const media_Type = item.media_type || mediaType;
         window.location.href = `movie_details/movie_details.html?media=${media_Type}&id=${item.id}`;
