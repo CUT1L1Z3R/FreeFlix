@@ -20,7 +20,7 @@ window.addEventListener('scroll', () => {
     
     if (currentScrollTop > lastScrollTop) {
         // Scrolling down: hide the header
-        header.style.top = "-70px"; // Move the header out of view (assuming the header height is 70px)
+        header.style.top = "-90px"; // Move the header out of view (assuming the header height is 70px)
     } else {
         // Scrolling up: show the header
         header.style.top = "0px"; // Reset the header position to the top
