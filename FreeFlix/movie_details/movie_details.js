@@ -74,6 +74,9 @@ async function changeServer() {
         case "2embed":
             embedURL = `https://www.2embed.cc/embed/${id}`;
             break;
+        case "movieapi.club":
+    embedURL = `https://movieapi.club/${type}/${id}`;
+    break;
         default:
             console.error("Selected server is not supported.");
             break;
