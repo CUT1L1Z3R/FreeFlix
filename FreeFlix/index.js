@@ -80,16 +80,25 @@ function fetchMedia(containerClass, endpoint, mediaType) {
                     const itemElement = document.createElement('div');
                     const imageUrl = containerClass === 'netflix-container' ? item.poster_path : item.backdrop_path;
 
-                    // Create a new container for each movie that includes the image, title, and rating
-                    itemElement.innerHTML = `
-                        <div class="movie-poster-container">
-                            <img src="https://image.tmdb.org/t/p/w500${imageUrl}" alt="${item.title || item.name}" class="movie-poster">
-                            <div class="movie-info">
-                                <h3 class="movie-title">${item.title || item.name}</h3>
-                                <p class="movie-rating">Rating: ${item.vote_average || 'N/A'}</p>
+                    // Exclude Netflix Originals from adding the title and rating below the poster
+                    if (containerClass !== 'netflix-container') {
+                        itemElement.innerHTML = `
+                            <div class="movie-poster-container">
+                                <img src="https://image.tmdb.org/t/p/w500${imageUrl}" alt="${item.title || item.name}" class="movie-poster">
+                                <div class="movie-info">
+                                    <h3 class="movie-title">${item.title || item.name}</h3>
+                                    <p class="movie-rating">Rating: ${item.vote_average || 'N/A'}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    } else {
+                        // For Netflix Originals, only display the poster (no title and rating below it)
+                        itemElement.innerHTML = `
+                            <div class="movie-poster-container">
+                                <img src="https://image.tmdb.org/t/p/w500${imageUrl}" alt="${item.title || item.name}" class="movie-poster">
+                            </div>
+                        `;
+                    }
 
                     container.appendChild(itemElement);
 
