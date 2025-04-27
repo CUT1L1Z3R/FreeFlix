@@ -10,6 +10,26 @@ goToWatchlistBtn.addEventListener('click', () => {
 
 const scrollDistance = 900;
 
+// Get references to the header and other elements
+const header = document.querySelector('.header');
+let lastScrollTop = 0; // Keep track of the last scroll position
+
+// Function to handle scroll events
+window.addEventListener('scroll', () => {
+    let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (currentScrollTop > lastScrollTop) {
+        // Scrolling down: hide the header
+        header.style.top = "-70px"; // Move the header out of view (assuming the header height is 70px)
+    } else {
+        // Scrolling up: show the header
+        header.style.top = "0px"; // Reset the header position to the top
+    }
+    
+    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // Prevent negative scroll value
+});
+
+
 // Define a function to handle scrolling
 function setupScroll(containerClass, previousButtonClass, nextButtonClass) {
     const previousButtons = document.querySelectorAll(`.${previousButtonClass}`);
