@@ -137,30 +137,42 @@ input::-webkit-input-placeholder {
   border-radius: 10px;
 }
 
+/* Styling for the movie poster container */
+.movie-poster-container {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
 /* Styling for the movie info (title and rating) */
 .movie-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Dark background for readability */
-  color: white;
-  padding: 10px;
-  border-radius: 0 0 10px 10px;
+  position: relative;
+  margin-top: 10px; /* Move title and rating below the poster */
   text-align: center;
 }
 
 .movie-title {
-  font-size: 18px;
+  font-size: 14px; /* Smaller font size */
   font-weight: bold;
   margin: 0;
 }
 
 .movie-rating {
-  font-size: 14px;
+  font-size: 12px; /* Smaller font size */
   margin: 5px 0 0 0;
 }
 
+/* Exclude title and rating for Netflix Originals */
+.netflix-container .movie-info {
+  display: none; /* Hide movie info (title and rating) */
+}
 
 /* Thumbnail styles */
 .search-item-thumbnail {
