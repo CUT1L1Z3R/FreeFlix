@@ -18,6 +18,7 @@ body {
   position: fixed;
   top: 0;
   z-index: 2;
+  transition: top 0.3s; /* Smooth transition for hiding/showing the header */
 }
 /* Logo styles */
 #netflix-logo {
