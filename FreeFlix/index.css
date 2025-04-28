@@ -2,7 +2,6 @@
 body {
   font-family: Arial, sans-serif;
   margin: 0 0 0 0;
-  margin-top: 70px; /* Push the content down to avoid overlap with the fixed header */
   padding: 0;
   background: #0c0c0c;
   overflow-x: hidden;
@@ -10,52 +9,22 @@ body {
 
 /* Header styles */
 .header {
-  position: fixed; /* Keep the header fixed at the top */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px; /* Set the height of the header */
-  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black background */
-  backdrop-filter: blur(10px); /* Apply blur to the background */
-  z-index: 1000; /* Ensure the header stays on top of other content */
+  width: 100vw;
+  height: 70px;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem; /* Add padding for spacing */
-  transition: all 0.3s ease; /* Smooth transition when the header changes */
+  background: rgb(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  z-index: 2;
+  transition: top 0.4s; /* Smooth transition for hiding/showing the header */
 }
-
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.header-left #netflix-logo {
-    margin-left: 10px; /* Adjust the margin value as needed */
-}
-
-/* Logo styling inside the header */
-.logo {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-/* Search bar styling inside the header */
-.search-bar input {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 25px;
-  font-size: 16px;
-  outline: none;
-}
-
 /* Logo styles */
 #netflix-logo {
   margin: 15px 0 15px 1.5%;
   width: 120px;
   height: 40px;
-  margin-left: 20px
 }
 
 /* "WatchList" button styles */
