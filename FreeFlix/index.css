@@ -19,12 +19,7 @@ body {
   top: 0;
   z-index: 2;
   transition: top 0.4s; /* Smooth transition for hiding/showing the header */
-  /* Add the following style to apply a blur effect */
-    filter: blur(1px); /* Adjust the blur value as needed */
-    -webkit-filter: blur(1px); /* For Safari and Chrome */
-    -moz-filter: blur(1px); /* For Firefox */
-    -ms-filter: blur(1px); /* For Internet Explorer */
-    backdrop-filter: blur(1px); /* For modern browsers */
+   backdrop-filter: blur(10px); /* Apply blur to the background */
 }
 /* Logo styles */
 #netflix-logo {
