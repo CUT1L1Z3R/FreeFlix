@@ -309,12 +309,19 @@ input::-webkit-input-placeholder {
   position: relative;
 }
 
+.movie-container img {
+    width: 100%;
+    height: auto;
+}
+
 /* Mobile styles */
 @media only screen and (max-width: 768px) {
-    .movie-container {
-        padding: 20px;
-        margin-bottom: 20px;
+    .movie-container img {
+        width: 90%;
+        height: auto;
     }
+}
+
     .movies-box {
         width: 100%;
         padding: 20px;
@@ -335,18 +342,7 @@ input::-webkit-input-placeholder {
     }
 }
 
-/* Desktop styles */
-@media only screen and (min-width: 1024px) {
-    .movie-container {
-        padding: 40px;
-        margin-bottom: 40px;
     }
- .movies-box {
-        width: 60%;
-        padding: 40px;
-        margin-bottom: 40px;
-    }
-}
 
 .navigation-button {
   width: 60px;
