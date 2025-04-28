@@ -20,18 +20,17 @@ body {
   z-index: 2;
   transition: top 0.4s; /* Smooth transition for hiding/showing the header */
   /* Add the following style to apply a blur effect */
-    filter: blur(5px); /* Adjust the blur value as needed */
-    -webkit-filter: blur(5px); /* For Safari and Chrome */
-    -moz-filter: blur(5px); /* For Firefox */
-    -ms-filter: blur(5px); /* For Internet Explorer */
-    backdrop-filter: blur(5px); /* For modern browsers */
+    filter: blur(1px); /* Adjust the blur value as needed */
+    -webkit-filter: blur(1px); /* For Safari and Chrome */
+    -moz-filter: blur(1px); /* For Firefox */
+    -ms-filter: blur(1px); /* For Internet Explorer */
+    backdrop-filter: blur(1px); /* For modern browsers */
 }
 /* Logo styles */
 #netflix-logo {
   margin: 15px 0 15px 1.5%;
   width: 120px;
   height: 40px;
-  display: none;
 }
 
 /* "WatchList" button styles */
