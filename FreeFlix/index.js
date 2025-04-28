@@ -101,7 +101,7 @@ function fetchMedia(containerClass, endpoint, mediaType) {
 
     function displayBanner(index) {
         const movie = bannerMovies[index];
-        banner.src = `https://image.tmdb.org/t/p/original/${movie.backdrop_path}`;
+        banner.src = `https://image.tmdb.org/t/p/w780/${movie.backdrop_path}`;
         title.textContent = movie.title || movie.name;
 
         // Update button click events
