@@ -65,7 +65,7 @@ setupScroll('action-container', 'action-previous', 'action-next');
 setupScroll('romantic-container', 'romantic-previous', 'romantic-next');
 
 // TMDB API key
-const api_Key = 'e79515e88dfd7d9f6eeca36e49101ac2';
+const api_Key = '84259f99204eeb7d45c7e3d8e36c6123';
 
 
 // Function to fetch and display movies or TV shows
