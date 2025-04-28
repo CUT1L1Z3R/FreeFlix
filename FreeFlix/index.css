@@ -21,8 +21,17 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px; /* Add padding for spacing */
+  padding: 1rem; /* Add padding for spacing */
   transition: all 0.3s ease; /* Smooth transition when the header changes */
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left #netflix-logo {
+    margin-left: 10px; /* Adjust the margin value as needed */
 }
 
 /* Logo styling inside the header */
@@ -46,6 +55,7 @@ body {
   margin: 15px 0 15px 1.5%;
   width: 120px;
   height: 40px;
+  margin-left: 20px
 }
 
 /* "WatchList" button styles */
