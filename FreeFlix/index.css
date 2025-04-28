@@ -309,6 +309,45 @@ input::-webkit-input-placeholder {
   position: relative;
 }
 
+/* Mobile styles */
+@media only screen and (max-width: 768px) {
+    .movie-container {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .movies-box {
+        width: 100%;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Tablet styles */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .movie-container {
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+    .movies-box {
+        width: 80%;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+}
+
+/* Desktop styles */
+@media only screen and (min-width: 1024px) {
+    .movie-container {
+        padding: 40px;
+        margin-bottom: 40px;
+    }
+ .movies-box {
+        width: 60%;
+        padding: 40px;
+        margin-bottom: 40px;
+    }
+}
+
 .navigation-button {
   width: 60px;
   height: 170px;
