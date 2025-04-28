@@ -31,6 +31,7 @@ body {
   margin: 15px 0 15px 1.5%;
   width: 120px;
   height: 40px;
+  display: none;
 }
 
 /* "WatchList" button styles */
