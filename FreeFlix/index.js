@@ -193,7 +193,7 @@ function displaySearchResults(results) {
         const movieItem = document.createElement('div');
         // Create HTML structure for each movie
         movieItem.innerHTML = `<div class = "search-item-thumbnail">
-                                    <img src ="https://image.tmdb.org/t/p/w500${movie.poster_path}">
+                                    <img src ="https://image.tmdb.org/t/p/w780${movie.poster_path}">
                                 </div>
                                 <div class ="search-item-info">
                                     <h3>${shortenedTitle}</h3>
