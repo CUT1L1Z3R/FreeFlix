@@ -17,7 +17,7 @@ let lastScrollTop = 0; // Keep track of the last scroll position
 // Function to handle scroll events
 window.addEventListener('scroll', () => {
     let currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
+
     if (currentScrollTop > lastScrollTop) {
         // Scrolling down: hide the header
         header.style.top = "-120px"; // Move the header out of view (assuming the header height is 70px)
@@ -25,7 +25,7 @@ window.addEventListener('scroll', () => {
         // Scrolling up: show the header
         header.style.top = "0px"; // Reset the header position to the top
     }
-    
+
     lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop; // Prevent negative scroll value
 });
 
@@ -79,6 +79,7 @@ function fetchMedia(containerClass, endpoint, mediaType) {
                 fetchResults.forEach(item => {
                     const itemElement = document.createElement('div');
                     const imageUrl = containerClass === 'netflix-container' ? item.poster_path : item.backdrop_path;
+                    // Using a higher quality image (w780) for better resolution on all devices
                     itemElement.innerHTML = ` <img src="https://image.tmdb.org/t/p/w780${imageUrl}" alt="${item.title || item.name}"> `;
                     container.appendChild(itemElement);
 
