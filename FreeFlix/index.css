@@ -18,8 +18,8 @@ body {
   position: fixed;
   top: 0;
   z-index: 2;
-  transition: top 0.4s; /* Smooth transition for hiding/showing the header */
-   backdrop-filter: blur(10px); /* Apply blur to the background */
+  transition: top 0.4s;
+  backdrop-filter: blur(10px);
 }
 /* Logo styles */
 #netflix-logo {
@@ -264,49 +264,152 @@ input::-webkit-input-placeholder {
 
 /* ----Common Design all Sections---- */
 
+.movie-section {
+  margin-bottom: 30px;
+}
+
 .movie-section h1 {
   color: white;
   font-size: 1.5rem;
-  margin-left: 15px;
-  margin-bottom: 0px;
-  margin-top: 0px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+/* Movies box styling */
+.movie-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* Ensure content doesn't spill out */
+  margin-bottom: 20px;
 }
 
 .movies-box {
   padding-left: 20px;
+  padding-right: 20px;
   display: flex;
   flex-direction: row;
   gap: 20px;
   overflow-x: scroll;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  width: 100%;
+  min-height: 210px; /* Ensure minimum height to display movie items */
 }
 
-/* Apply custom styles to the scrollbar */
+/* Special height for Netflix container */
+.netflix-container {
+  min-height: 380px;
+}
+
+/* Hide scrollbar completely for all browsers */
 .movies-box::-webkit-scrollbar {
-  height: 1px;
+  display: none; /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
+  background: transparent;
 }
 
-.movies-box div {
+/* Movie item styling - Fixed rectangular dimensions */
+.movie-item {
+  flex: 0 0 auto; /* Prevent items from shrinking */
   width: 290px;
   height: 170px;
   cursor: pointer;
   margin: 20px 0;
   transition: all 0.5s ease-in-out;
+  position: relative;
+  box-sizing: border-box; /* Ensure dimensions include padding/border */
 }
 
-.movies-box div img {
-  width: 290px;
-  height: 170px;
+/* Netflix Originals section with taller posters */
+.netflix-container .movie-item {
+  width: 250px;
+  height: 340px;
+}
+
+/* This helps ensure the overlay stays in position even when image scales */
+.image-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 5px;
+  position: relative;
+}
+
+.movies-box .movie-item:hover .image-wrapper img {
+  transform: scale(1.1);
+}
+
+.movies-box img {
+  width: 100%;
+  height: 100%;
   border-radius: 5px;
   transition: all 0.5s ease-in-out;
+  object-fit: cover;
 }
 
-.movies-box div img:hover {
-  transform: scale(1.1);
-  border-radius: 5px;
+/* Movie info overlay styling */
+.movie-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 70%);
+  color: white;
+  padding: 10px 12px;
+  border-radius: 0 0 5px 5px;
+  border-top: 2px solid rgba(141, 22, 201, 0.6);
+  box-sizing: border-box;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  pointer-events: none; /* This ensures clicks pass through to the parent element */
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: opacity 0.3s ease;
 }
 
-.movie-container {
-  position: relative;
+.image-wrapper:hover .movie-overlay {
+  opacity: 1;
+}
+
+/* Improved movie title and rating styling for visibility */
+.movie-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0;
+  max-width: 70%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+/* Updated rating styling for consistency */
+.movie-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.rating-star {
+  color: #8d16c9;
+  font-size: 15px;
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.8);
+}
+
+.rating-value {
+  font-size: 13px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+  color: white;
 }
 
 .movie-container img {
@@ -314,10 +417,11 @@ input::-webkit-input-placeholder {
     height: auto;
 }
 
+/* Navigation button styling */
 .navigation-button {
   width: 60px;
   height: 170px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
   font-size: 2.5rem;
   font-weight: 600;
@@ -330,41 +434,34 @@ input::-webkit-input-placeholder {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-  z-index: 1;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 5;
+  color: white;
+}
+
+/* Special buttons for Netflix section */
+.netflix-previous, .netflix-next {
+  height: 340px;
 }
 
 .movie-container:hover .navigation-button {
   opacity: 0.8;
-  z-index: 1;
+}
+
+.navigation-button:hover {
+  opacity: 1 !important;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 .previous {
-  left: 15px;
+  left: 0;
+  border-radius: 0 5px 5px 0;
 }
 
 .next {
-  right: 0%;
+  right: 0;
+  border-radius: 5px 0 0 5px;
 }
-
-/* ----Netflix Movies---- */
-
-.netflix-container div {
-  width: 250px;
-  height: 340px;
-}
-
-.netflix-container div img {
-  width: 250px;
-  height: 340px;
-}
-
-.netflix-previous,
-.netflix-next {
-  width: 80px;
-  height: 340px;
-}
-
 
 /* ----Media Query---- */
 
@@ -423,57 +520,85 @@ input::-webkit-input-placeholder {
 
   #banner-title {
     font-size: 40px;
-
   }
 
   #details-container {
     bottom: 12%;
-
   }
 
   #empty {
     width: 100vw;
   }
 
+  .movie-section {
+    margin-bottom: 22px;
+  }
+
   .movie-section h1 {
     font-size: 1.2rem;
+    margin-left: 12px;
+    margin-bottom: 6px;
+    margin-top: 15px;
   }
 
   .movies-box {
     gap: 15px;
+    min-height: 120px;
+    padding-left: 10px;
+    padding-right: 10px;
+    scrollbar-width: none;
   }
 
-  .movies-box div {
+  /* Movie item styling for small screens */
+  .movie-item {
+    flex: 0 0 auto;
     width: 180px;
     height: 100px;
     margin: 8px 0;
+    box-sizing: border-box;
   }
 
-  .movies-box div img {
-    width: 180px;
-    height: 100px;
+  /* Netflix Originals section with taller posters */
+  .netflix-container .movie-item {
+    width: 120px;
+    height: 200px;
+  }
+
+  .movies-box img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .movie-title {
+    font-size: 10px;
+    max-width: 60%;
+  }
+
+  .rating-star, .rating-value {
+    font-size: 9px;
   }
 
   .navigation-button {
     width: 40px;
     height: 100px;
     font-size: 1.6rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  .netflix-container div {
-    width: 140px;
+  .netflix-previous, .netflix-next {
     height: 200px;
   }
 
-  .netflix-container div img {
-    width: 140px;
-    height: 200px;
+  .netflix-container {
+    min-height: 220px;
   }
 
-  .netflix-previous,
-  .netflix-next {
-    width: 40px;
-    height: 200px;
+  .movies-box::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
   }
 }
 
@@ -514,45 +639,75 @@ input::-webkit-input-placeholder {
     width: 100vw;
   }
 
+  .movie-section {
+    margin-bottom: 26px;
+  }
+
   .movie-section h1 {
     font-size: 1.4rem;
+    margin-left: 16px;
+    margin-bottom: 8px;
+    margin-top: 18px;
   }
 
   .movies-box {
     gap: 18px;
+    min-height: 140px;
+    padding-left: 15px;
+    padding-right: 15px;
+    scrollbar-width: none;
   }
 
-  .movies-box div {
+  /* Movie item styling for medium screens */
+  .movie-item {
+    flex: 0 0 auto;
     width: 250px;
     height: 120px;
     margin: 10px 0;
+    box-sizing: border-box;
   }
 
-  .movies-box div img {
-    width: 250px;
-    height: 120px;
+  /* Netflix Originals section with taller posters */
+  .netflix-container .movie-item {
+    width: 110px;
+    height: 180px;
+  }
+
+  .movies-box img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .movie-title {
+    font-size: 11px;
+    max-width: 65%;
+  }
+
+  .rating-star, .rating-value {
+    font-size: 10px;
   }
 
   .navigation-button {
     width: 45px;
     height: 120px;
     font-size: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  .netflix-container div {
-    width: 200px;
-    height: 270px;
+  .netflix-previous, .netflix-next {
+    height: 180px;
   }
 
-  .netflix-container div img {
-    width: 200px;
-    height: 270px;
+  .netflix-container {
+    min-height: 200px;
   }
 
-  .netflix-previous,
-  .netflix-next {
-    width: 50px;
-    height: 270px;
+  .movies-box::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
   }
 }
 
@@ -589,36 +744,66 @@ input::-webkit-input-placeholder {
     width: 100vw;
   }
 
-  .movies-box div {
+  .movie-section {
+    margin-bottom: 28px;
+  }
+
+  .movie-section h1 {
+    font-size: 1.35rem;
+    margin-left: 18px;
+    margin-bottom: 10px;
+    margin-top: 19px;
+  }
+
+  /* Movie item styling for large tablets/small desktops */
+  .movie-item {
+    flex: 0 0 auto;
     width: 250px;
     height: 160px;
     margin: 15px 0;
+    box-sizing: border-box;
   }
 
-  .movies-box div img {
-    width: 250px;
-    height: 160px;
+  /* Netflix Originals section with taller posters */
+  .netflix-container .movie-item {
+    width: 170px;
+    height: 260px;
+  }
+
+  .movies-box img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .movie-title {
+    font-size: 12px;
+    max-width: 68%;
+  }
+
+  .rating-star, .rating-value {
+    font-size: 11px;
   }
 
   .navigation-button {
     width: 55px;
     height: 160px;
     font-size: 2.3rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  .netflix-container div {
-    width: 250px;
-    height: 300px;
+  .netflix-previous, .netflix-next {
+    height: 260px;
   }
 
-  .netflix-container div img {
-    width: 250px;
-    height: 300px;
+  .netflix-container {
+    min-height: 280px;
   }
 
-  .netflix-previous,
-  .netflix-next {
-    width: 55px;
-    height: 300px;
+  .movies-box::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
   }
 }
