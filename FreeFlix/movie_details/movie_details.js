@@ -1,3 +1,4 @@
+//
 // Selecting the logo element and adding a click event listener to navigate to the homepage
 const logo = document.querySelector('.logo');
 logo.addEventListener('click', () => {
@@ -80,11 +81,6 @@ document.getElementById('server-selector').addEventListener('click', (e) => {
 // Add event listener for the close button
 document.querySelector('.close-button').addEventListener('click', () => {
   document.getElementById('server-selector').style.display = 'none';
-});
-
-document.getElementById('server').addEventListener('change', () => {
-    changeServer();
-    document.getElementById('server-selector').style.display = 'none'; // Hide dropdown after selection
 });
 
 // Function to create season dropdown items
@@ -197,6 +193,9 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
 
     // Update the URL for each server to include season and episode parameters
     switch (server) {
+        case "player.videasy.net":
+            embedURL = `https://player.videasy.net/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
+            break;
         case "vidlink.pro":
             embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=false`;
             break;
@@ -308,25 +307,10 @@ async function changeServer() {
     // Update the iframe source with the correct video URL
     iframe.src = embedURL;
 
-    // Ensure iframe is visible and correctly sized
+    // Ensure iframe is visible
     iframe.style.display = "block";  // Show the iframe
 
-    // Set responsive height based on device width
-    if (window.innerWidth <= 560) {
-        iframe.style.height = "250px";
-    } else if (window.innerWidth <= 740) {
-        iframe.style.height = "300px";
-    } else if (window.innerWidth <= 840) {
-        iframe.style.height = "350px";
-    } else if (window.innerWidth <= 924) {
-        iframe.style.height = "300px";
-    } else if (window.innerWidth <= 1024) {
-        iframe.style.height = "350px";
-    } else {
-        iframe.style.height = "400px";
-    }
-
-    iframe.style.width = (window.innerWidth <= 740) ? "95%" : "100%";
+    // We don't need to modify heights anymore since we're using CSS !important values
 
     // Hide the movie poster when the video is playing
     moviePoster.style.display = "none";  // Hide the movie poster image
@@ -401,10 +385,69 @@ function toggleFavorite(movieDetails) {
     localStorage.setItem('watchlist', JSON.stringify(watchlist));
 }
 
-// Call the function to display movie details when the page loads
-window.addEventListener('load', () => {
-    displayMovieDetails();
-});
+// Enhanced server dropdown UI functionality
+function initServerDropdown() {
+    // Setup server dropdown toggle
+    const serverDropdownHeader = document.querySelector('.server-dropdown-header');
+    const serverDropdownContent = document.querySelector('.server-dropdown-content');
+    const dropdownArrow = document.querySelector('.dropdown-arrow');
+
+    if (!serverDropdownHeader) return; // Exit if elements don't exist
+
+    // Toggle dropdown when clicking the header
+    serverDropdownHeader.addEventListener('click', function(event) {
+        event.stopPropagation();
+        serverDropdownContent.classList.toggle('show');
+        serverDropdownHeader.classList.toggle('active');
+        dropdownArrow.classList.toggle('up');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.server-dropdown')) {
+            serverDropdownContent.classList.remove('show');
+            serverDropdownHeader.classList.remove('active');
+            dropdownArrow.classList.remove('up');
+        }
+    });
+
+    // Handle server selection
+    const serverOptions = document.querySelectorAll('.server-option');
+    const selectedServerDisplay = document.querySelector('.selected-server');
+
+    serverOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Update the hidden select for compatibility with existing code
+            const serverValue = this.getAttribute('data-server');
+            document.getElementById('server').value = serverValue;
+
+            // Update selected server display in header
+            selectedServerDisplay.innerHTML = this.innerHTML;
+
+            // Remove active class from all options
+            serverOptions.forEach(opt => opt.classList.remove('active'));
+
+            // Add active class to clicked option
+            this.classList.add('active');
+
+            // Close the dropdown
+            serverDropdownContent.classList.remove('show');
+            serverDropdownHeader.classList.remove('active');
+            dropdownArrow.classList.remove('up');
+
+            // Call the existing changeServer function
+            changeServer();
+        });
+    });
+
+    // Set initial active server
+    const initialServer = document.getElementById('server').value;
+    const initialServerOption = document.querySelector(`.server-option[data-server="${initialServer}"]`);
+    if (initialServerOption) {
+        initialServerOption.classList.add('active');
+        selectedServerDisplay.innerHTML = initialServerOption.innerHTML;
+    }
+}
 
 // Function to handle changes when server selection is made
 document.getElementById('server').addEventListener('change', () => {
@@ -417,4 +460,13 @@ window.addEventListener('resize', () => {
     if (iframe.style.display === "block") {
         changeServer();
     }
+});
+
+// Initialize everything when the window loads
+window.addEventListener('load', function() {
+    // Initialize server dropdown
+    initServerDropdown();
+
+    // Display movie details
+    displayMovieDetails();
 });
