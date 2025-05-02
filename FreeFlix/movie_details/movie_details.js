@@ -352,6 +352,11 @@ async function changeServer() {
     if (iframe) {
         iframe.src = embedURL;
         iframe.style.display = "block";  // Show the iframe
+
+        // Make sure iframe is visible and not positioned absolutely for better layout
+        iframe.style.position = "relative";
+        iframe.style.top = "auto";
+        iframe.style.left = "auto";
     } else {
         console.error("iframe element not found!");
     }
@@ -401,6 +406,11 @@ function playEpisode(tvId, seasonNumber, episodeNumber) {
         iframe.src = embedURL;
         iframe.style.display = "block";
         moviePoster.style.display = "none";
+
+        // Make sure iframe is visible and not positioned absolutely
+        iframe.style.position = "relative";
+        iframe.style.top = "auto";
+        iframe.style.left = "auto";
 
         // Mark the selected episode as active
         const episodes = document.querySelectorAll('.episode-item');
@@ -492,6 +502,13 @@ async function displayMovieDetails() {
                     createSeasonOptions(seasons);
                     // Display the seasons container
                     seasonsContainer.style.display = "flex";
+                    // Scroll to the seasons container for better mobile experience if needed
+                    if (window.innerWidth <= 740) {
+                        window.scrollTo({
+                            top: seasonsContainer.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
             } catch (err) {
                 console.error("Error setting up TV seasons:", err);
