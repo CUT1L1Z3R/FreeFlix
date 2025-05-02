@@ -520,8 +520,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                                       containerClass === 'anime-romance-container' ||
                                       containerClass === 'anime-popular-container' ||
                                       containerClass === 'anime-top-container' ||
-                                      containerClass === 'anime-upcoming-container' ||
-                                      containerClass === 'anime-container';
+                                      containerClass === 'anime-upcoming-container';
 
                     const imageUrl = useBackdrop && anime.backdrop_path
                         ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}` // Use higher quality for landscape
@@ -644,17 +643,13 @@ fetchMedia('documentary-tv-container', 'discover/tv?with_genres=99&', 'tv'); // 
 fetchAnime('anime-popular-container', 'popular'); // Popular anime
 fetchAnime('anime-top-container', 'top_rated'); // Top rated anime
 fetchAnime('anime-upcoming-container', 'upcoming'); // Ongoing anime (keeping the same container name)
-fetchAnime('anime-upcoming-new-container', 'truly_upcoming'); // Truly upcoming anime
+fetchAnime('anime-upcoming-new-container', 'truly_upcoming'); // Latest anime
 
 // Additional anime genres (removed the ones not needed)
 fetchAnime('anime-comedy-container', 'comedy'); // Comedy anime
 fetchAnime('anime-romance-container', 'romance'); // Romance anime
 
-// Fetch anime for generic anime container - now using ongoing anime
-const genericAnimeContainer = document.querySelector('.anime-container');
-if (genericAnimeContainer) {
-    fetchAnime('anime-container', 'upcoming'); // Use ongoing anime for the main anime container
-}
+// The generic anime container has been removed
 
 // Function to fetch search results from TMDB API
 async function fetchSearchResults(query) {
@@ -782,7 +777,6 @@ setupScroll('comedy-tv-container', 'comedy-tv-previous', 'comedy-tv-next');
 setupScroll('documentary-tv-container', 'documentary-tv-previous', 'documentary-tv-next');
 
 // Anime scroll (updated to reflect removed sections)
-setupScroll('anime-container', 'anime-previous', 'anime-next');
 setupScroll('anime-popular-container', 'anime-popular-previous', 'anime-popular-next');
 setupScroll('anime-top-container', 'anime-top-previous', 'anime-top-next');
 setupScroll('anime-upcoming-container', 'anime-upcoming-previous', 'anime-upcoming-next');
