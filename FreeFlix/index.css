@@ -1117,7 +1117,7 @@ input::-webkit-input-placeholder {
     font-size: 1.5rem;
     top: 50%;
     transform: translateY(-50%);
-    opacity: 0.7;
+    opacity: 0.8;
     background-color: rgba(0, 0, 0, 0.6);
   }
 
@@ -1737,7 +1737,7 @@ html::-webkit-scrollbar-thumb:hover {
 
     /* Default state for mobile: transparent but visible */
     .banner-nav-button {
-        opacity: 0.3 !important; /* Transparent but visible on mobile */
+        opacity: 0.7 !important; /* Transparent but visible on mobile */
         background-color: rgba(0, 0, 0, 0.5) !important;
         transition: opacity 0.3s ease;
         width: 40px;
