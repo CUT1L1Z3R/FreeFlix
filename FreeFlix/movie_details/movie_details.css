@@ -802,7 +802,8 @@ p {
 
 @media (max-width: 600px) {
     .server-notice-banner {
-        bottom: 8px;
+        top: 8px;
+        bottom: auto;
         padding: 4px 8px;
         font-size: 12px;
     }
