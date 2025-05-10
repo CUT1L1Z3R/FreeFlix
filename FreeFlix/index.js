@@ -1267,50 +1267,6 @@ movieContainers.forEach(container => {
  * Add touch swipe functionality for movie sections
  * Enables custom drag-to-scroll and momentum for .movies-box containers on touch devices.
  */
-const movieContainers = document.querySelectorAll('.movie-box');
-
-movieContainers.forEach(container => {
-    let startX, startTime;
-    let isDragging = false;
-    let scrollLeft;
-
-    // Touch event handlers
-    container.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        startX = e.touches[0].pageX;
-        startTime = new Date().getTime();
-        scrollLeft = container.scrollLeft;
-    }, { passive: true });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const x = e.touches[0].pageX;
-        const dragDistance = startX - x;
-        container.scrollLeft = scrollLeft + dragDistance;
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-
-        const endX = e.changedTouches[0].pageX;
-        const endTime = new Date().getTime();
-        const dragDistance = startX - endX;
-        const dragDuration = endTime - startTime;
-
-        // If swipe is quick enough and long enough, add momentum
-        if (dragDuration < 300 && Math.abs(dragDistance) > 50) {
-            // Calculate momentum based on drag speed and distance
-            const momentum = (dragDistance * 1.5) * (300 / dragDuration);
-
-            container.scrollBy({
-                left: momentum,
-                behavior: 'smooth'
-            });
-        }
-
-        isDragging = false;
-    }, { passive: true });
-});
 
 // injectFadeStyles and any other code that should follow here
 (function injectFadeStyles() {
