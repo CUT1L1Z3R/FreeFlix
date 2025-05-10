@@ -1218,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Add touch swipe functionality for movie sections
-const movieContainers = document.querySelectorAll('.movies-box');
+const movieContainers = document.querySelectorAll('.movie-box');
 
 movieContainers.forEach(container => {
     let startX, startTime;
@@ -1267,7 +1267,7 @@ movieContainers.forEach(container => {
  * Add touch swipe functionality for movie sections
  * Enables custom drag-to-scroll and momentum for .movies-box containers on touch devices.
  */
-const movieContainers = document.querySelectorAll('.movies-box');
+const movieContainers = document.querySelectorAll('.movie-box');
 
 movieContainers.forEach(container => {
     let startX, startTime;
