@@ -1263,7 +1263,6 @@ movieContainers.forEach(container => {
     }, { passive: true });
 });
 
-// Add fade-in/fade-out CSS classes for smooth transitions if not already present
 (function injectFadeStyles() {
     if (!document.getElementById('fade-section-styles')) {
         const style = document.createElement('style');
