@@ -1046,8 +1046,9 @@ input::-webkit-input-placeholder {
     scrollbar-width: none;
     -ms-overflow-style: none;
     overflow-x: auto;
+    scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: none;
   }
 
   .movies-box::-webkit-scrollbar {
