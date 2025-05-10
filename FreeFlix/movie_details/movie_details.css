@@ -804,6 +804,9 @@ p {
     .server-notice-banner {
         top: 8px;
         bottom: auto;
+        right: 8px;
+        left: auto;
+        transform: none;
         padding: 4px 8px;
         font-size: 12px;
     }
