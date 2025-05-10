@@ -568,6 +568,8 @@ window.addEventListener('load', function() {
     const banner = document.getElementById('server-notice-banner');
     const bannerClose = document.getElementById('banner-close-btn');
     if (banner) {
+        // Scroll to bottom to ensure banner is visible on mobile
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         banner.style.display = 'flex';
         bannerClose.addEventListener('click', () => {
             banner.style.display = 'none';
