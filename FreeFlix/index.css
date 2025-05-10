@@ -670,7 +670,7 @@ input::-webkit-input-placeholder {
     height: 340px;
   }
   .netflix-previous, .netflix-next {
-    height: 340px;
+    height: 350px;
   }
 }
 
@@ -718,7 +718,7 @@ input::-webkit-input-placeholder {
 
 /* Navigation button styling */
 .navigation-button {
-  width: 60px;
+  width: 45px;
   height: 170px;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 5px;
@@ -739,11 +739,11 @@ input::-webkit-input-placeholder {
 }
 
 .netflix-previous, .netflix-next {
-  height: 340px;
+  height: 350px;
 }
 
 .anime-previous, .anime-next {
-  height: 340px;
+  height: 350px;
 }
 
 .movie-container:hover .navigation-button {
@@ -1157,7 +1157,7 @@ input::-webkit-input-placeholder {
     height: 340px;
   }
   .netflix-previous, .netflix-next {
-    height: 340px;
+    height: 350px;
   }
 }
 
@@ -1168,7 +1168,7 @@ input::-webkit-input-placeholder {
     height: 260px;
   }
   .netflix-previous, .netflix-next {
-    height: 260px;
+    height: 270px;
   }
 }
 
@@ -1359,11 +1359,11 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    height: 120px;
+    height: 130px;
   }
 
   .anime-previous, .anime-next {
-    height: 120px;
+    height: 130px;
   }
 
   .movies-box::-webkit-scrollbar {
@@ -1484,11 +1484,11 @@ input::-webkit-input-placeholder {
   }
 
   .netflix-previous, .netflix-next {
-    height: 260px;
+    height: 270px;
   }
 
   .anime-previous, .anime-next {
-    height: 260px;
+    height: 270px;
   }
 
   .movies-box::-webkit-scrollbar {
