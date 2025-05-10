@@ -518,14 +518,6 @@ document.getElementById('server').addEventListener('change', () => {
     changeServer();
 });
 
-// Add window resize listener to ensure responsive video size
-window.addEventListener('resize', () => {
-    // Only update if iframe is visible
-    if (iframe.style.display === "block") {
-        changeServer();
-    }
-});
-
 // Initialize everything when the window loads
 window.addEventListener('load', function() {
     // Set a default server if none is selected
