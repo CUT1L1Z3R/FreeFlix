@@ -672,6 +672,25 @@ input::-webkit-input-placeholder {
   .netflix-previous, .netflix-next {
     height: 340px;
   }
+
+  /* Match font-size for these h1 sections to latest anime */
+  #disney-popular h1,
+  #adventure-movies h1,
+  #mystery-movies h1,
+  #fantasy-movies h1,
+  #romance-movies h1,
+  #action-movies h1,
+  #drama-movies h1,
+  #action-adventure-tv h1,
+  #mystery-tv h1,
+  #fantasy-tv h1,
+  #reality-tv h1 {
+    font-size: 0.85rem;
+    max-width: 95%;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
 }
 
 .image-wrapper:hover .movie-overlay {
@@ -1038,6 +1057,25 @@ input::-webkit-input-placeholder {
   #top-rated-anime-movies h1,
   #drama-anime h1,
   #adventure-anime h1 {
+    font-size: 0.85rem;
+    max-width: 95%;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* Match font-size for these h1 sections to latest anime */
+  #disney-popular h1,
+  #adventure-movies h1,
+  #mystery-movies h1,
+  #fantasy-movies h1,
+  #romance-movies h1,
+  #action-movies h1,
+  #drama-movies h1,
+  #action-adventure-tv h1,
+  #mystery-tv h1,
+  #fantasy-tv h1,
+  #reality-tv h1 {
     font-size: 0.85rem;
     max-width: 95%;
     text-transform: uppercase;

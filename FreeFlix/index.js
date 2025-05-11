@@ -655,6 +655,10 @@ fetchMedia('top-container', 'movie/top_rated?&', 'movie');
 fetchMedia('horror-container', 'discover/movie?with_genres=27&', 'movie');
 fetchMedia('comedy-container', 'discover/movie?with_genres=35&', 'movie');
 fetchMedia('action-container', 'discover/movie?with_genres=28&', 'movie');
+fetchMedia('drama-container', 'discover/movie?with_genres=18&', 'movie');
+fetchMedia('fantasy-container', 'discover/movie?with_genres=14&', 'movie');
+fetchMedia('romance-container', 'discover/movie?with_genres=10749&', 'movie');
+fetchMedia('mystery-container', 'discover/movie?with_genres=9648&', 'movie');
 
 // Additional movie genres
 fetchMedia('thriller-container', 'discover/movie?with_genres=53&', 'movie'); // Thriller movies
@@ -668,6 +672,13 @@ fetchMedia('crime-tv-container', 'discover/tv?with_genres=80&', 'tv'); // Crime 
 fetchMedia('scifi-tv-container', 'discover/tv?with_genres=10765&', 'tv'); // Sci-Fi & Fantasy (10765)
 fetchMedia('comedy-tv-container', 'discover/tv?with_genres=35&', 'tv'); // Comedy TV (35)
 fetchMedia('documentary-tv-container', 'discover/tv?with_genres=99&', 'tv'); // Documentary (99)
+
+// Fetch contents for Disney+ and new TV Show containers
+fetchMedia('disney-container', 'discover/tv?with_networks=2739&sort_by=popularity.desc&', 'tv'); // Disney+ network ID: 2739
+fetchMedia('actionadventure-container', 'discover/tv?with_genres=10759&sort_by=popularity.desc&', 'tv'); // Genre 10759: Action & Adventure
+fetchMedia('mystery-container', 'discover/tv?with_genres=9648&sort_by=popularity.desc&', 'tv'); // Genre 9648: Mystery
+fetchMedia('fantasy-container', 'discover/tv?with_genres=10765&sort_by=popularity.desc&', 'tv'); // Genre 10765: Sci-Fi & Fantasy (most include Fantasy shows)
+fetchMedia('reality-container', 'discover/tv?with_genres=10764&sort_by=popularity.desc&', 'tv'); // Genre 10764: Reality
 
 // Initial fetch of anime using TMDB API with appropriate genres/keywords
 fetchAnime('anime-popular-container', 'popular'); // Popular anime
