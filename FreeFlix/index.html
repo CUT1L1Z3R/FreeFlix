@@ -9,6 +9,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <meta name="description" content="Stream Your Favorite Movies And TV Shows For Free on FreeFlixx. Watch the latest blockbusters, classic films, trending TV series, and popular anime without subscription fees.">
     <meta name="keywords" content="free movies, free TV shows, streaming, FreeFlixx, watch online, entertainment, free streaming, film streaming, anime, Netflix originals, Disney+, horror movies, action movies, comedy shows">
+    <meta name="application-name" content="FreeFlixx">
+    <meta name="apple-mobile-web-app-title" content="FreeFlixx">
+    <meta name="generator" content="FreeFlixx Movies Streaming Platform">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -33,7 +36,9 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "FreeFlixx",
+      "alternateName": "FreeFlixx Streaming",
       "url": "https://freeflixx.pages.dev/",
+      "sameAs": ["https://freeflixx.pages.dev"],
       "potentialAction": {
         "@type": "SearchAction",
         "target": "https://freeflixx.pages.dev/?search={search_term_string}",
@@ -43,8 +48,21 @@
     }
     </script>
 
+    <!-- Organization structured data to improve site identification -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "FreeFlixx",
+      "url": "https://freeflixx.pages.dev/",
+      "logo": "https://freeflixx.pages.dev/assets/freeflixx.png",
+      "sameAs": ["https://freeflixx.pages.dev"]
+    }
+    </script>
+
     <!-- Web App Manifest -->
     <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
