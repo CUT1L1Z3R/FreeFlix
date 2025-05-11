@@ -2,6 +2,15 @@ User-agent: *
 Allow: /
 Disallow: /assets/
 Disallow: /assests/
+Disallow: /*.js$
+Disallow: /*.css$
 
-# Allow access to sitemap
+# Specific directories
+Allow: /movies/
+Allow: /tvshows/
+Allow: /anime/
+Allow: /movie_details/
+Allow: /watchList/
+
+# Sitemaps
 Sitemap: https://freeflixx.pages.dev/sitemap.xml

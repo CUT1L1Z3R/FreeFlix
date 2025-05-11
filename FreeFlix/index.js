@@ -3,6 +3,19 @@
  * Handles fetching, displaying, and UI interactions for movies, TV shows, and anime.
  */
 
+// Register Service Worker for better performance and offline capability
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+                console.log('ServiceWorker registration failed: ', error);
+            });
+    });
+}
+
 // Get references to HTML elements
 const searchInput = document.getElementById('searchInput');
 const searchResults = document.getElementById('searchResults');

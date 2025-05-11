@@ -27,9 +27,33 @@
     <!-- Canonical URL -->
     <link rel="canonical" href="https://freeflixx.pages.dev/">
 
+    <!-- Structured Data for Movie Streaming Website -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "FreeFlixx",
+      "url": "https://freeflixx.pages.dev/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://freeflixx.pages.dev/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
+      "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlixx. Watch the latest blockbusters, classic films, trending TV series, and popular anime without subscription fees."
+    }
+    </script>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="FreeFlixx">
+    <link rel="apple-touch-icon" href="/assets/freeflixx.png">
+
     <link rel="stylesheet" href="index.css">
     <link rel="icon" href="assets/freeflixx.ico">
-    <title>FreeFlixx - Stream Movies & TV Shows For Free</title>
+    <title>FreeFlixx - Stream Movies & TV Shows For Free | No Subscription Needed</title>
 </head>
 
 <body>
