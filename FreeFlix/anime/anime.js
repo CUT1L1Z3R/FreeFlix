@@ -320,8 +320,9 @@ function fetchAnime(containerClass, genreOrKeyword) {
         // Top rated anime movies
         endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
     } else if (genreOrKeyword === 'adventure') {
-        // Adventure anime
-        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,12&with_keywords=210024&sort_by=popularity.desc`;
+        // Action & Adventure anime - combining action and adventure genres
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=50`;
+        // Genres: 16=Animation, 28=Action, 12=Adventure
     } else if (genreOrKeyword === 'drama') {
         // Drama anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
@@ -331,6 +332,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
     }
 
     // Fetch anime data from TMDB
+    console.log(`Fetching anime with endpoint: https://api.themoviedb.org/3/${endpoint}`);
     fetch(`https://api.themoviedb.org/3/${endpoint}`)
         .then(response => {
             if (!response.ok) {
@@ -354,6 +356,12 @@ function fetchAnime(containerClass, genreOrKeyword) {
 
                 // Filter out items without backdrop or poster images
                 const validResults = animeResults.filter(item => item.poster_path || item.backdrop_path);
+
+                if (validResults.length === 0) {
+                    console.warn(`No valid image results found for ${containerClass}`);
+                    container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content with images available at this time. Please try again later.</div>';
+                    return;
+                }
 
                 validResults.forEach(anime => {
                     const title = anime.name || anime.title || 'Unknown Title';
@@ -459,6 +467,75 @@ function fetchAnime(containerClass, genreOrKeyword) {
         })
         .catch(error => {
             console.error('Error fetching anime data:', error);
+
+            // Special handling for adventure anime container if it fails
+            if (containerClass === 'adventure-anime-container') {
+                containers.forEach(container => {
+                    // Try a fallback query for adventure anime
+                    console.log("Attempting fallback query for adventure anime");
+                    const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=100`;
+
+                    fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const animeResults = data.results || [];
+                            if (animeResults.length > 0) {
+                                container.innerHTML = ''; // Clear error message
+
+                                // Just show the first 15 most popular anime
+                                const validResults = animeResults
+                                    .filter(item => item.poster_path || item.backdrop_path)
+                                    .slice(0, 15);
+
+                                if (validResults.length > 0) {
+                                    validResults.forEach(anime => {
+                                        const title = anime.name || anime.title || 'Unknown Title';
+                                        const imageUrl = anime.backdrop_path
+                                            ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}`
+                                            : anime.poster_path
+                                                ? `https://image.tmdb.org/t/p/w500${anime.poster_path}`
+                                                : 'https://via.placeholder.com/780x439?text=No+Image+Available';
+
+                                        const itemElement = document.createElement('div');
+                                        itemElement.className = 'movie-item';
+                                        itemElement.style.width = '290px';
+                                        itemElement.style.height = '170px';
+                                        itemElement.dataset.mediaType = 'tv';
+                                        itemElement.dataset.id = anime.id;
+
+                                        const imgWrapper = document.createElement('div');
+                                        imgWrapper.className = 'image-wrapper';
+
+                                        const img = document.createElement('img');
+                                        img.src = imageUrl;
+                                        img.alt = title;
+                                        img.loading = 'lazy';
+
+                                        const overlay = document.createElement('div');
+                                        overlay.className = 'movie-overlay';
+
+                                        const titleElement = document.createElement('div');
+                                        titleElement.className = 'movie-title';
+                                        titleElement.textContent = title;
+
+                                        overlay.appendChild(titleElement);
+                                        imgWrapper.appendChild(img);
+                                        imgWrapper.appendChild(overlay);
+                                        itemElement.appendChild(imgWrapper);
+                                        container.appendChild(itemElement);
+
+                                        itemElement.addEventListener('click', () => {
+                                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
+                                        });
+                                    });
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Error with fallback adventure anime fetch:', err);
+                        });
+                });
+            }
         });
 }
 
