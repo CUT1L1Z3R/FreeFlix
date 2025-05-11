@@ -344,17 +344,38 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
                 container.innerHTML = ''; // Clear the container
 
                 movies.forEach(movie => {
-                    // Skip if no image is available
-                    const imageUrl = usePosterPath
-                        ? movie.poster_path
-                        : movie.backdrop_path;
-                    if (!imageUrl) return;
+                    // Check which path to use:
+                    // - Use poster_path for Netflix originals
+                    // - For all others, prefer backdrop_path but fall back to poster_path if needed
+                    let useBackdropStyle = false;
+                    let pathToUse;
 
-                    let pathToUse = usePosterPath ? movie.poster_path : movie.backdrop_path;
+                    if (containerClass === 'netflix-container') {
+                        // Netflix originals use portrait format (poster_path)
+                        pathToUse = movie.poster_path;
+                    } else {
+                        // All other containers use landscape format (backdrop_path)
+                        pathToUse = movie.backdrop_path || movie.poster_path;
+                        useBackdropStyle = movie.backdrop_path != null;
+                    }
+
+                    // Skip if no image is available
+                    if (!pathToUse) return;
                     // Create item element
                     const itemElement = document.createElement('div');
                     itemElement.className = 'movie-item';
                     itemElement.dataset.mediaType = mediaType || 'movie';
+
+                    // Set appropriate dimensions based on image type
+                    if (containerClass === 'netflix-container') {
+                        // Portrait dimensions for Netflix originals
+                        itemElement.style.width = '250px';  // Portrait width
+                        itemElement.style.height = '340px'; // Portrait height
+                    } else if (useBackdropStyle) {
+                        // Landscape dimensions for everything else using backdrop images
+                        itemElement.style.width = '290px';  // Landscape width
+                        itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
+                    }
 
                     // Using a wrapper for the image to maintain aspect ratio
                     const imgWrapper = document.createElement('div');
@@ -931,114 +952,19 @@ addBackToTopButton();
 // Navigation menu functionality
 navItems.forEach(item => {
     item.addEventListener('click', () => {
-        // Remove active class from all items
-        navItems.forEach(navItem => navItem.classList.remove('active'));
-
-        // Add active class to clicked item
-        item.classList.add('active');
-
-        // Get the section to show
+        // Get the section to navigate to
         const section = item.querySelector('a').getAttribute('data-section');
-        currentSection = section; // Update the current section
 
-        // Update the banner slideshow for the selected section
-        updateBannerForSection(section);
-
-        // First, fade out all sections
-        movieSections.forEach(section => {
-            section.classList.add('fade-out');
-            section.classList.remove('fade-in');
-        });
-
-        // Wait for fade out to complete, then update visibility and fade in
-        setTimeout(() => {
-            // Show/hide sections based on selection
-            if (section === 'all') {
-                // Show all sections
-                movieSections.forEach(section => {
-                    section.style.display = 'block';
-                    // Stagger the animations for a cascade effect
-                    setTimeout(() => {
-                        section.classList.remove('fade-out');
-                        section.classList.add('fade-in');
-                    }, Math.random() * 200); // Random delay between 0-200ms for natural feel
-                });
-            } else if (section === 'anime') {
-                // Show only anime sections
-                movieSections.forEach(section => {
-                    if (section.classList.contains('anime-section')) {
-                        section.style.display = 'block';
-                        // Stagger the animations
-                        setTimeout(() => {
-                            section.classList.remove('fade-out');
-                            section.classList.add('fade-in');
-                        }, Math.random() * 200);
-                    } else {
-                        section.style.display = 'none';
-                    }
-                });
-
-                // Adjust the scroll position to show the first anime section
-                const firstAnimeSection = document.querySelector('.anime-section');
-                if (firstAnimeSection) {
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: firstAnimeSection.offsetTop - 150,
-                            behavior: 'smooth'
-                        });
-                    }, 300);
-                }
-            } else if (section === 'movies') {
-                // Show only movie sections (not TV or anime)
-                movieSections.forEach(section => {
-                    if (section.classList.contains('anime-section')) {
-                        section.style.display = 'none';
-                    } else if (section.id && section.id.includes('tv')) {
-                        section.style.display = 'none';
-                    } else {
-                        // Check if the section contains "Netflix" which is TV shows
-                        const sectionTitle = section.querySelector('h1');
-                        if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
-                            section.style.display = 'none';
-                        } else {
-                            section.style.display = 'block';
-                            // Stagger the animations
-                            setTimeout(() => {
-                                section.classList.remove('fade-out');
-                                section.classList.add('fade-in');
-                            }, Math.random() * 200);
-                        }
-                    }
-                });
-            } else if (section === 'tv') {
-                // Show only TV show sections (not movies or anime)
-                movieSections.forEach(section => {
-                    if (section.classList.contains('anime-section')) {
-                        section.style.display = 'none';
-                    } else {
-                        // Check if the section contains "Netflix" which is TV shows
-                        const sectionTitle = section.querySelector('h1');
-                        if (sectionTitle && sectionTitle.textContent.includes('NETFLIX ORIGINALS')) {
-                            section.style.display = 'block';
-                            // Stagger the animations
-                            setTimeout(() => {
-                                section.classList.remove('fade-out');
-                                section.classList.add('fade-in');
-                            }, Math.random() * 200);
-                        } else if (section.classList.contains('tv-section')) {
-                            section.style.display = 'block';
-                            // Stagger the animations
-                            setTimeout(() => {
-                                section.classList.remove('fade-out');
-                                section.classList.add('fade-in');
-                            }, Math.random() * 200);
-                        } else {
-                            section.style.display = 'none';
-                        }
-                    }
-                });
-            }
-        }, 400); // Wait for fade out animation to complete
+        // Update URL based on selected section
+        if (section === 'movies') {
+            window.location.href = 'movies/index.html';
+        } else if (section === 'tv') {
+            window.location.href = 'tvshows/index.html';
+        } else if (section === 'anime') {
+            window.location.href = 'anime/index.html';
+        } else if (section === 'all') {
+            window.location.href = 'index.html';
+        }
     });
 });
 

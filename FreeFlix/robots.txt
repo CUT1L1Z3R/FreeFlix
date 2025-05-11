@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /assets/
+Disallow: /assests/
+
+# Allow access to sitemap
+Sitemap: https://freeflixx.pages.dev/sitemap.xml

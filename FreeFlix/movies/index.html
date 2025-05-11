@@ -7,35 +7,35 @@
     <meta name="monetag" content="9d74356880b3ebb47a990a92b03643e2">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="Stream Your Favorite Movies And TV Shows For Free on FreeFlixx. Watch the latest blockbusters, classic films, trending TV series, and popular anime without subscription fees.">
-    <meta name="keywords" content="free movies, free TV shows, streaming, FreeFlixx, watch online, entertainment, free streaming, film streaming, anime, Netflix originals, Disney+, horror movies, action movies, comedy shows">
+    <meta name="description" content="Stream the latest and greatest movies for free on FreeFlixx. Watch trending, top-rated, horror, comedy, thriller, adventure, action, drama, fantasy, romance, and mystery movies without any subscription.">
+    <meta name="keywords" content="free movies, streaming, FreeFlixx, watch online, entertainment, free streaming, film streaming, trending movies, horror movies, comedy films, action movies, thriller movies">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://freeflixx.pages.dev/">
-    <meta property="og:title" content="FreeFlixx - Stream Movies & TV Shows For Free">
-    <meta property="og:description" content="Watch unlimited movies, TV shows, and anime for free. No subscription required.">
+    <meta property="og:url" content="https://freeflixx.pages.dev/movies/">
+    <meta property="og:title" content="FreeFlixx - Stream Movies For Free">
+    <meta property="og:description" content="Watch trending, top-rated, horror, comedy, thriller, adventure, action, drama, fantasy, romance, and mystery movies for free.">
     <meta property="og:image" content="https://freeflixx.pages.dev/assets/freeflixx.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://freeflixx.pages.dev/">
-    <meta property="twitter:title" content="FreeFlixx - Stream Movies & TV Shows For Free">
-    <meta property="twitter:description" content="Watch unlimited movies, TV shows, and anime for free. No subscription required.">
+    <meta property="twitter:url" content="https://freeflixx.pages.dev/movies/">
+    <meta property="twitter:title" content="FreeFlixx - Stream Movies For Free">
+    <meta property="twitter:description" content="Watch trending, top-rated, horror, comedy, thriller, adventure, action, drama, fantasy, romance, and mystery movies for free.">
     <meta property="twitter:image" content="https://freeflixx.pages.dev/assets/freeflixx.png">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://freeflixx.pages.dev/">
+    <link rel="canonical" href="https://freeflixx.pages.dev/movies/">
 
-    <link rel="stylesheet" href="index.css">
-    <link rel="icon" href="assets/freeflixx.ico">
-    <title>FreeFlixx - Stream Movies & TV Shows For Free</title>
+    <link rel="stylesheet" href="../index.css">
+    <link rel="icon" href="../assets/freeflixx.ico">
+    <title>FreeFlixx - Stream Movies For Free</title>
 </head>
 
 <body>
     <!-- Header container -->
     <header class="header">
-        <img src="assests/netflix.png" alt="logo" id="netflix-logo">
+        <img src="../assests/netflix.png" alt="logo" id="netflix-logo">
         <div class="input-container">
             <input type="text" id="searchInput" placeholder="Search movies...">
             <div id="searchResults"></div>
@@ -46,10 +46,10 @@
     <!-- Navigation Menu -->
     <nav class="nav-menu">
         <ul class="nav-list">
-            <li class="nav-item active"><a href="index.html" data-section="all">All</a></li>
-            <li class="nav-item"><a href="movies/index.html" data-section="movies">Movies</a></li>
-            <li class="nav-item"><a href="tvshows/index.html" data-section="tv">TV Shows</a></li>
-            <li class="nav-item"><a href="anime/index.html" data-section="anime">Anime</a></li>
+            <li class="nav-item"><a href="../index.html" data-section="all">All</a></li>
+            <li class="nav-item active"><a href="index.html" data-section="movies">Movies</a></li>
+            <li class="nav-item"><a href="../tvshows/index.html" data-section="tv">TV Shows</a></li>
+            <li class="nav-item"><a href="../anime/index.html" data-section="anime">Anime</a></li>
         </ul>
     </nav>
 
@@ -60,11 +60,11 @@
             <h1 id="banner-title"></h1>
             <div id="button-container">
                 <button id="play-button">
-                    <img style="width: 0.8rem; height: 0.8rem;" src="assests/play.png" />
+                    <img style="width: 0.8rem; height: 0.8rem;" src="../assests/play.png" />
                     <span>Play</span>
                 </button>
                 <button id="more-info">
-                    <img id="info-icon" src="assests/info.png" />
+                    <img id="info-icon" src="../assests/info.png" />
                     <span>More Information</span>
                 </button>
             </div>
@@ -79,27 +79,6 @@
 
     <!-- Main content container for sections -->
     <div class="sections-container" style="max-width: 1400px; margin: 0 auto; padding: 2rem 1rem;">
-        <!-- Netflix Originals container -->
-        <section class="movie-section tv-section" id="netflix-originals">
-            <h1>NETFLIX ORIGINALS</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous netflix-previous">&lt;</button>
-                <div class="movies-box netflix-container"></div>
-                <button class="navigation-button next netflix-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Popular on Disney+ container -->
-        <section class="movie-section tv-section" id="disney-popular">
-            <h1>Popular on Disney+</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous disney-previous">&lt;</button>
-                <div class="movies-box disney-container"></div>
-                <button class="navigation-button next disney-next">&gt;</button>
-            </div>
-        </section>
-
         <!-- Trending Movies container -->
         <section class="movie-section" id="trending-now">
             <h1>Trending Now</h1>
@@ -211,192 +190,6 @@
                 <button class="navigation-button next mystery-next">&gt;</button>
             </div>
         </section>
-        <!-- Drama TV Shows container -->
-        <section class="movie-section tv-section" id="drama-tv">
-            <h1>Drama TV Shows</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous drama-tv-previous">&lt;</button>
-                <div class="movies-box drama-tv-container"></div>
-                <button class="navigation-button next drama-tv-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Crime TV Shows container -->
-        <section class="movie-section tv-section" id="crime-tv">
-            <h1>Crime TV Shows</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous crime-tv-previous">&lt;</button>
-                <div class="movies-box crime-tv-container"></div>
-                <button class="navigation-button next crime-tv-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Comedy TV Shows container -->
-        <section class="movie-section tv-section" id="comedy-tv">
-            <h1>Comedy TV Shows</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous comedy-tv-previous">&lt;</button>
-                <div class="movies-box comedy-tv-container"></div>
-                <button class="navigation-button next comedy-tv-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Action & Adventure TV Shows container -->
-        <section class="movie-section" id="action-adventure-tv">
-            <h1>Action & Adventure TV Shows</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous actionadventure-previous">&lt;</button>
-                <div class="movies-box actionadventure-container"></div>
-                <button class="navigation-button next actionadventure-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Mystery TV Shows container -->
-        <section class="movie-section" id="mystery-tv">
-            <h1>Mystery TV Shows</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous mystery-previous">&lt;</button>
-                <div class="movies-box mystery-container"></div>
-                <button class="navigation-button next mystery-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Fantasy TV Shows container -->
-        <section class="movie-section" id="fantasy-tv">
-            <h1>Fantasy TV Shows</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous fantasy-previous">&lt;</button>
-                <div class="movies-box fantasy-container"></div>
-                <button class="navigation-button next fantasy-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Reality TV container -->
-        <section class="movie-section" id="reality-tv">
-            <h1>Reality TV</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous reality-previous">&lt;</button>
-                <div class="movies-box reality-container"></div>
-                <button class="navigation-button next reality-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- SciFi TV Shows container -->
-        <section class="movie-section tv-section" id="scifi-tv">
-            <h1>SciFi & Fantasy TV Shows</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous scifi-tv-previous">&lt;</button>
-                <div class="movies-box scifi-tv-container"></div>
-                <button class="navigation-button next scifi-tv-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Documentary TV Shows container -->
-        <section class="movie-section tv-section" id="documentary-tv">
-            <h1>Documentary TV Shows</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous documentary-tv-previous">&lt;</button>
-                <div class="movies-box documentary-tv-container"></div>
-                <button class="navigation-button next documentary-tv-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Latest Anime container -->
-        <section class="movie-section anime-section" id="anime-upcoming-new">
-            <h1>LATEST ANIME</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous anime-upcoming-new-previous">&lt;</button>
-                <div class="movies-box anime-upcoming-new-container"></div>
-                <button class="navigation-button next anime-upcoming-new-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Top Rated Anime Movies -->
-        <section class="movie-section anime-section" id="top-rated-anime-movies">
-            <h1>Top Rated Anime Movies</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous top-rated-anime-movie-previous">&lt;</button>
-                <div class="movies-box top-rated-anime-movie-container"></div>
-                <button class="navigation-button next top-rated-anime-movie-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Popular Anime container -->
-        <section class="movie-section anime-section" id="anime-popular">
-            <h1>Popular Anime</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous anime-popular-previous">&lt;</button>
-                <div class="movies-box anime-popular-container"></div>
-                <button class="navigation-button next anime-popular-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Top Rated Anime container -->
-        <section class="movie-section anime-section" id="anime-top-rated">
-            <h1>Top Rated Anime</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous anime-top-previous">&lt;</button>
-                <div class="movies-box anime-top-container"></div>
-                <button class="navigation-button next anime-top-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Ongoing Anime container -->
-        <section class="movie-section anime-section" id="anime-ongoing">
-            <h1>Ongoing Anime</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous anime-upcoming-previous">&lt;</button>
-                <div class="movies-box anime-upcoming-container"></div>
-                <button class="navigation-button next anime-upcoming-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Adventure Anime -->
-        <section class="movie-section anime-section" id="adventure-anime">
-            <h1>Adventure Anime</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous adventure-anime-previous">&lt;</button>
-                <div class="movies-box adventure-anime-container"></div>
-                <button class="navigation-button next adventure-anime-next">&gt;</button>
-            </div>
-        </section>
-        <!-- Drama Anime -->
-        <section class="movie-section anime-section" id="drama-anime">
-            <h1>Drama Anime</h1>
-            <div class="movie-container">
-                <button class="navigation-button previous drama-anime-previous">&lt;</button>
-                <div class="movies-box drama-anime-container"></div>
-                <button class="navigation-button next drama-anime-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Comedy Anime container -->
-        <section class="movie-section anime-section" id="anime-comedy">
-            <h1>Comedy Anime</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous anime-comedy-previous">&lt;</button>
-                <div class="movies-box anime-comedy-container"></div>
-                <button class="navigation-button next anime-comedy-next">&gt;</button>
-            </div>
-        </section>
-
-        <!-- Romance Anime container -->
-        <section class="movie-section anime-section" id="anime-romance">
-            <h1>Romance Anime</h1>
-
-            <div class="movie-container">
-                <button class="navigation-button previous anime-romance-previous">&lt;</button>
-                <div class="movies-box anime-romance-container"></div>
-                <button class="navigation-button next anime-romance-next">&gt;</button>
-            </div>
-        </section>
     </div>
 
     <!-- Back to top button -->
@@ -407,7 +200,7 @@
     </button>
 
     <!-- Load script at the end for better performance -->
-    <script src="index.js"></script>
+    <script src="movies.js"></script>
 </body>
 
 </html>
