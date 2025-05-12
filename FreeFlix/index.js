@@ -1008,9 +1008,21 @@ addBackToTopButton();
 
 // Navigation menu functionality
 navItems.forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (event) => {
         // Get the section to navigate to
-        const section = item.querySelector('a').getAttribute('data-section');
+        const link = item.querySelector('a');
+        const section = link.getAttribute('data-section');
+        const href = link.getAttribute('href');
+
+        // Check if we're already on this page - prevent navigation to avoid the error
+        const currentPath = window.location.pathname;
+        const onIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '';
+
+        // If clicking "All" while already on index page, prevent navigation
+        if (section === 'all' && onIndexPage) {
+            event.preventDefault();
+            return false;
+        }
 
         // Update URL based on selected section
         if (section === 'movies') {

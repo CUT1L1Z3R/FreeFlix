@@ -30,7 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Enhance navigation with error handling
         link.addEventListener('click', function(e) {
-            // Always ensure the link isn't broken
+            // Check if we're already on this page - prevent navigation to avoid the error
+            const isIndexPage = currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '';
+
+            // If we're already on the index page and clicking "All", prevent the navigation
+            if (href === 'index.html' && isIndexPage && section === 'all') {
+                e.preventDefault();
+                return false;
+            }
+
+            // Always ensure the link isn't broken for sub-pages
             if (href === 'index.html' && (currentPath === '/anime/' || currentPath === '/movies/' || currentPath === '/tvshows/')) {
                 e.preventDefault();
                 window.location.href = '../index.html';

@@ -51,49 +51,51 @@
         }, {passive: false});
 
         // Navigation fix for FreeFlixx website
-// This prevents the error when clicking on the "All" section twice
+        // This prevents the error when clicking on the "All" section twice
+        document.addEventListener('DOMContentLoaded', () => {
+            // Find all navigation links
+            const navLinks = document.querySelectorAll('nav a');
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Find all navigation links
-    const navLinks = document.querySelectorAll('nav a, header a, ul li a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // If we're already on the same page and it's the active link,
+                    // prevent the default navigation which causes the error
+                    const href = link.getAttribute('href');
+                    const section = link.getAttribute('data-section');
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            // If we're already on the same page and it's the active link,
-            // prevent the default navigation which causes the error
-            const href = link.getAttribute('href');
-
-            // Check if this is the currently active page
-            if (isActiveLink(link) && isCurrentPage(href)) {
-                e.preventDefault();
-                return false;
-            }
+                    // Special handling for "All" section on index page
+                    if (section === 'all' && isCurrentPage(href)) {
+                        console.log('Preventing navigation - already on index page');
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            });
         });
-    });
-});
 
-// Helper function to check if the link is marked as active
-function isActiveLink(link) {
-    return link.classList.contains('active') ||
-           link.parentElement.classList.contains('active');
-}
+        // Helper function to check if the link is marked as active
+        function isActiveLink(link) {
+            return link.classList.contains('active') ||
+                link.parentElement.classList.contains('active');
+        }
 
-// Helper function to check if we're already on the page the link points to
-function isCurrentPage(href) {
-    if (!href) return false;
+        // Helper function to check if we're already on the page the link points to
+        function isCurrentPage(href) {
+            if (!href) return false;
 
-    // Get the current path and filename
-    const currentPath = window.location.pathname;
-    const currentFilename = currentPath.split('/').pop() || 'index.html';
+            // Get the current path and filename
+            const currentPath = window.location.pathname;
+            const currentFilename = currentPath.split('/').pop() || 'index.html';
 
-    // Get the target filename
-    const targetFilename = href.split('/').pop();
+            // Get the target filename
+            const targetFilename = href.split('/').pop();
 
-    // Check if we're already on the page the link points to
-    return currentFilename === targetFilename ||
-           (currentFilename === '' && targetFilename === 'index.html') ||
-           (currentPath.endsWith('/') && targetFilename === 'index.html');
-}
+            // Check if we're already on the page the link points to
+            return currentFilename === targetFilename ||
+                (currentFilename === '' && targetFilename === 'index.html') ||
+                (currentPath.endsWith('/') && targetFilename === 'index.html') ||
+                (currentPath === '/' && targetFilename === 'index.html');
+        }
 
         // Touch end event
         bannerContainer.addEventListener('touchend', function(e) {

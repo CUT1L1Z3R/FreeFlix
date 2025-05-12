@@ -1,5 +1,5 @@
 // Service Worker for FreeFlixx
-const CACHE_VERSION = '1.0.1'; // Increment this when making changes
+const CACHE_VERSION = '1.0.2'; // Increment this when making changes
 const CACHE_NAME = 'freeflixx-cache-v' + CACHE_VERSION;
 const urlsToCache = [
   './',
@@ -13,7 +13,8 @@ const urlsToCache = [
   './assests/play.png',
   './assests/info.png',
   './custom-buttons.css',
-  './custom-navigation.js'
+  './custom-navigation.js',
+  './navigation-fix.js'
 ];
 
 // Install event - cache assets
@@ -35,6 +36,17 @@ self.addEventListener('install', event => {
 
 // Fetch event - serve from cache if available
 self.addEventListener('fetch', event => {
+  // Handle page navigation requests differently
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => {
+          return caches.match('./index.html');
+        })
+    );
+    return;
+  }
+
   // Don't cache API calls or skip cache for development
   const isApiCall = event.request.url.includes('api.themoviedb.org');
   const shouldSkipCache = event.request.url.includes('?v=') || isApiCall;
@@ -111,15 +123,17 @@ self.addEventListener('fetch', event => {
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
 
+  // Take control of all clients immediately
   event.waitUntil(
     caches.keys().then(cacheNames => {
-      return Promise.all(
+      return Promise.all([
         cacheNames.map(cacheName => {
           if (cacheWhitelist.indexOf(cacheName) === -1) {
             return caches.delete(cacheName);
           }
-        })
-      );
+        }),
+        self.clients.claim() // Take control of all clients
+      ]);
     })
   );
 });
