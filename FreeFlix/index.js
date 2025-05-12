@@ -353,7 +353,7 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
         let url = `https://api.themoviedb.org/3/${endpoint}`;
         if (url.includes('?')) {
             // Already has '?', so just append with '&'
-            url += `api_key=${api_Key}`;
+            url += `&api_key=${api_Key}`;
         } else {
             // No '?', so add it
             url += `?api_key=${api_Key}`;
@@ -483,20 +483,21 @@ function fetchAnime(containerClass, genreOrKeyword) {
     const containers = document.querySelectorAll(`.${containerClass}`);
 
     containers.forEach((container) => {
-        // Determine which TMDB endpoint to use based on the input
-        let endpoint = '';
+        // Build the base URL with the API key
+        const baseUrl = "https://api.themoviedb.org/3/";
+        let url = "";
 
         if (genreOrKeyword === 'popular') {
             // For popular anime, use discover with animation genre + anime keyword and sort by popularity
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'top_rated') {
             // For top rated anime, use discover with animation genre + anime keyword sorted by rating
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=vote_average.desc&vote_count.gte=100`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=vote_average.desc&vote_count.gte=100`;
         } else if (genreOrKeyword === 'upcoming') {
             // For ongoing anime (renamed from upcoming), use discover with recent and ongoing air dates
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.lte=${dateStr}&with_status=0&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'truly_upcoming') {
             // For truly upcoming anime, use discover with future air dates
             const today = new Date();
@@ -507,45 +508,45 @@ function fetchAnime(containerClass, genreOrKeyword) {
             const futureDateStr = futureDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
 
             // Get anime that will air after today but before 6 months from now
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`;
         } else if (genreOrKeyword === 'action') {
             // Action anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,28&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'romance') {
             // Romance anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,10749&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'comedy') {
             // Comedy anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,35&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'fantasy') {
             // Fantasy anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,14&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,14&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'sci_fi') {
             // Sci-Fi anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,878&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,878&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'movie') {
             // Anime movies: animation genre (16) + movie type
-            endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/movie?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'top_rated_anime_movies') {
             // Top rated anime movies
-            endpoint = `discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
+            url = `${baseUrl}discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
         } else if (genreOrKeyword === 'adventure') {
             // Adventure anime (update genre ID to 10759 for TV genre)
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,10758&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,10758&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'drama') {
             // Drama anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'sports') {
             // Sports anime (no direct sports TV genre; fallback to use keyword 210024 for anime, or another approach if available)
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024,sports&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024,sports&sort_by=popularity.desc`;
         } else {
             // Default endpoint for general anime
-            endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
         }
 
         // Fetch anime data from TMDB
-        console.log(`Fetching anime from TMDB with endpoint: https://api.themoviedb.org/3/${endpoint}`);
-        fetch(`https://api.themoviedb.org/3/${endpoint}`)
+        console.log(`Fetching anime from TMDB with endpoint: ${url}`);
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`TMDB API responded with status: ${response.status}`);
