@@ -1,22 +1,33 @@
 // Service Worker for FreeFlixx
 const CACHE_NAME = 'freeflixx-cache-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/index.css',
-  '/index.js',
-  '/manifest.json',
-  '/assets/freeflixx.ico',
-  '/assets/freeflixx.png',
+  './',
+  './index.html',
+  './index.css',
+  './index.js',
+  './manifest.json',
+  './assets/freeflixx.ico',
+  './assets/freeflixx.png',
+  './assests/netflix.png',
+  './assests/play.png',
+  './assests/info.png',
+  './custom-buttons.css',
+  './custom-navigation.js'
 ];
 
 // Install event - cache assets
 self.addEventListener('install', event => {
+  // Skip waiting to update service worker immediately
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
+      })
+      .catch(error => {
+        console.error('Failed to cache resources:', error);
       })
   );
 });
@@ -49,6 +60,17 @@ self.addEventListener('fetch', event => {
               });
 
             return response;
+          })
+          .catch(error => {
+            console.error('Fetch failed:', error);
+            // Return a custom offline page if it's a page request
+            if (event.request.mode === 'navigate') {
+              return caches.match('./index.html');
+            }
+            return new Response('Network error happened', {
+              status: 408,
+              headers: { 'Content-Type': 'text/plain' },
+            });
           });
       })
   );
