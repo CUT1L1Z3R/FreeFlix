@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/assets/*",
+    "/assests/*",
+    "/*.css",
+    "/*.js",
+    "/*.png",
+    "/*.jpg",
+    "/*.ico",
+    "/*.xml",
+    "/*.webmanifest",
+    "/*.json"
+  ],
+  "routes": [
+    { "src": "/index.html", "dest": "/index.html" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/movies/index.html", "dest": "/movies/index.html" },
+    { "src": "/tvshows/index.html", "dest": "/tvshows/index.html" },
+    { "src": "/anime/index.html", "dest": "/anime/index.html" },
+    { "src": "/*", "dest": "/index.html" }
+  ]
+}
