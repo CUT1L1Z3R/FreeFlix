@@ -471,6 +471,40 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
 // Set up scroll distance
 const scrollDistance = 1200;
 
+// Fix for navigation buttons in all containers
+function fixNavigationButtons() {
+    const allPrevButtons = document.querySelectorAll('.navigation-button.previous');
+    const allNextButtons = document.querySelectorAll('.navigation-button.next');
+
+    // Make sure all navigation buttons work by directly adding event listeners
+    allPrevButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const container = this.nextElementSibling;
+            if (container && container.classList.contains('movies-box')) {
+                container.scrollBy({
+                    left: -scrollDistance,
+                    behavior: 'smooth',
+                });
+            }
+        });
+    });
+
+    allNextButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const container = this.previousElementSibling;
+            if (container && container.classList.contains('movies-box')) {
+                container.scrollBy({
+                    left: scrollDistance,
+                    behavior: 'smooth',
+                });
+            }
+        });
+    });
+}
+
+// Call the fix function when DOM is loaded
+document.addEventListener('DOMContentLoaded', fixNavigationButtons);
+
 // Get references to the header and other elements
 // (header and navMenu are now defined below for scroll behavior)
 

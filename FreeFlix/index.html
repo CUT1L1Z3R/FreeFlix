@@ -500,25 +500,7 @@
             }, 300);
         };
 
-        // Create refresh button
-        const refreshButton = document.createElement('button');
-        refreshButton.id = 'refresh-content-btn';
-        refreshButton.innerHTML = '🔄 Refresh';
-        refreshButton.style.position = 'fixed';
-        refreshButton.style.bottom = '10px';
-        refreshButton.style.right = '10px';
-        refreshButton.style.zIndex = '9999';
-        refreshButton.style.padding = '8px 15px';
-        refreshButton.style.backgroundColor = '#8d16c9';
-        refreshButton.style.color = 'white';
-        refreshButton.style.border = 'none';
-        refreshButton.style.borderRadius = '4px';
-        refreshButton.style.cursor = 'pointer';
-        refreshButton.style.fontWeight = 'bold';
-        refreshButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
-        refreshButton.onclick = window.refreshContent;
-
-        document.body.appendChild(refreshButton);
+        // Refresh button has been removed as requested
     })();
     </script>
 </body>
