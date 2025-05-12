@@ -976,7 +976,7 @@ navItems.forEach(item => {
         } else if (section === 'anime') {
             window.location.href = 'anime/index.html';
         } else if (section === 'all') {
-            window.location.href = 'index.html';
+            window.location.href = 'freeflix.pages.dev';
         }
     });
 });
