@@ -1,5 +1,6 @@
 // Service Worker for FreeFlixx
-const CACHE_NAME = 'freeflixx-cache-v1';
+const CACHE_VERSION = '1.0.1'; // Increment this when making changes
+const CACHE_NAME = 'freeflixx-cache-v' + CACHE_VERSION;
 const urlsToCache = [
   './',
   './index.html',
@@ -34,10 +35,40 @@ self.addEventListener('install', event => {
 
 // Fetch event - serve from cache if available
 self.addEventListener('fetch', event => {
+  // Don't cache API calls or skip cache for development
+  const isApiCall = event.request.url.includes('api.themoviedb.org');
+  const shouldSkipCache = event.request.url.includes('?v=') || isApiCall;
+
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Return the cached response if found
+        // For API calls or versioned resources, always go to network first
+        if (shouldSkipCache) {
+          return fetch(event.request)
+            .then(networkResponse => {
+              // Only cache if it's not an API call
+              if (!isApiCall && networkResponse && networkResponse.status === 200) {
+                const responseToCache = networkResponse.clone();
+                caches.open(CACHE_NAME).then(cache => {
+                  cache.put(event.request, responseToCache);
+                });
+              }
+              return networkResponse;
+            })
+            .catch(error => {
+              console.error('API fetch failed:', error);
+              // If we have a cached response, return it as fallback
+              if (response) return response;
+
+              // Otherwise return an error
+              return new Response('Network error happened', {
+                status: 408,
+                headers: { 'Content-Type': 'text/plain' },
+              });
+            });
+        }
+
+        // Return the cached response if found for non-API calls
         if (response) {
           return response;
         }

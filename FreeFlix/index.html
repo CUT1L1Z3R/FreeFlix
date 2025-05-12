@@ -71,8 +71,8 @@
     <meta name="apple-mobile-web-app-title" content="FreeFlixx">
     <link rel="apple-touch-icon" href="./assets/freeflixx.png">
 
-    <link rel="stylesheet" href="./index.css">
-    <link rel="stylesheet" href="./custom-buttons.css">
+    <link rel="stylesheet" href="./index.css?v=1.0.1">
+    <link rel="stylesheet" href="./custom-buttons.css?v=1.0.1">
     <link rel="icon" href="./assets/freeflixx.ico">
     <title>FreeFlixx - Stream Movies & TV Shows For Free | No Subscription Needed</title>
 </head>
@@ -452,8 +452,75 @@
     </button>
 
     <!-- Load script at the end for better performance -->
-    <script src="./custom-navigation.js"></script>
-    <script src="./index.js"></script>
+    <script src="./custom-navigation.js?v=1.0.1"></script>
+    <script src="./index.js?v=1.0.1"></script>
+
+    <script>
+    // Force reload of resources when a new version is deployed
+    (function() {
+        const lastUpdate = localStorage.getItem('lastUpdate');
+        const currentVersion = '1.0.1'; // Update this when making changes
+
+        if (lastUpdate !== currentVersion) {
+            localStorage.setItem('lastUpdate', currentVersion);
+            // Optional: If you want a hard refresh when your version changes
+            if (lastUpdate) {
+                window.location.reload(true);
+            }
+        }
+
+        // Add this function to manually refresh assets
+        window.refreshContent = function() {
+            console.log('Refreshing content and clearing cache...');
+            const timestamp = new Date().getTime();
+            const scripts = document.querySelectorAll('script[src]');
+            const styles = document.querySelectorAll('link[rel="stylesheet"]');
+
+            // Update script sources with timestamp
+            scripts.forEach(script => {
+                if (script.src.includes('?v=')) {
+                    script.src = script.src.split('?v=')[0] + '?v=' + timestamp;
+                } else if (!script.src.includes('?')) {
+                    script.src = script.src + '?v=' + timestamp;
+                }
+            });
+
+            // Update stylesheet links with timestamp
+            styles.forEach(style => {
+                if (style.href.includes('?v=')) {
+                    style.href = style.href.split('?v=')[0] + '?v=' + timestamp;
+                } else if (!style.href.includes('?')) {
+                    style.href = style.href + '?v=' + timestamp;
+                }
+            });
+
+            // Force reload the application JS
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 300);
+        };
+
+        // Create refresh button
+        const refreshButton = document.createElement('button');
+        refreshButton.id = 'refresh-content-btn';
+        refreshButton.innerHTML = '🔄 Refresh';
+        refreshButton.style.position = 'fixed';
+        refreshButton.style.bottom = '10px';
+        refreshButton.style.right = '10px';
+        refreshButton.style.zIndex = '9999';
+        refreshButton.style.padding = '8px 15px';
+        refreshButton.style.backgroundColor = '#8d16c9';
+        refreshButton.style.color = 'white';
+        refreshButton.style.border = 'none';
+        refreshButton.style.borderRadius = '4px';
+        refreshButton.style.cursor = 'pointer';
+        refreshButton.style.fontWeight = 'bold';
+        refreshButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
+        refreshButton.onclick = window.refreshContent;
+
+        document.body.appendChild(refreshButton);
+    })();
+    </script>
 </body>
 
 </html>

@@ -532,7 +532,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
             url = `${baseUrl}discover/movie?api_key=${api_Key}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100`;
         } else if (genreOrKeyword === 'adventure') {
             // Adventure anime (update genre ID to 10759 for TV genre)
-            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,10759&with_keywords=210024&sort_by=popularity.desc`;
+            url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,10758&with_keywords=210024&sort_by=popularity.desc`;
         } else if (genreOrKeyword === 'drama') {
             // Drama anime
             url = `${baseUrl}discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
