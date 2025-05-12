@@ -468,14 +468,6 @@
                 window.location.reload(true);
             }
         }
-
-        // Add this function to manually refresh assets
-        window.refreshContent = function() {
-            console.log('Refreshing content and clearing cache...');
-            const timestamp = new Date().getTime();
-            const scripts = document.querySelectorAll('script[src]');
-            const styles = document.querySelectorAll('link[rel="stylesheet"]');
-
             // Update script sources with timestamp
             scripts.forEach(script => {
                 if (script.src.includes('?v=')) {
