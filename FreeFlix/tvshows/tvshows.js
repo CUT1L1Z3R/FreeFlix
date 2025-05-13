@@ -364,6 +364,22 @@ function showBannerAtIndex(index) {
 
         // Update the banner image to have better display
         bannerElement.style.objectFit = 'cover';
+
+        // Add click event listeners to the play and more info buttons
+        const playButton = document.getElementById('play-button');
+        const moreInfoButton = document.getElementById('more-info');
+
+        if (playButton) {
+            playButton.onclick = () => {
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
+            };
+        }
+
+        if (moreInfoButton) {
+            moreInfoButton.onclick = () => {
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
+            };
+        }
     }
 }
 
