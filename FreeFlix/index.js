@@ -473,14 +473,20 @@ const scrollDistance = 1200;
 
 // Fix for navigation buttons in all containers
 function fixNavigationButtons() {
+    const scrollDistance = 800; // Amount to scroll on each button click
     const allPrevButtons = document.querySelectorAll('.navigation-button.previous');
     const allNextButtons = document.querySelectorAll('.navigation-button.next');
 
     // Make sure all navigation buttons work by directly adding event listeners
     allPrevButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const container = this.nextElementSibling;
-            if (container && container.classList.contains('movies-box')) {
+            // Try to find the correct container for both movies and TV/anime sections
+            let container = this.nextElementSibling;
+            // If not found, try to find the next sibling with class 'movies-box' or 'anime-box' or 'tv-box'
+            while (container && !(container.classList.contains('movies-box') || container.classList.contains('anime-box') || container.classList.contains('tv-box'))) {
+                container = container.nextElementSibling;
+            }
+            if (container && (container.classList.contains('movies-box') || container.classList.contains('anime-box') || container.classList.contains('tv-box'))) {
                 container.scrollBy({
                     left: -scrollDistance,
                     behavior: 'smooth',
@@ -491,8 +497,13 @@ function fixNavigationButtons() {
 
     allNextButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const container = this.previousElementSibling;
-            if (container && container.classList.contains('movies-box')) {
+            // Try to find the correct container for both movies and TV/anime sections
+            let container = this.previousElementSibling;
+            // If not found, try to find the previous sibling with class 'movies-box' or 'anime-box' or 'tv-box'
+            while (container && !(container.classList.contains('movies-box') || container.classList.contains('anime-box') || container.classList.contains('tv-box'))) {
+                container = container.previousElementSibling;
+            }
+            if (container && (container.classList.contains('movies-box') || container.classList.contains('anime-box') || container.classList.contains('tv-box'))) {
                 container.scrollBy({
                     left: scrollDistance,
                     behavior: 'smooth',

@@ -445,8 +445,28 @@ function loadContent() {
         const netflixContainer = document.querySelector('.netflix-container');
 
         if (netflixPrevBtn && netflixNextBtn) {
+            // Set the correct height for Netflix navigation buttons
             netflixPrevBtn.style.height = '340px';
             netflixNextBtn.style.height = '340px';
+            // Add click event listeners to ensure they work properly
+            netflixPrevBtn.addEventListener('click', function() {
+                const container = document.querySelector('.netflix-container');
+                if (container) {
+                    container.scrollBy({
+                        left: -800,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+            netflixNextBtn.addEventListener('click', function() {
+                const container = document.querySelector('.netflix-container');
+                if (container) {
+                    container.scrollBy({
+                        left: 800,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         }
 
         if (netflixContainer) {
