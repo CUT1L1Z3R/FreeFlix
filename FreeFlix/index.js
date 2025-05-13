@@ -1161,30 +1161,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, Math.random() * 500); // Longer random delay for initial load
     });
 
-    // Make sure navigation is properly initialized when page loads
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        // Force reset any active states to ensure consistency
-        item.classList.remove('active');
-
-        const link = item.querySelector('a');
-        const section = link.getAttribute('data-section');
-        const currentPath = window.location.pathname;
-
-        // Set active class based on current path
-        if (currentPath === '/' || currentPath.endsWith('/index.html') || currentPath === '') {
-            if (section === 'all') {
-                item.classList.add('active');
-            }
-        } else if (currentPath.includes('/movies/') && section === 'movies') {
-            item.classList.add('active');
-        } else if (currentPath.includes('/tvshows/') && section === 'tv') {
-            item.classList.add('active');
-        } else if (currentPath.includes('/anime/') && section === 'anime') {
-            item.classList.add('active');
-        }
-    });
-
     // Update the banner based on the active section
     const activeNavItem = document.querySelector('.nav-item.active');
     if (activeNavItem) {

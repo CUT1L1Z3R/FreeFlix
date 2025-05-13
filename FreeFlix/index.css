@@ -82,20 +82,7 @@ body {
 .nav-item.active {
   background-color: rgb(141, 22, 201);
   border-radius: 8px;
-  animation: pulse-purple 1s cubic-bezier(0.4, 0, 0.6, 1);
-  position: relative;
-  overflow: visible;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(141, 22, 201, 0.5);
-  transition: all 0.3s ease;
-}
-
-/* Ensures the active indicator stays visible */
-.nav-item.active::before {
-  width: 90% !important;
-  background: #ffffff !important;
-  height: 3px !important;
-  opacity: 0.9;
+  animation: pulse-purple 0.5s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
 @keyframes pulse-purple {
@@ -119,19 +106,11 @@ body {
 
 .nav-item:hover {
   background-color: rgba(141, 22, 201, 0.3);
-  transform: translateY(-2px);
-  transition: all 0.3s ease;
 }
 
 .nav-item.active a {
   color: white;
   font-weight: bold;
-}
-
-/* Add a touch feedback effect */
-.nav-item.nav-touch {
-  transform: scale(0.95);
-  background-color: rgba(141, 22, 201, 0.5);
 }
 
 /* Logo styles */
@@ -1060,8 +1039,8 @@ input::-webkit-input-placeholder {
   .movies-box {
     gap: 15px;
     min-height: 160px;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 0;
+    padding-right: 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
     overflow-x: auto;
