@@ -1,7 +1,7 @@
 {
-  "name": "FreeFlixx - Stream Movies & TV Shows For Free",
-  "short_name": "FreeFlixx",
-  "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlixx",
+  "name": "FreeFlix - Stream Movies & TV Shows For Free",
+  "short_name": "FreeFlix",
+  "description": "Stream Your Favorite Movies And TV Shows For Free on FreeFlix",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#000000",
