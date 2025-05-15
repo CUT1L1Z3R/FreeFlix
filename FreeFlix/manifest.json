@@ -1,6 +1,6 @@
 {
-  "name": "FreeFlixx - Free Movie Streaming Platform",
-  "short_name": "FreeFlixx",
+  "name": "FreeFlix - Free Movie Streaming Platform",
+  "short_name": "FreeFlix",
   "description": "Stream thousands of free movies, TV shows, and anime with no subscription required. The #1 free streaming platform online.",
   "start_url": "/?source=pwa",
   "display": "standalone",
