@@ -1,11 +1,26 @@
 User-agent: *
 Allow: /
+
+# Allow all bots to index important pages
+Allow: /index.html
+Allow: /movies/
+Allow: /tvshows/
+Allow: /anime/
+Allow: /watchList/
+Allow: /movie_details/
+Allow: /free-movie-streaming.html
+Allow: /sitemap.html
+Allow: /sitemap.xml
+Allow: /sitemap-index.xml
+
+# Block crawling of non-content files
 Disallow: /*.js$
 Disallow: /*.css$
+Disallow: /*.json$
+Disallow: /*backup*
+Disallow: /*bak*
 Disallow: /*?*
-Disallow: /*.backup$
-Disallow: /*.bak$
 
+# Sitemaps
 Sitemap: https://freeflix.top/sitemap.xml
-Sitemap: https://freeflix.top/sitemap-index.xml
 Sitemap: https://freeflix.top/sitemap-index.xml
