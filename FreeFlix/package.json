@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "bunx --bun serve -p 3000 --cors -s .",
     "start": "npx http-server -a 0.0.0.0 -p 3000 -c-1",
-    "build": "mkdir -p dist && cp -r ./* ./dist/ && rm -rf ./dist/dist"
+    "build": "echo 'Static site, no build step needed'"
   },
   "author": "",
   "license": "ISC",
