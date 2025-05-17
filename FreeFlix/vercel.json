@@ -3,30 +3,37 @@
   "buildCommand": "echo 'Static site, no build step needed'",
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/movies", "destination": "/movies/index.html" },
-    { "source": "/movies/", "destination": "/movies/index.html" },
-    { "source": "/tvshows", "destination": "/tvshows/index.html" },
-    { "source": "/tvshows/", "destination": "/tvshows/index.html" },
-    { "source": "/anime", "destination": "/anime/index.html" },
-    { "source": "/anime/", "destination": "/anime/index.html" },
-    { "source": "/movie_details", "destination": "/movie_details/movie_details.html" },
-    { "source": "/movie_details/", "destination": "/movie_details/movie_details.html" },
-    { "source": "/watchList", "destination": "/watchList/watchlist.html" },
-    { "source": "/watchList/", "destination": "/watchList/watchlist.html" },
+    { "source": "/movies", "destination": "/movies/" },
+    { "source": "/tvshows", "destination": "/tvshows/" },
+    { "source": "/anime", "destination": "/anime/" },
+    { "source": "/watchList", "destination": "/watchList/" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/sitemap-index.xml", "destination": "/sitemap-index.xml" },
     { "source": "/movies-sitemap.xml", "destination": "/movies-sitemap.xml" },
     { "source": "/tvshows-sitemap.xml", "destination": "/tvshows-sitemap.xml" },
     { "source": "/anime-sitemap.xml", "destination": "/anime-sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/robots.txt" },
-    { "source": "/404.html", "destination": "/404.html" },
-    { "source": "/:path(.*)", "destination": "/404.html" }
+    { "source": "/robots.txt", "destination": "/robots.txt" }
   ],
   "redirects": [
     { "source": "/index.php", "destination": "/", "permanent": true },
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/browse", "destination": "/", "permanent": true }
+  ],
+  "routes": [
+    { "src": "/index.html", "dest": "/index.html" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/movies", "dest": "/movies/index.html" },
+    { "src": "/movies/", "dest": "/movies/index.html" },
+    { "src": "/tvshows", "dest": "/tvshows/index.html" },
+    { "src": "/tvshows/", "dest": "/tvshows/index.html" },
+    { "src": "/anime", "dest": "/anime/index.html" },
+    { "src": "/anime/", "dest": "/anime/index.html" },
+    { "src": "/movie_details", "dest": "/movie_details/movie_details.html" },
+    { "src": "/movie_details/", "dest": "/movie_details/movie_details.html" },
+    { "src": "/watchList", "dest": "/watchList/watchlist.html" },
+    { "src": "/watchList/", "dest": "/watchList/watchlist.html" },
+    { "src": "/404.html", "dest": "/404.html" },
+    { "src": "/:path*", "status": 404, "dest": "/404.html" }
   ],
   "headers": [
     {
@@ -73,7 +80,7 @@
       ]
     },
     {
-      "source": "/:path(.+)\\.js",
+      "source": "/:path*.js",
       "headers": [
         {
           "key": "Cache-Control",
@@ -82,7 +89,7 @@
       ]
     },
     {
-      "source": "/:path(.+)\\.css",
+      "source": "/:path*.css",
       "headers": [
         {
           "key": "Cache-Control",
@@ -117,7 +124,7 @@
       ]
     },
     {
-      "source": "/:file(.+)-sitemap.xml",
+      "source": "/*-sitemap.xml",
       "headers": [
         {
           "key": "Content-Type",

@@ -1,26 +1,57 @@
 User-agent: *
 Allow: /
-
-# Allow all bots to index important pages
 Allow: /index.html
 Allow: /movies/
 Allow: /tvshows/
 Allow: /anime/
-Allow: /watchList/
 Allow: /movie_details/
-Allow: /free-movie-streaming.html
+Allow: /watchList/
 Allow: /sitemap.html
+Allow: /free-movie-streaming.html
 Allow: /sitemap.xml
 Allow: /sitemap-index.xml
+Allow: /movies-sitemap.xml
+Allow: /tvshows-sitemap.xml
+Allow: /anime-sitemap.xml
+Allow: /genres.html
+Allow: /google-sitemap.xml
+Allow: /google-structured-data.json
+Allow: /assets/
+Allow: /assests/
 
-# Block crawling of non-content files
-Disallow: /*.js$
-Disallow: /*.css$
+# Prevent duplicate content issues
+Disallow: /index.php
+Disallow: */index.html$
+Disallow: */index.php$
+
+# Prevent search engines from indexing temporary files
+Disallow: /*.bak$
+Disallow: /*.tmp$
 Disallow: /*.json$
-Disallow: /*backup*
-Disallow: /*bak*
-Disallow: /*?*
 
-# Sitemaps
+# Allow important files
+Allow: /manifest.json
+Allow: /site.webmanifest
+Allow: /browserconfig.xml
+
+# Special directives for specific bots
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /assets/
+Allow: /assests/
+
+User-agent: Bingbot
+Allow: /
+
+# Set crawl delay for bots to prevent server overload
+Crawl-delay: 1
+
+# Sitemap links
 Sitemap: https://freeflix.top/sitemap.xml
 Sitemap: https://freeflix.top/sitemap-index.xml
+Sitemap: https://freeflix.top/movies-sitemap.xml
+Sitemap: https://freeflix.top/tvshows-sitemap.xml
+Sitemap: https://freeflix.top/anime-sitemap.xml
+Sitemap: https://freeflix.top/google-sitemap.xml
