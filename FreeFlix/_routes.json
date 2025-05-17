@@ -4,14 +4,14 @@
   "exclude": [
     "/assets/*",
     "/assests/*",
-    "/*.css",
-    "/*.js",
-    "/*.png",
-    "/*.jpg",
-    "/*.ico",
-    "/*.xml",
-    "/*.webmanifest",
-    "/*.json"
+    "/**/*.css",
+    "/**/*.js",
+    "/**/*.png",
+    "/**/*.jpg",
+    "/**/*.ico",
+    "/**/*.xml",
+    "/**/*.webmanifest",
+    "/**/*.json"
   ],
   "routes": [
     { "src": "/index.html", "dest": "/index.html" },
@@ -30,6 +30,6 @@
     { "src": "/watchList", "dest": "/watchList/watchlist.html" },
     { "src": "/watchList/", "dest": "/watchList/watchlist.html" },
     { "src": "/404.html", "dest": "/404.html" },
-    { "src": "/*", "status": 404, "dest": "/404.html" }
+    { "src": "/:path*", "status": 404, "dest": "/404.html" }
   ]
 }
