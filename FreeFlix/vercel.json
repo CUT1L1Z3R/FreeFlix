@@ -1,4 +1,7 @@
 {
+  "version": 2,
+  "buildCommand": "echo 'Static site, no build step needed'",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/movies", "destination": "/movies/" },
     { "source": "/tvshows", "destination": "/tvshows/" },
@@ -15,6 +18,22 @@
     { "source": "/index.php", "destination": "/", "permanent": true },
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/browse", "destination": "/", "permanent": true }
+  ],
+  "routes": [
+    { "src": "/index.html", "dest": "/index.html" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/movies", "dest": "/movies/index.html" },
+    { "src": "/movies/", "dest": "/movies/index.html" },
+    { "src": "/tvshows", "dest": "/tvshows/index.html" },
+    { "src": "/tvshows/", "dest": "/tvshows/index.html" },
+    { "src": "/anime", "dest": "/anime/index.html" },
+    { "src": "/anime/", "dest": "/anime/index.html" },
+    { "src": "/movie_details", "dest": "/movie_details/movie_details.html" },
+    { "src": "/movie_details/", "dest": "/movie_details/movie_details.html" },
+    { "src": "/watchList", "dest": "/watchList/watchlist.html" },
+    { "src": "/watchList/", "dest": "/watchList/watchlist.html" },
+    { "src": "/404.html", "dest": "/404.html" },
+    { "src": "/:path*", "status": 404, "dest": "/404.html" }
   ],
   "headers": [
     {
@@ -44,6 +63,15 @@
     },
     {
       "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assests/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
