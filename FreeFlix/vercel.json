@@ -21,7 +21,7 @@
     { "source": "/anime-sitemap.xml", "destination": "/anime-sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
     { "source": "/404.html", "destination": "/404.html" },
-    { "source": "/:path*", "destination": "/404.html", "statusCode": 404 }
+    { "source": "/:path(.*)", "destination": "/404.html" }
   ],
   "redirects": [
     { "source": "/index.php", "destination": "/", "permanent": true },
@@ -73,7 +73,7 @@
       ]
     },
     {
-      "source": "/:path*.js",
+      "source": "/:path(.+)\\.js",
       "headers": [
         {
           "key": "Cache-Control",
@@ -82,7 +82,7 @@
       ]
     },
     {
-      "source": "/:path*.css",
+      "source": "/:path(.+)\\.css",
       "headers": [
         {
           "key": "Cache-Control",
@@ -117,7 +117,7 @@
       ]
     },
     {
-      "source": "/*-sitemap.xml",
+      "source": "/:file(.+)-sitemap.xml",
       "headers": [
         {
           "key": "Content-Type",
