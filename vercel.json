@@ -1,15 +1,27 @@
 {
+  "version": 2,
+  "buildCommand": "echo 'Static site, no build step needed'",
+  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/movies", "destination": "/movies/" },
-    { "source": "/tvshows", "destination": "/tvshows/" },
-    { "source": "/anime", "destination": "/anime/" },
-    { "source": "/watchList", "destination": "/watchList/" },
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/movies", "destination": "/movies/index.html" },
+    { "source": "/movies/", "destination": "/movies/index.html" },
+    { "source": "/tvshows", "destination": "/tvshows/index.html" },
+    { "source": "/tvshows/", "destination": "/tvshows/index.html" },
+    { "source": "/anime", "destination": "/anime/index.html" },
+    { "source": "/anime/", "destination": "/anime/index.html" },
+    { "source": "/movie_details", "destination": "/movie_details/movie_details.html" },
+    { "source": "/movie_details/", "destination": "/movie_details/movie_details.html" },
+    { "source": "/watchList", "destination": "/watchList/watchlist.html" },
+    { "source": "/watchList/", "destination": "/watchList/watchlist.html" },
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/sitemap-index.xml", "destination": "/sitemap-index.xml" },
     { "source": "/movies-sitemap.xml", "destination": "/movies-sitemap.xml" },
     { "source": "/tvshows-sitemap.xml", "destination": "/tvshows-sitemap.xml" },
     { "source": "/anime-sitemap.xml", "destination": "/anime-sitemap.xml" },
-    { "source": "/robots.txt", "destination": "/robots.txt" }
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/404.html", "destination": "/404.html" },
+    { "source": "/:path(.*)", "destination": "/404.html" }
   ],
   "redirects": [
     { "source": "/index.php", "destination": "/", "permanent": true },
@@ -52,7 +64,7 @@
       ]
     },
     {
-      "source": "/:path*.js",
+      "source": "/assests/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -61,7 +73,16 @@
       ]
     },
     {
-      "source": "/:path*.css",
+      "source": "/:path(.+)\\.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/:path(.+)\\.css",
       "headers": [
         {
           "key": "Cache-Control",
@@ -96,7 +117,7 @@
       ]
     },
     {
-      "source": "/*-sitemap.xml",
+      "source": "/:file(.+)-sitemap.xml",
       "headers": [
         {
           "key": "Content-Type",
