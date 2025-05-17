@@ -4,22 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="Watch the latest anime series and movies for free on FreeFlixx. Stream popular, top-rated, adventure, drama, comedy, romance, and upcoming anime without subscription or ads.">
-    <meta name="keywords" content="free anime, streaming, FreeFlixx, watch online, entertainment, free streaming, anime streaming, latest anime, popular anime, adventure anime, drama anime, comedy anime">
+    <meta name="description" content="Watch the latest anime series and movies for free on FreeFlix. Stream popular, top-rated, adventure, drama, comedy, romance, and upcoming anime without subscription or ads.">
+    <meta name="keywords" content="free anime, streaming, FreeFlix, watch online, entertainment, free streaming, anime streaming, latest anime, popular anime, adventure anime, drama anime, comedy anime">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freeflix.top/anime/">
-    <meta property="og:title" content="FreeFlixx - Stream Anime For Free">
+    <meta property="og:title" content="FreeFlix - Stream Anime For Free">
     <meta property="og:description" content="Watch the latest anime series and movies including popular, top-rated, adventure, drama, comedy shows for free.">
-    <meta property="og:image" content="https://freeflix.top/assets/freeflixx.png">
+    <meta property="og:image" content="https://freeflix.top/assets/freeflix.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://freeflix.top/anime/">
-    <meta property="twitter:title" content="FreeFlixx - Stream Anime For Free">
+    <meta property="twitter:title" content="FreeFlix - Stream Anime For Free">
     <meta property="twitter:description" content="Watch the latest anime series and movies including popular, top-rated, adventure, drama, comedy shows for free.">
-    <meta property="twitter:image" content="https://freeflix.top/assets/freeflixx.png">
+    <meta property="twitter:image" content="https://freeflix.top/assets/freeflix.png">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="https://freeflix.top/anime/">
@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="../index.css">
     <link rel="stylesheet" href="../custom-buttons.css">
     <link rel="stylesheet" href="section-fix.css">
-    <link rel="icon" href="../assets/freeflixx.ico">
+    <link rel="icon" href="../assets/freeflix.ico">
     <title>FreeFlix - Stream Anime For Free</title>
     <link rel="stylesheet" href="../custom-buttons.css">
     <link rel="stylesheet" href="section-fix.css">
@@ -38,7 +38,7 @@
 <body>
     <!-- Header container -->
     <header class="header">
-        <img src="../assests/netflix.png" alt="logo" id="netflix-logo">
+        <img src="/assets/freeflix.png" alt="FreeFlix logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
         <div class="input-container">
             <input type="text" id="searchInput" placeholder="Search anime...">
             <div id="searchResults"></div>
@@ -53,6 +53,35 @@
             <li class="nav-item"><a href="../movies/index.html" data-section="movies">Movies</a></li>
             <li class="nav-item"><a href="../tvshows/index.html" data-section="tv">TV Shows</a></li>
             <li class="nav-item active"><a href="index.html" data-section="anime">Anime</a></li>
+            <li class="nav-item dropdown">
+                <a href="javascript:void(0)" data-section="genres">Genres</a>
+                <div class="dropdown-content">
+                    <div class="dropdown-column">
+                        <h3>Movies</h3>
+                        <a href="../movies/index.html?genre=action">Action</a>
+                        <a href="../movies/index.html?genre=comedy">Comedy</a>
+                        <a href="../movies/index.html?genre=horror">Horror</a>
+                        <a href="../movies/index.html?genre=thriller">Thriller</a>
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>TV Shows</h3>
+                        <a href="../tvshows/index.html?genre=drama">Drama</a>
+                        <a href="../tvshows/index.html?genre=comedy">Comedy</a>
+                        <a href="../tvshows/index.html?genre=crime">Crime</a>
+                        <a href="../tvshows/index.html?genre=mystery">Mystery</a>
+                    </div>
+                    <div class="dropdown-column">
+                        <h3>Anime</h3>
+                        <a href="index.html?genre=action">Action</a>
+                        <a href="index.html?genre=adventure">Adventure</a>
+                        <a href="index.html?genre=fantasy">Fantasy</a>
+                        <a href="index.html?genre=romance">Romance</a>
+                    </div>
+                    <div class="dropdown-footer">
+
+                    </div>
+                </div>
+            </li>
         </ul>
     </nav>
 
@@ -63,11 +92,11 @@
             <h1 id="banner-title"></h1>
             <div id="button-container">
                 <button id="play-button">
-                    <img style="width: 0.8rem; height: 0.8rem;" src="../assests/play.png" />
+                    <img style="width: 0.8rem; height: 0.8rem;" src="/assets/play.png" alt="Play button" width="13" height="13" loading="lazy" />
                     <span>Play</span>
                 </button>
                 <button id="more-info">
-                    <img id="info-icon" src="../assests/info.png" />
+                    <img id="info-icon" src="/assets/info.png" alt="Info button" width="13" height="13" loading="lazy" />
                     <span>More Information</span>
                 </button>
             </div>
@@ -194,7 +223,7 @@
                 <a href="../movies/index.html" style="color: #999; text-decoration: none; margin: 0 10px;">Movies</a>
                 <a href="../tvshows/index.html" style="color: #999; text-decoration: none; margin: 0 10px;">TV Shows</a>
                 <a href="../anime/index.html" style="color: #999; text-decoration: none; margin: 0 10px;">Anime</a>
-                <a href="../genres.html" style="color: #999; text-decoration: none; margin: 0 10px;">Genres</a>
+
                 <a href="../free-movie-streaming.html" style="color: #999; text-decoration: none; margin: 0 10px;">Free Movie Streaming</a>
                 <a href="../sitemap.html" style="color: #999; text-decoration: none; margin: 0 10px;">Sitemap</a>
             </div>
@@ -203,6 +232,7 @@
     </footer>
     <!-- Load script at the end for better performance -->
     <script src="../navigation-fix.js?v=1.0.1"></script>
+    <script src="../custom-navigation.js?v=1.0.1"></script>
     <script src="anime.js"></script>
 </body>
 </html>

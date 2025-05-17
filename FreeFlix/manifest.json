@@ -10,18 +10,18 @@
   "categories": ["entertainment", "video", "streaming", "movies", "tv"],
   "icons": [
     {
-      "src": "./assets/freeflixx.ico",
+      "src": "/assets/freeflix.ico",
       "sizes": "64x64",
       "type": "image/x-icon"
     },
     {
-      "src": "./assets/freeflixx.png",
+      "src": "/assets/freeflix.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./assets/freeflixx.png",
+      "src": "/assets/freeflix.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -29,11 +29,11 @@
   ],
   "screenshots": [
     {
-      "src": "./assets/freeflixx.png",
+      "src": "/assets/freeflix.png",
       "sizes": "1280x720",
       "type": "image/png",
       "platform": "wide",
-      "label": "FreeFlixx Home Screen"
+      "label": "FreeFlix Home Screen"
     }
   ],
   "related_applications": [],
@@ -41,17 +41,17 @@
   "shortcuts": [
     {
       "name": "Movies",
-      "url": "/movies/index.html",
+      "url": "/movies/",
       "description": "Browse all free movies"
     },
     {
       "name": "TV Shows",
-      "url": "/tvshows/index.html",
+      "url": "/tvshows/",
       "description": "Browse all free TV shows"
     },
     {
       "name": "Anime",
-      "url": "/anime/index.html",
+      "url": "/anime/",
       "description": "Browse all free anime"
     },
     {

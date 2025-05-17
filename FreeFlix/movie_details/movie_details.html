@@ -1,40 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x: hidden; max-width: 100%;">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name="description" content="Get detailed information about movies and TV shows on FreeFlixx. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
-    <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlixx, streaming info">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Get detailed information about movies and TV shows on FreeFlix. View ratings, cast, trailers, synopsis and add titles to your watchlist.">
+    <meta name="keywords" content="movie details, TV show details, anime details, movie info, cast, ratings, synopsis, trailer, FreeFlix, streaming info">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://freeflix.top/movie_details/">
-    <meta property="og:title" content="FreeFlixx - Movie & TV Show Details">
-    <meta property="og:description" content="Get detailed information about your favorite movies, TV shows, and anime on FreeFlixx.">
-    <meta property="og:image" content="https://freeflix.top/assets/freeflixx.png">
+    <meta property="og:title" content="FreeFlix - Movie & TV Show Details">
+    <meta property="og:description" content="Get detailed information about your favorite movies, TV shows, and anime on FreeFlix.">
+    <meta property="og:image" content="https://freeflix.top/assets/freeflix.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://freeflix.top/movie_details/">
-    <meta property="twitter:title" content="FreeFlixx - Movie & TV Show Details">
-    <meta property="twitter:description" content="Get detailed information about your favorite movies, TV shows, and anime on FreeFlixx.">
-    <meta property="twitter:image" content="https://freeflix.top/assets/freeflixx.png">
+    <meta property="twitter:title" content="FreeFlix - Movie & TV Show Details">
+    <meta property="twitter:description" content="Get detailed information about your favorite movies, TV shows, and anime on FreeFlix.">
+    <meta property="twitter:image" content="https://freeflix.top/assets/freeflix.png">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://freeflix.top/movie_details/">
+    <link rel="canonical" href="https://freeflix.top/movie_details/movie_details.html">
 
     <link rel="stylesheet" href="movie_details.css">
-    <link rel="icon" href="/assets/freeflixx.ico">
-    <title>FreeFlixx - Movie & TV Show Details</title>
+    <link rel="icon" href="/assets/freeflix.ico">
+    <title>FreeFlix - Movie & TV Show Details</title>
     <!-- Import Poppins font for aesthetics -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Mobile layout fixes -->
+    <style>
+        @media (max-width: 560px) {
+            html, body {
+                overflow-x: hidden;
+                width: 100%;
+                max-width: 100%;
+                position: relative;
+            }
+
+            body {
+                font-size: 14px;
+            }
+
+            /* Prevent any content from creating horizontal overflow */
+            * {
+                max-width: 100vw;
+                box-sizing: border-box;
+            }
+
+            /* Make sure images don't overflow */
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Make sure text elements don't overflow */
+            p, h1, h2, h3, h4, h5, h6, span, div {
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+            }
+        }
+    </style>
 </head>
 
-<body>
+<body style="overflow-x: hidden; max-width: 100%; width: 100%;">
     <!-- Header section -->
     <header class="header">
-        <img src="/assests/netflix.png" alt="logo" class="logo">
+        <img src="/assets/freeflix.png" alt="FreeFlix logo" class="logo" width="150" height="47" loading="eager" fetchpriority="high">
     </header>
 
     <!-- Server change notice banner -->
@@ -48,7 +82,7 @@
 
         <!-- Movie poster section -->
         <div class="movie-poster">
-            <img id="moviePoster" src="" alt="Movie Poster">
+            <img id="moviePoster" src="" alt="Movie Poster" width="300" height="450" loading="eager">
             <iframe id="iframe" frameborder="0" allowfullscreen playsinline
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"></iframe>
 
