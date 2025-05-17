@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" style="overflow-x: hidden; max-width: 100%;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
@@ -75,8 +74,9 @@
     <link rel="canonical" href="https://freeflix.top/genre/">
     <link rel="stylesheet" href="../index.css">
     <link rel="stylesheet" href="../custom-buttons.css">
-    <link rel="stylesheet" href="enhanced-style.css">
-    <link rel="icon" href="../assets/freeflix.ico">
+    <link rel="stylesheet" href="../custom-search.css">
+    <link rel="stylesheet" href="./section-fix.css">
+    <link rel="stylesheet" href="./enhanced-style.css">
     <style>
         /* Mobile viewport scaling fix */
         @media (max-width: 480px) {
@@ -259,114 +259,84 @@
             }
         }
     </style>
-    <title>FreeFlix - Browse by Genre</title>
-    <meta name="monetag" content="9d74356880b3ebb47a990a92b03643e2">
-    <script data-cfasync="false" type="text/javascript" src="//madurird.com/tag.min.js" data-zone="9255615" async onerror="_gomung()" onload="_ogigoe()"></script>
 </head>
-
-<body>
-    <!-- Header container -->
+<body style="overflow-x: hidden; max-width: 100%; width: 100%">
     <header class="header">
-        <img src="/assets/freeflix.png" alt="FreeFlix logo" id="netflix-logo" width="150" height="47" loading="eager" fetchpriority="high">
-        <div class="input-container">
-            <input type="text" id="searchInput" placeholder="Search by genre...">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../assets/freeflix.png" alt="FreeFlix Logo">
+            </a>
         </div>
-        <div id="searchResults"></div>
-        <button id="goToWatchlist" class="watchList-Btn">WatchList</button>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search movies...">
+            <div id="searchResults" style="display: none;"></div>
+        </div>
+        <button id="goToWatchlist" class="watch-list-button">
+            <span class="button-text">Watchlist</span>
+        </button>
     </header>
 
-    <!-- Navigation Menu -->
     <nav class="nav-menu">
-        <ul class="nav-list">
-            <li class="nav-item"><a href="../" data-section="all">All</a></li>
-            <li class="nav-item"><a href="../movies/" data-section="movies">Movies</a></li>
-            <li class="nav-item"><a href="../tvshows/" data-section="tvshows">TV Shows</a></li>
-            <li class="nav-item"><a href="../anime/" data-section="anime">Anime</a></li>
+        <ul class="nav-items">
+            <li class="nav-item">
+                <a href="../index.html" data-section="all">All</a>
+            </li>
+            <li class="nav-item">
+                <a href="../movies/index.html" data-section="movies">Movies</a>
+            </li>
+            <li class="nav-item">
+                <a href="../tvshows/index.html" data-section="tv">TV Shows</a>
+            </li>
+            <li class="nav-item">
+                <a href="../anime/index.html" data-section="anime">Anime</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" data-section="genres">Genres</a>
+            </li>
         </ul>
     </nav>
 
-    <!-- Main Content -->
-    <main>
-        <section class="genre-section">
-            <h1 class="section-title">Browse Content by Genre</h1>
+    <main class="main-content">
+        <h1 id="genre-title" class="genre-title">Genre Results</h1>
 
-            <div class="genre-selection">
-                <div class="content-type-tabs">
-                    <button class="content-tab active" data-content-type="all">All Content</button>
-                    <button class="content-tab" data-content-type="movies">Movies</button>
-                    <button class="content-tab" data-content-type="tvshows">TV Shows</button>
-                    <button class="content-tab" data-content-type="anime">Anime</button>
-                </div>
+        <div id="genre-filter-container" class="genre-filter-container">
+            <div class="filter-options">
+                <button id="filter-popular" class="filter-button active">Popular</button>
+                <button id="filter-top-rated" class="filter-button">Top Rated</button>
+                <button id="filter-newest" class="filter-button">Newest</button>
             </div>
+        </div>
 
-            <div class="genre-grid">
-                <div class="genre-card" data-genre="action">
-                    <h3>Action</h3>
-                    <p>Exciting action content with thrilling sequences</p>
-                </div>
-                <div class="genre-card" data-genre="comedy">
-                    <h3>Comedy</h3>
-                    <p>Funny and humorous content to make you laugh</p>
-                </div>
-                <div class="genre-card" data-genre="drama">
-                    <h3>Drama</h3>
-                    <p>Emotional and character-driven stories</p>
-                </div>
-                <div class="genre-card" data-genre="horror">
-                    <h3>Horror</h3>
-                    <p>Scary and suspenseful content</p>
-                </div>
-                <div class="genre-card" data-genre="thriller">
-                    <h3>Thriller</h3>
-                    <p>Suspenseful and exciting content</p>
-                </div>
-                <div class="genre-card" data-genre="romance">
-                    <h3>Romance</h3>
-                    <p>Love stories and romantic content</p>
-                </div>
-                <div class="genre-card" data-genre="scifi">
-                    <h3>Sci-Fi</h3>
-                    <p>Science fiction and futuristic content</p>
-                </div>
-                <div class="genre-card" data-genre="fantasy">
-                    <h3>Fantasy</h3>
-                    <p>Magical and imaginative worlds</p>
-                </div>
-                <div class="genre-card" data-genre="adventure">
-                    <h3>Adventure</h3>
-                    <p>Exciting journeys and quests</p>
-                </div>
-                <div class="genre-card" data-genre="crime">
-                    <h3>Crime</h3>
-                    <p>Criminal investigations and mysteries</p>
-                </div>
-                <div class="genre-card" data-genre="documentary">
-                    <h3>Documentary</h3>
-                    <p>Real-life stories and informative content</p>
-                </div>
-                <div class="genre-card" data-genre="family">
-                    <h3>Family</h3>
-                    <p>Content suitable for all ages</p>
-                </div>
-            </div>
+        <div id="genre-grid-container" class="genre-grid-container">
+            <!-- Results will be displayed here as a grid -->
+        </div>
 
-            <div class="content-results">
-                <h2 id="results-title">All Genres</h2>
-                <div class="card-container" id="genreContainer">
-                    <!-- Results will be displayed here -->
-                </div>
-            </div>
-        </section>
+        <div id="pagination-container" class="pagination-container">
+            <button id="prev-page" class="pagination-button" disabled>&laquo; Previous</button>
+            <span id="page-indicator" class="page-indicator">Page 1</span>
+            <button id="next-page" class="pagination-button">Next &raquo;</button>
+        </div>
+
+        <div id="loading-indicator" class="loading-indicator">
+            <div class="loading-spinner"></div>
+            <p>Loading content...</p>
+        </div>
+
+        <div id="no-results" class="no-results" style="display: none;">
+            <p>No results found for this genre. Please try another genre.</p>
+        </div>
+
+        <button id="back-to-top-btn" class="back-to-top" title="Back to Top">↑</button>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2025 FreeFlix - Browse by Genre. All rights reserved.</p>
-        <p><a href="/sitemap.html">Sitemap</a> | <a href="/">Home</a></p>
+        <div>
+            <p>FreeFlix &copy; 2023 - All Rights Reserved</p>
+            <p>This site does not store any files on its server. All contents are provided by non-affiliated third parties.</p>
+        </div>
     </footer>
 
-    <script src="genre.js"></script>
-    <script src="../navigation-fix.js"></script>
+    <script src="../custom-navigation.js"></script>
+    <script src="./genre.js"></script>
 </body>
-
 </html>
