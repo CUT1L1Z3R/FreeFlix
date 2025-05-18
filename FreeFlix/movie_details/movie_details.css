@@ -63,7 +63,7 @@ h1 {
 iframe {
     width: 100%;
     height: 450px !important;
-    margin: 0 0 20px 0;
+    margin: 0;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     border: none; /* Remove border to make it cleaner */
@@ -77,37 +77,39 @@ iframe {
     border-radius: 8px;
 }
 
-/* Add margin space to the text elements */
+/* Movie information section */
 .movie-info {
     margin-left: 20px;
     margin-right: 30px;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Increased from 10px for better spacing between elements */
+    margin-top: -25px; /* Increased negative margin to reduce space below video */
 }
 
 /* Add margin space to the plot element */
 #plot {
-    margin-bottom: 20px;
+    margin-bottom: 24px; /* Increased from 20px */
 }
 
 /* Movie information section */
-.movie-info {
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-}
-
-/* Movie title styling */
 .movie-info h1 {
     color: #a209da;
     font-size: 46px;
+    margin-top: 0;
+    margin-bottom: 18px; /* Added bottom margin for better spacing with description */
+    line-height: 1.2; /* Added line height for better title readability */
 }
 
 /* Plot styling */
 #plot {
     color: white;
-    line-height: 1.4;
+    line-height: 1.6; /* Increased from 1.4 for better readability */
     font-size: 18px;
     text-align: justify;
+    margin-top: 0; /* Ensure there's no extra top margin */
+    padding-bottom: 6px; /* Added padding at bottom */
 }
 
 /* Movie data styling */
@@ -292,13 +294,14 @@ p {
 
 /* Both buttons should have identical width and appearance */
 .watchListBtn,
+.downloadBtn,
 .server-dropdown {
   width: 100%;
   max-width: 100%;
   margin: 10px 0;
 }
 
-.watchListBtn {
+.watchListBtn, .downloadBtn {
   color: white;
   font-size: 16px;
   font-weight: 600;
@@ -311,15 +314,37 @@ p {
   display: block; /* Ensure block display for full width */
 }
 
-.watchListBtn:hover {
+.watchListBtn:hover, .downloadBtn:hover {
   background: black;
   color: rgb(141, 22, 201);
   border: 1px solid rgb(141, 22, 201);
 }
 
+/* Make the download button slightly different */
+.downloadBtn {
+  background: rgb(109, 18, 158);
+}
+
+/* Server dropdown wrapper with dedicated space */
 .server-dropdown {
+  width: 100%;
+  max-width: 100%;
+  margin: 10px 0;
   position: relative;
   z-index: 20;
+  transition: margin-bottom 0.3s ease-out;
+  margin-bottom: 0; /* Start with no extra space */
+}
+
+/* Create dedicated space for dropdown when open */
+.server-dropdown.has-open-dropdown {
+  margin-bottom: calc(min(40vh, 300px)); /* Space for dropdown content */
+}
+
+/* Dedicated space for server options */
+.servers-section {
+  margin-bottom: 15px;
+  position: relative;
 }
 
 /* --- FIXED SERVER DROPDOWN HEADER --- */
@@ -344,15 +369,17 @@ p {
   gap: 10px; /* ensures spacing between content and arrow */
 }
 .server-dropdown-header::before {
-  content: "Servers";
-  position: absolute;
-  top: -15px;
-  left: 0;
-  font-size: 12px;
-  color: #a209da;
-  background: none;
-  padding: 0;
-  letter-spacing: 0.5px;
+    content: "Servers";
+    position: absolute;
+    top: -15px;
+    left: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #a209da;
+    background: black;
+    padding: 0 4px;
+    letter-spacing: 0.5px;
+    z-index: 1;
 }
 
 .server-dropdown-header:hover {
@@ -366,6 +393,14 @@ p {
   border-bottom: none;
 }
 
+.server-dropdown-header.active + .server-dropdown-content.dropdown-down {
+  border-radius: 0 0 3px 3px;
+}
+
+.server-dropdown-header.active + .server-dropdown-content.dropdown-up {
+  border-radius: 3px 3px 0 0;
+}
+
 /* Server tag styles with improved spacing */
 .selected-server {
   display: flex;
@@ -375,6 +410,48 @@ p {
   flex: 1; /* Take up available space */
   min-width: 0;
   overflow: hidden;
+}
+
+/* Mobile optimizations for server dropdown */
+@media (max-width: 560px) {
+    /* Increase tap area for better touch interaction */
+    .server-dropdown-header {
+        padding: 10px 16px;
+        min-height: 48px; /* Minimum recommended touch target size */
+    }
+
+    .server-option {
+        padding: 12px 16px;
+        min-height: 48px; /* Minimum recommended touch target size */
+    }
+
+    /* Ensure dropdown doesn't get too tall on small screens */
+    .server-dropdown-content {
+        max-height: 40vh; /* 40% of viewport height */
+    }
+
+    /* Create dedicated space for dropdown on mobile */
+    .server-dropdown.has-open-dropdown {
+        margin-bottom: 40vh; /* 40% of viewport height on mobile */
+    }
+
+    /* Ensure tags don't wrap awkwardly */
+    .server-tag {
+        margin-bottom: 4px;
+        white-space: nowrap;
+    }
+
+    /* Improve tap targets for dropdown arrows */
+    .dropdown-arrow {
+        font-size: 18px;
+        padding: 8px;
+        margin: -8px;
+    }
+
+    /* Ensure header text doesn't get cut off */
+    .selected-server {
+        max-width: calc(100% - 30px);
+    }
 }
 
 .server-tag {
@@ -425,10 +502,26 @@ p {
   overflow-y: auto;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   box-sizing: border-box; /* Include border in width */
+  /* For smooth appearance, let animation handle opacity/transform */
 }
 
+/* Animation for dropdown appearance */
 .server-dropdown-content.show {
   display: block;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.server-dropdown-content.dropdown-down {
+  /* No longer need to set top/bottom, handled by .server-dropdown-content */
+}
+
+.server-dropdown-content.dropdown-up {
+  /* Upward dropdown positioning removed for dedicated space approach */
 }
 
 .server-option {
@@ -704,8 +797,14 @@ p {
     width: 100%;
     height: 450px !important;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 0; /* Removed margin to match original */
     border: none; /* Remove border to make it cleaner */
+}
+
+/* Player controls spacer adjustment */
+#player-controls-spacer {
+    display: none; /* Hidden by default */
+    height: 0; /* Reduce height to minimum */
 }
 
 /* Styling for the change server dropdown */
@@ -841,15 +940,39 @@ p {
         margin: 0 auto;
         padding: 0 8px;
         box-sizing: border-box;
+        margin-bottom: -30px; /* Increased negative margin on mobile */
     }
 
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 220px !important;
+        height: 230px !important;
         width: 100%;
-        margin: 0 auto 15px auto;
+        margin: 0 auto 0 auto;
         box-sizing: border-box;
+    }
+
+    /* Show spacer on mobile devices but with reduced height */
+    #player-controls-spacer {
+        display: block;
+        width: 100%;
+        height: 10px; /* Reduced height to minimize space */
+        clear: both;
+        margin-top: 0;
+        margin-bottom: 0;
+        position: relative;
+        pointer-events: none; /* Allows clicking through to elements under it */
+    }
+
+    /* Add extra space to the right of the iframe for controls */
+    #iframe {
+        padding-right: 30px; /* Reduced space for fullscreen button */
+        box-sizing: border-box;
+    }
+
+    /* Ensure iframe retains proper height */
+    iframe {
+        min-height: 220px;
     }
 
     /* Season container adjustments */
@@ -872,8 +995,8 @@ p {
     /* Movie info section */
     .movie-info {
         width: 95%;
-        margin: auto;
-        gap: 12px;
+        margin: -20px auto 0; /* Increased negative margin on mobile */
+        gap: 12px; /* Increased from 8px for better spacing */
         overflow-wrap: break-word;
         word-break: break-word;
         box-sizing: border-box;
@@ -882,9 +1005,9 @@ p {
 
     /* Optimize title size */
     .movie-info h1 {
-        font-size: 24px;
+        font-size: 28px; /* Increased from 24px */
         line-height: 1.3;
-        margin: 0 0 8px 0;
+        margin: 0 0 12px 0; /* Increased bottom margin from 8px */
     }
 
     /* Streamline movie data layout */
@@ -935,9 +1058,10 @@ p {
     #plot {
         max-width: 100%;
         overflow-wrap: break-word;
-        font-size: 14px;
-        line-height: 1.4;
+        font-size: 15px; /* Increased from 14px */
+        line-height: 1.5; /* Increased from 1.4 */
         box-sizing: border-box;
+        margin-bottom: 18px; /* Added specific margin for mobile */
     }
 
     /* Server dropdown content */
