@@ -1010,6 +1010,24 @@ p {
 
 /* ----Media Queries---- */
 
+/* Extra small devices - specific mobile optimization for video player */
+@media (max-width: 480px) {
+    /*
+      On extra-small mobile screens, further reduce the video player height
+      to maximize visible content and minimize vertical space usage.
+      This is especially useful for devices with very limited screen real estate.
+    */
+    #iframe,
+    iframe {
+        height: 75px !important; /* Further reduced height for better mobile viewing */
+        width: 98vw !important;  /* Maintain this width as requested */
+        max-width: 98vw !important;
+        margin-left: 3vw; /* Shift right by adding left margin */
+        margin-right: 0;
+        padding-right: 40px !important; /* Maintained right padding for fullscreen button */
+    }
+}
+
 /* Mobile viewport scaling fix */
 @media only screen and (max-width: 560px) {
     /* Core layout fixes to prevent zooming issues */
@@ -1046,10 +1064,14 @@ p {
     /* Video frame optimization */
     #iframe,
     iframe {
-        height: 230px !important;
-        width: 100%;
-        margin: 0 auto 0 auto;
+        height: 100px !important;
+        width: 98vw !important;
+        max-width: 98vw !important;
+        margin-left: 1vw;
+        margin-right: 1vw;
+        margin-bottom: 20px;
         box-sizing: border-box;
+        padding-right: 38px;
     }
 
     /* Show spacer on mobile devices but with reduced height */
@@ -1062,17 +1084,6 @@ p {
         margin-bottom: 0;
         position: relative;
         pointer-events: none; /* Allows clicking through to elements under it */
-    }
-
-    /* Add extra space to the right of the iframe for controls */
-    #iframe {
-        padding-right: 30px; /* Reduced space for fullscreen button */
-        box-sizing: border-box;
-    }
-
-    /* Ensure iframe retains proper height */
-    iframe {
-        min-height: 220px;
     }
 
     /* Season container adjustments */
