@@ -55,7 +55,7 @@ function initAnimePage() {
     initializeAnimeSections();
 }
 
-// Update banner with upcoming anime
+// Update banner with Popular This Season anime
 function updateBannerForAnime() {
     const banner = document.getElementById('banner');
     const bannerTitle = document.getElementById('banner-title');
@@ -73,22 +73,18 @@ function updateBannerForAnime() {
     bannerItems = [];
     currentBannerIndex = 0;
 
-    // For Anime section, use upcoming anime for banner slideshow
+    // For Anime section, use Popular This Season anime for banner slideshow
     const today = new Date();
-    const futureDate = new Date();
-    futureDate.setMonth(futureDate.getMonth() + 6); // Get anime coming in the next 6 months
+    const currentYear = today.getFullYear();
 
-    const todayStr = today.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-    const futureDateStr = futureDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-
-    // Get anime that will air after today but before 6 months from now
-    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${todayStr}&air_date.lte=${futureDateStr}&sort_by=primary_release_date.asc`)
+    // Get popular anime from current year with broader criteria for better results
+    fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`)
         .then(response => response.json())
         .then(data => {
-            const upcomingAnimes = data.results || [];
-            console.log('Upcoming anime fetched:', upcomingAnimes.length);
+            const popularSeasonAnimes = data.results || [];
+            console.log('Popular This Season anime fetched:', popularSeasonAnimes.length);
             // Filter to animes with backdrop images, get up to 9 items
-            bannerItems = upcomingAnimes.filter(anime => anime.backdrop_path).slice(0, 9).map(anime => ({
+            bannerItems = popularSeasonAnimes.filter(anime => anime.backdrop_path).slice(0, 9).map(anime => ({
                 ...anime,
                 mediaType: 'tv'
             }));
@@ -135,10 +131,11 @@ function updateBannerForAnime() {
 
 // Initialize sections for anime
 function initializeAnimeSections() {
-    // Initialize anime sections
-    fetchAnime('anime-upcoming-new-container', 'truly_upcoming');
-    fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
     fetchAnime('anime-popular-container', 'popular');
+    fetchAnime('anime-latest-episodes-container', 'latest_episodes');
+    fetchAnime('latest-episodes-container', 'latest_episodes');
+    fetchAnime('popular-season-container', 'popular_season');
+    fetchAnime('top-rated-anime-movie-container', 'top_rated_anime_movies');
     fetchAnime('anime-top-container', 'top_rated');
     fetchAnime('anime-upcoming-container', 'upcoming');
     fetchAnime('adventure-anime-container', 'adventure');
@@ -218,8 +215,8 @@ function showBannerAtIndex(index) {
             extraInfo.push(new Date(item.first_air_date).getFullYear());
         }
 
-        // Add "Latest Update" tag for anime
-        extraInfo.push('Latest Update');
+        // Add "Popular This Season" tag for anime
+        extraInfo.push('Popular This Season');
 
         // Add rating if available
         if (item.vote_average) {
@@ -240,18 +237,18 @@ function showBannerAtIndex(index) {
                 subtitleElement.style.marginTop = '8px';
                 subtitleElement.style.fontWeight = 'normal';
 
-                // Style the "Latest Update" tag for anime section
-                if (subtitleElement.textContent.includes('Latest Update')) {
-                    // Create a span to style just the "Latest Update" text
+                // Style the "Popular This Season" tag for anime section
+                if (subtitleElement.textContent.includes('Popular This Season')) {
+                    // Create a span to style just the "Popular This Season" text
                     subtitleElement.innerHTML = subtitleElement.innerHTML.replace(
-                        'Latest Update',
-                        '<span class="latest-update-badge">Latest Update</span>'
+                        'Popular This Season',
+                        '<span class="popular-season-badge">Popular This Season</span>'
                     );
 
                     // Style the badge
-                    const badge = subtitleElement.querySelector('.latest-update-badge');
+                    const badge = subtitleElement.querySelector('.popular-season-badge');
                     if (badge) {
-                        badge.style.backgroundColor = 'rgba(52, 152, 219, 0.9)'; // Blue for latest updates
+                        badge.style.backgroundColor = 'rgba(255, 193, 7, 0.9)'; // Gold/amber for popular content
                         badge.style.padding = '3px 8px';
                         badge.style.borderRadius = '4px';
                         badge.style.color = 'white';
@@ -273,6 +270,282 @@ function showBannerAtIndex(index) {
 }
 
 // Function to fetch anime from TMDB API
+// Function to display anime results in containers
+function displayAnimeResults(container, animeResults, containerClass) {
+    container.innerHTML = ''; // Clear the container first to prevent duplicates
+
+    // Process each anime item
+    if (animeResults.length === 0) {
+        console.warn(`No anime results found for ${containerClass}`);
+        container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content available at this time. Please try again later.</div>';
+        return;
+    }
+
+    // Filter out items without backdrop or poster images
+    const validResults = animeResults.filter(item => item.poster_path || item.backdrop_path);
+
+    if (validResults.length === 0) {
+        console.warn(`No valid image results found for ${containerClass}`);
+        container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content with images available at this time. Please try again later.</div>';
+        return;
+    }
+
+    validResults.forEach(anime => {
+        const title = anime.name || anime.title || 'Unknown Title';
+
+        // Get image URL - use backdrop (landscape) for all anime containers
+        let useBackdrop = true;
+
+        const imageUrl = useBackdrop && anime.backdrop_path
+            ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}` // Use higher quality for landscape
+            : anime.poster_path
+                ? `https://image.tmdb.org/t/p/w500${anime.poster_path}`
+                : anime.backdrop_path
+                    ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}`
+                    : 'https://via.placeholder.com/780x439?text=No+Image+Available'; // 16:9 aspect ratio
+
+        // Create the main item element
+        const itemElement = document.createElement('div');
+        itemElement.className = 'movie-item';
+
+        // Apply landscape dimensions for all anime containers
+        if (useBackdrop) {
+            itemElement.style.width = '290px';  // Landscape width
+            itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
+        }
+
+        // For anime-movie-container and top-rated-anime-movie-container, set mediaType to 'movie', else 'tv'
+        if (containerClass === 'top-rated-anime-movie-container') {
+            itemElement.dataset.mediaType = 'movie';
+        } else {
+            itemElement.dataset.mediaType = 'tv'; // Using TV since most anime are TV shows in TMDB
+        }
+        itemElement.dataset.id = anime.id;
+
+        // Create a wrapper for the image
+        const imgWrapper = document.createElement('div');
+        imgWrapper.className = 'image-wrapper';
+
+        // Create and add the image
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = title;
+        img.loading = 'lazy';
+
+        // Error handling for image loading
+        img.onerror = function() {
+            this.onerror = null;
+            this.src = 'https://via.placeholder.com/500x750?text=Image+Error';
+        };
+
+        // Create an overlay for anime info
+        const overlay = document.createElement('div');
+        overlay.className = 'movie-overlay';
+
+        // Add the title
+        const titleElement = document.createElement('div');
+        titleElement.className = 'movie-title';
+        titleElement.textContent = title;
+
+        // Add the rating
+        const rating = document.createElement('div');
+        rating.className = 'movie-rating';
+
+        const star = document.createElement('span');
+        star.className = 'rating-star';
+        star.innerHTML = '★';
+
+        const ratingValue = document.createElement('span');
+        ratingValue.className = 'rating-value';
+
+        // Format the rating to show only one decimal place
+        const voteAverage = anime.vote_average || 0;
+        const formattedRating = voteAverage !== 0 ? voteAverage.toFixed(1) : 'N/A';
+        ratingValue.textContent = formattedRating;
+
+        // Set color based on rating
+        if (formattedRating !== 'N/A') {
+            star.style.color = getRatingColor(voteAverage);
+        }
+
+        // Build the rating element
+        rating.appendChild(star);
+        rating.appendChild(ratingValue);
+
+        // Add overlay elements
+        overlay.appendChild(titleElement);
+        overlay.appendChild(rating);
+
+        imgWrapper.appendChild(img);
+        imgWrapper.appendChild(overlay);
+        itemElement.appendChild(imgWrapper);
+        container.appendChild(itemElement);
+
+        // Add click event to navigate to details page
+        itemElement.addEventListener('click', () => {
+            if (containerClass === 'top-rated-anime-movie-container') {
+                window.location.href = `../movie_details/movie_details.html?media=movie&id=${anime.id}`;
+            } else {
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
+            }
+        });
+    });
+}
+
+// Special function to fetch the latest anime episodes using multiple approaches
+async function fetchLatestAnimeEpisodes(containers, containerClass) {
+    console.log(`Fetching latest anime episodes for ${containerClass} with enhanced TMDB API calls`);
+
+    // Show loading indicator
+    containers.forEach(container => {
+        container.innerHTML = '<div style="color: white; padding: 40px; text-align: center; font-size: 1.1rem;"><div style="margin-bottom: 15px;">🔄 Loading latest anime episodes...</div><div style="font-size: 0.9rem; color: #ccc;">Fetching most recent content with smart fallbacks</div></div>';
+    });
+
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+
+    // Get current date components for more precise queries
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // getMonth() returns 0-11
+    const currentQuarter = Math.ceil(currentMonth / 3);
+
+    // Focus on super recent content - past 1-2 weeks maximum
+    const past3Days = new Date(today.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const pastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const pastTwoWeeks = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    const endpoints = [
+        // Currently airing TODAY - highest priority
+        `tv/airing_today?api_key=${api_Key}&with_genres=16`,
+
+        // Anime that aired in the past 3 days (super recent) - no vote requirement
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${past3Days}&air_date.lte=${todayStr}&sort_by=first_air_date.desc`,
+
+        // Anime that aired this week (past 7 days) - minimal vote requirement
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastWeek}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=1`,
+
+        // Anime that aired in the past 2 weeks (maximum range)
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastTwoWeeks}&air_date.lte=${todayStr}&sort_by=first_air_date.desc&vote_count.gte=3`,
+
+        // Currently ongoing series with recent episodes
+        `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_status=0&air_date.gte=${pastTwoWeeks}&sort_by=first_air_date.desc&vote_count.gte=5`
+    ];
+
+    try {
+        // Fetch from all endpoints and combine results
+        const promises = endpoints.map(endpoint =>
+            fetch(`https://api.themoviedb.org/3/${endpoint}`)
+                .then(response => response.ok ? response.json() : { results: [] })
+                .catch(() => ({ results: [] }))
+        );
+
+        const results = await Promise.all(promises);
+        let allAnime = [];
+
+        // Combine all results
+        results.forEach((data, index) => {
+            if (data.results && data.results.length > 0) {
+                console.log(`Endpoint ${index + 1} returned ${data.results.length} anime`);
+                allAnime = allAnime.concat(data.results);
+            }
+        });
+
+        // Fallback: If we don't have enough content, fetch popular anime as backup
+        if (allAnime.length < 10) {
+            console.log(`Only ${allAnime.length} anime found, fetching popular anime as fallback...`);
+            try {
+                const fallbackResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc&vote_count.gte=10`);
+                if (fallbackResponse.ok) {
+                    const fallbackData = await fallbackResponse.json();
+                    if (fallbackData.results) {
+                        console.log(`Fallback returned ${fallbackData.results.length} popular anime`);
+                        allAnime = allAnime.concat(fallbackData.results);
+                    }
+                }
+            } catch (error) {
+                console.log('Fallback request failed:', error);
+            }
+        }
+
+        // Remove duplicates based on ID
+        let uniqueAnime = allAnime.filter((anime, index, self) =>
+            index === self.findIndex(a => a.id === anime.id)
+        );
+
+        // First try: Filter for very recent content (past 14 days)
+        const twoWeeksAgo = new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000);
+        let recentAnime = uniqueAnime.filter(anime => {
+            const airDate = new Date(anime.first_air_date || anime.air_date || '1970-01-01');
+            return airDate >= twoWeeksAgo;
+        });
+
+        // Fallback: If not enough recent content, expand to past 2 months but prioritize recent
+        if (recentAnime.length < 5) {
+            console.log(`Only ${recentAnime.length} anime from past 2 weeks, expanding search range...`);
+            const twoMonthsAgo = new Date(today.getTime() - 60 * 24 * 60 * 60 * 1000);
+            uniqueAnime = uniqueAnime.filter(anime => {
+                const airDate = new Date(anime.first_air_date || anime.air_date || '1970-01-01');
+                return airDate >= twoMonthsAgo;
+            });
+        } else {
+            uniqueAnime = recentAnime;
+        }
+
+        // Sort by most recent air date with heavy preference for super recent content
+        uniqueAnime.sort((a, b) => {
+            const dateA = new Date(a.first_air_date || a.air_date || '1970-01-01');
+            const dateB = new Date(b.first_air_date || b.air_date || '1970-01-01');
+
+            // Calculate how recent each anime is (in days)
+            const nowTime = today.getTime();
+            const daysAgoA = Math.floor((nowTime - dateA.getTime()) / (24 * 60 * 60 * 1000));
+            const daysAgoB = Math.floor((nowTime - dateB.getTime()) / (24 * 60 * 60 * 1000));
+
+            // Give massive priority to anime from past 3 days
+            if (daysAgoA <= 3 && daysAgoB > 3) return -1;
+            if (daysAgoB <= 3 && daysAgoA > 3) return 1;
+
+            // Then priority to anime from past week
+            if (daysAgoA <= 7 && daysAgoB > 7) return -1;
+            if (daysAgoB <= 7 && daysAgoA > 7) return 1;
+
+            // Within same time range, sort by date (most recent first)
+            if (dateB.getTime() !== dateA.getTime()) {
+                return dateB.getTime() - dateA.getTime();
+            }
+
+            // Then by popularity as tiebreaker
+            return (b.popularity || 0) - (a.popularity || 0);
+        });
+
+        // Take top 20 most recent
+        const latestAnime = uniqueAnime.slice(0, 20);
+
+        console.log(`Filtered to ${latestAnime.length} anime episodes with recent content priority`);
+
+        // Log air dates of first few items for debugging
+        if (latestAnime.length > 0) {
+            console.log('Most recent anime:', latestAnime.slice(0, 3).map(anime => ({
+                name: anime.name || anime.title,
+                air_date: anime.first_air_date || anime.air_date,
+                popularity: anime.popularity
+            })));
+        }
+
+        // Display the results with success message
+        console.log(`Successfully fetched and processed ${latestAnime.length} latest anime episodes`);
+        containers.forEach(container => {
+            displayAnimeResults(container, latestAnime, containerClass);
+        });
+
+    } catch (error) {
+        console.error('Error fetching latest anime episodes:', error);
+        containers.forEach(container => {
+            container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">Unable to load latest episodes. Please try again later.</div>';
+        });
+    }
+}
+
 function fetchAnime(containerClass, genreOrKeyword) {
     console.log(`Fetching anime for ${containerClass} with TMDB API using genre/keyword: ${genreOrKeyword}`);
     const containers = document.querySelectorAll(`.${containerClass}`);
@@ -326,9 +599,37 @@ function fetchAnime(containerClass, genreOrKeyword) {
     } else if (genreOrKeyword === 'drama') {
         // Drama anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16,18&with_keywords=210024&sort_by=popularity.desc`;
+    } else if (genreOrKeyword === 'latest_episodes') {
+        // Latest anime episodes - show very recent anime with emphasis on currently airing
+        const today = new Date();
+        const pastMonth = new Date();
+        pastMonth.setMonth(pastMonth.getMonth() - 1); // Past month for more recent content
+
+        const futureMonth = new Date();
+        futureMonth.setMonth(futureMonth.getMonth() + 1); // Next month for upcoming episodes
+
+        const todayStr = today.toISOString().split('T')[0];
+        const pastMonthStr = pastMonth.toISOString().split('T')[0];
+        const futureMonthStr = futureMonth.toISOString().split('T')[0];
+
+        // Get anime that are currently airing or very recently aired with higher popularity threshold
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&air_date.gte=${pastMonthStr}&air_date.lte=${futureMonthStr}&with_status=0,1&sort_by=first_air_date.desc&vote_count.gte=10`;
+    } else if (genreOrKeyword === 'popular_season') {
+        // Popular this season - current year's most popular anime
+        const today = new Date();
+        const currentYear = today.getFullYear();
+
+        // Get popular anime from current year with broader criteria for better results
+        endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&first_air_date.gte=${currentYear}-01-01&first_air_date.lte=${currentYear}-12-31&sort_by=popularity.desc&vote_count.gte=5`;
     } else {
         // Default endpoint for general anime
         endpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&sort_by=popularity.desc`;
+    }
+
+    // Special handling for latest episodes to get very recent content
+    if (genreOrKeyword === 'latest_episodes') {
+        fetchLatestAnimeEpisodes(containers, containerClass);
+        return;
     }
 
     // Fetch anime data from TMDB
@@ -345,135 +646,31 @@ function fetchAnime(containerClass, genreOrKeyword) {
             const animeResults = data.results || [];
 
             containers.forEach(container => {
-                container.innerHTML = ''; // Clear the container first to prevent duplicates
-
-                // Process each anime item
-                if (animeResults.length === 0) {
-                    console.warn(`No anime results found for ${containerClass}`);
-                    container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content available at this time. Please try again later.</div>';
-                    return;
-                }
-
-                // Filter out items without backdrop or poster images
-                const validResults = animeResults.filter(item => item.poster_path || item.backdrop_path);
-
-                if (validResults.length === 0) {
-                    console.warn(`No valid image results found for ${containerClass}`);
-                    container.innerHTML = '<div style="color: white; padding: 20px; text-align: center;">No anime content with images available at this time. Please try again later.</div>';
-                    return;
-                }
-
-                validResults.forEach(anime => {
-                    const title = anime.name || anime.title || 'Unknown Title';
-
-                    // Get image URL - use backdrop (landscape) for all anime containers
-                    let useBackdrop = true;
-
-                    const imageUrl = useBackdrop && anime.backdrop_path
-                        ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}` // Use higher quality for landscape
-                        : anime.poster_path
-                            ? `https://image.tmdb.org/t/p/w500${anime.poster_path}`
-                            : anime.backdrop_path
-                                ? `https://image.tmdb.org/t/p/w780${anime.backdrop_path}`
-                                : 'https://via.placeholder.com/780x439?text=No+Image+Available'; // 16:9 aspect ratio
-
-                    // Create the main item element
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'movie-item';
-
-                    // Apply landscape dimensions for all anime containers
-                    if (useBackdrop) {
-                        itemElement.style.width = '290px';  // Landscape width
-                        itemElement.style.height = '170px'; // Landscape height (16:9 aspect ratio)
-                    }
-
-                    // For anime-movie-container and top-rated-anime-movie-container, set mediaType to 'movie', else 'tv'
-                    if (containerClass === 'top-rated-anime-movie-container') {
-                        itemElement.dataset.mediaType = 'movie';
-                    } else {
-                        itemElement.dataset.mediaType = 'tv'; // Using TV since most anime are TV shows in TMDB
-                    }
-                    itemElement.dataset.id = anime.id;
-
-                    // Create a wrapper for the image
-                    const imgWrapper = document.createElement('div');
-                    imgWrapper.className = 'image-wrapper';
-
-                    // Create and add the image
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.alt = title;
-                    img.loading = 'lazy';
-
-                    // Error handling for image loading
-                    img.onerror = function() {
-                        this.onerror = null;
-                        this.src = 'https://via.placeholder.com/500x750?text=Image+Error';
-                    };
-
-                    // Create an overlay for anime info
-                    const overlay = document.createElement('div');
-                    overlay.className = 'movie-overlay';
-
-                    // Add the title
-                    const titleElement = document.createElement('div');
-                    titleElement.className = 'movie-title';
-                    titleElement.textContent = title;
-
-                    // Add the rating
-                    const rating = document.createElement('div');
-                    rating.className = 'movie-rating';
-
-                    const star = document.createElement('span');
-                    star.className = 'rating-star';
-                    star.innerHTML = '★';
-
-                    const ratingValue = document.createElement('span');
-                    ratingValue.className = 'rating-value';
-
-                    // Format the rating to show only one decimal place
-                    const voteAverage = anime.vote_average || 0;
-                    const formattedRating = voteAverage !== 0 ? voteAverage.toFixed(1) : 'N/A';
-                    ratingValue.textContent = formattedRating;
-
-                    // Set color based on rating
-                    if (formattedRating !== 'N/A') {
-                        star.style.color = getRatingColor(voteAverage);
-                    }
-
-                    // Build the rating element
-                    rating.appendChild(star);
-                    rating.appendChild(ratingValue);
-
-                    // Add overlay elements
-                    overlay.appendChild(titleElement);
-                    overlay.appendChild(rating);
-
-                    imgWrapper.appendChild(img);
-                    imgWrapper.appendChild(overlay);
-                    itemElement.appendChild(imgWrapper);
-                    container.appendChild(itemElement);
-
-                    // Add click event to navigate to details page
-                    itemElement.addEventListener('click', () => {
-                        if (containerClass === 'top-rated-anime-movie-container') {
-                            window.location.href = `../movie_details/movie_details.html?media=movie&id=${anime.id}`;
-                        } else {
-                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
-                        }
-                    });
-                });
+                displayAnimeResults(container, animeResults, containerClass);
             });
         })
         .catch(error => {
             console.error('Error fetching anime data:', error);
 
-            // Special handling for adventure anime container if it fails
-            if (containerClass === 'adventure-anime-container') {
+            // Special handling for containers that might fail
+            if (containerClass === 'adventure-anime-container' ||
+                containerClass === 'latest-episodes-container' ||
+                containerClass === 'popular-season-container') {
                 containers.forEach(container => {
-                    // Try a fallback query for adventure anime
-                    console.log("Attempting fallback query for adventure anime");
-                    const fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=100`;
+                    // Try a fallback query with different content for each section
+                    console.log(`Attempting fallback query for ${containerClass}`);
+                    let fallbackEndpoint;
+
+                    if (containerClass === 'latest-episodes-container' || containerClass === 'anime-latest-episodes-container') {
+                        // For latest episodes fallback, use currently airing anime with high popularity
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&with_keywords=210024&with_status=0&sort_by=popularity.desc&vote_count.gte=10`;
+                    } else if (containerClass === 'popular-season-container') {
+                        // For popular season fallback, use popular anime
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=50`;
+                    } else {
+                        // Default fallback for adventure anime
+                        fallbackEndpoint = `discover/tv?api_key=${api_Key}&with_genres=16&sort_by=popularity.desc&vote_count.gte=50`;
+                    }
 
                     fetch(`https://api.themoviedb.org/3/${fallbackEndpoint}`)
                         .then(response => response.json())
@@ -482,7 +679,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             if (animeResults.length > 0) {
                                 container.innerHTML = ''; // Clear error message
 
-                                // Just show the first 15 most popular anime
+                                // Show popular anime as fallback
                                 const validResults = animeResults
                                     .filter(item => item.poster_path || item.backdrop_path)
                                     .slice(0, 15);
@@ -532,7 +729,7 @@ function fetchAnime(containerClass, genreOrKeyword) {
                             }
                         })
                         .catch(err => {
-                            console.error('Error with fallback adventure anime fetch:', err);
+                            console.error(`Error with fallback ${containerClass} fetch:`, err);
                         });
                 });
             }
