@@ -1,4 +1,4 @@
-/* Global styles - FreeFlix theme with andoks.cc layout */
+/* Global styles - FreeFlix theme with layout */
 * {
     margin: 0;
     padding: 0;
@@ -13,7 +13,7 @@ body {
     line-height: 1.6;
 }
 
-/* Header styles - similar to andoks.cc but with FreeFlix branding */
+/* Header styles - similar to but with FreeFlix branding */
 .header {
     display: flex;
     align-items: center;
@@ -168,7 +168,7 @@ body {
     min-height: calc(100vh - 70px);
 }
 
-/* Hero section with backdrop - similar to andoks.cc */
+/* Hero section with backdrop */
 .hero-section {
     position: relative;
     height: 600px;
