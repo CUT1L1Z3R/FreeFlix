@@ -1,5 +1,7 @@
-//
+/*
+// FreeFlix Movie Details - Updated for andoks.cc layout
 // Selecting the logo element and adding a click event listener to navigate to the homepage
+*/
 const logo = document.querySelector('.logo');
 logo.addEventListener('click', () => {
     window.location.href = '../index.html';
@@ -7,6 +9,7 @@ logo.addEventListener('click', () => {
 
 // Define server fallback chain
 const serverFallbackChain = ['iframe.pstream.org', 'vidsrc.su', 'vidsrc.vip', 'vidlink.pro'];
+let currentServerIndex = 0;
 
 // Function to show toast notification
 function showToast(message, type = 'info') {
@@ -14,24 +17,63 @@ function showToast(message, type = 'info') {
     if (!toastContainer) {
         toastContainer = document.createElement('div');
         toastContainer.className = 'toast-container';
+        toastContainer.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        `;
         document.body.appendChild(toastContainer);
     }
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     toast.textContent = message;
+    toast.style.cssText = `
+        padding: 12px 20px;
+        border-radius: 8px;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        margin-bottom: 8px;
+        font-weight: 500;
+        min-width: 250px;
+        max-width: 320px;
+        text-align: center;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        border-left: 4px solid ${type === 'error' ? '#d32f2f' : type === 'success' ? '#2e7d32' : '#be7dc0'};
+    `;
     toastContainer.appendChild(toast);
     setTimeout(() => {
-        toast.classList.add('show');
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
     }, 10);
     setTimeout(() => {
-        toast.classList.remove('show');
+        toast.style.transform = 'translateY(100px)';
+        toast.style.opacity = '0';
         setTimeout(() => {
-            toastContainer.removeChild(toast);
+            if (toastContainer.contains(toast)) {
+                toastContainer.removeChild(toast);
+            }
         }, 300);
     }, 3000);
 }
 
-// Function to handle content download (declare early to avoid hoisting issues)
+// Helper function to format runtime
+function formatRuntime(minutes) {
+    if (!minutes) return 'N/A';
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
+}
+
+// Function to handle content download
 function handleDownload() {
     let downloadUrl = '';
     let contentType = media === 'movie' ? 'movie' : 'episode';
@@ -62,36 +104,38 @@ function handleDownload() {
     }
 }
 
-// Function to ensure iframe controls are accessible on mobile
-function ensureControlsAccessible() {
-    if (window.innerWidth <= 560) {
-        const iframe = document.getElementById('iframe');
-        const spacer = document.getElementById('player-controls-spacer');
-        if (iframe && spacer) {
-            spacer.style.height = '75px';
-            iframe.style.paddingRight = '50px';
-            iframe.style.minHeight = '220px';
-        }
-    }
-}
-
 // Selecting various elements on the page for displaying movie details
 const movieTitle = document.getElementById('movieTitle');
-const moviePoster = document.getElementById('moviePoster');
+const backdropImage = document.getElementById('backdropImage');
 const movieYear = document.getElementById('movieYear');
 const rating = document.getElementById('rating');
 const genre = document.getElementById('genre');
 const plot = document.getElementById("plot");
-const language = document.getElementById("language");
 const iframe = document.getElementById("iframe");
-const watchListBtn = document.querySelector('.watchListBtn');
-const downloadBtn = document.querySelector('.downloadBtn');
+const watchListBtn = document.querySelector('.watchlist-btn');
+const downloadBtn = document.querySelector('.download-btn');
+const playBtn = document.querySelector('.play-btn');
 const watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
 
-// Season and Episode selectors
-const seasonsContainer = document.getElementById('seasons-container');
+// Season and Episode selectors - updated for new layout
 const seasonSelect = document.getElementById('season-select');
-const episodesList = document.getElementById('episodes-list');
+const episodesList = document.getElementById('episodesList');
+const seasonsCount = document.getElementById('seasonsCount');
+const status = document.getElementById('status');
+
+// Movie-specific elements
+const runtime = document.getElementById('runtime');
+const language = document.getElementById('language');
+const movieStatus = document.getElementById('movieStatus');
+
+// Server dropdown elements
+const serverDropdown = document.querySelector('.server-dropdown');
+const serverDropdownHeader = document.querySelector('.server-dropdown-header');
+const serverDropdownContent = document.querySelector('.server-dropdown-content');
+const selectedServerName = document.querySelector('.selected-server .server-name');
+
+// Recommendations elements
+const recommendationsList = document.getElementById('recommendationsList');
 
 // API key for TMDB API
 const api_Key = 'e79515e88dfd7d9f6eeca36e49101ac2';
@@ -99,958 +143,801 @@ const api_Key = 'e79515e88dfd7d9f6eeca36e49101ac2';
 // Retrieve the TMDb ID and Media from the URL parameter
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
-const media = params.get("media");
+const media = params.get('media');
 
-// Function to check if content is actual anime (Japanese origin) vs western animation
-function isActualAnime(item) {
-    // Check for animation genre first
-    if (!item.genre_ids || !item.genre_ids.includes(16)) {
-        return false;
-    }
+let currentSeason = 1;
+let currentEpisode = 1;
+let currentServer = 'iframe.pstream.org';
+let seasonsData = [];
 
-    // Check origin country - anime typically originates from Japan
-    if (item.origin_country && item.origin_country.includes('JP')) {
-        return true;
-    }
-
-    // Check original language - anime is typically in Japanese
-    if (item.original_language === 'ja') {
-        return true;
-    }
-
-    // Check production companies for known anime studios (if available)
-    if (item.production_companies) {
-        const animeStudios = [
-            'Studio Ghibli', 'Toei Animation', 'Madhouse', 'Studio Pierrot', 'Bones',
-            'MAPPA', 'Wit Studio', 'Production I.G', 'Sunrise', 'A-1 Pictures',
-            'Kyoto Animation', 'Shaft', 'Trigger', 'CloverWorks', 'Ufotable'
-        ];
-        return item.production_companies.some(company =>
-            animeStudios.some(studio =>
-                company.name.toLowerCase().includes(studio.toLowerCase())
-            )
-        );
-    }
-
-    // For items without enough metadata, use heuristics based on title patterns
-    const title = (item.title || item.name || '').toLowerCase();
-
-    // Common western animation patterns to exclude
-    const westernPatterns = [
-        'teen titans', 'adventure time', 'steven universe', 'gravity falls',
-        'rick and morty', 'south park', 'family guy', 'simpsons',
-        'american dad', 'futurama', 'bob\'s burgers', 'archer',
-        'bojack horseman', 'big mouth', 'f is for family'
-    ];
-
-    // If it matches western patterns, it's not anime
-    if (westernPatterns.some(pattern => title.includes(pattern))) {
-        return false;
-    }
-
-    // If it has animation genre but no clear indicators, be conservative
-    // Default to false unless we have positive indicators it's anime
-    return false;
-}
-
-// Function to check if current content is actual anime
-function isCurrentContentAnime() {
-    if (!currentMovieDetails || !currentMovieDetails.genres) {
-        return false;
-    }
-
-    // Must have animation genre
-    const hasAnimationGenre = currentMovieDetails.genres.some(genre => genre.id === 16);
-    if (!hasAnimationGenre) {
-        return false;
-    }
-
-    // Check for Japanese origin indicators
-    return (currentMovieDetails.origin_country && currentMovieDetails.origin_country.includes('JP')) ||
-           (currentMovieDetails.original_language === 'ja') ||
-           (currentMovieDetails.production_companies &&
-            currentMovieDetails.production_companies.some(company => {
-                const animeStudios = [
-                    'Studio Ghibli', 'Toei Animation', 'Madhouse', 'Studio Pierrot', 'Bones',
-                    'MAPPA', 'Wit Studio', 'Production I.G', 'Sunrise', 'A-1 Pictures',
-                    'Kyoto Animation', 'Shaft', 'Trigger', 'CloverWorks', 'Ufotable'
-                ];
-                return animeStudios.some(studio =>
-                    company.name.toLowerCase().includes(studio.toLowerCase())
-                );
-            }));
-}
-
-// Function to fetch detailed information using its TMDb ID
-async function fetchMovieDetails(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
-    const data = await response.json();
-    if (media === "tv" && data) {
-        const isAnime = data.genres && data.genres.some(genre => genre.id === 16);
-        if (isAnime) {
-            data.is_anime = true;
-        }
-    }
-    return data;
-}
-
-// Function to fetch video details (trailers) for a movie or TV show
-async function fetchVideoDetails(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/videos?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.results;
-}
-
-// Function to fetch TV show seasons
-async function fetchTVSeasons(id) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.seasons;
-}
-
-// Function to fetch episodes for a specific season
-async function fetchSeasonEpisodes(tvId, seasonNumber) {
-    const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}?api_key=${api_Key}`);
-    const data = await response.json();
-    return data.episodes;
-}
-
-document.getElementById('change-server-btn').addEventListener('click', () => {
-    const serverSelector = document.getElementById('server-selector');
-    serverSelector.style.display = (serverSelector.style.display === 'block') ? 'none' : 'block';
-    console.log(`Current media type: ${media}, ID: ${id}`);
-    if (media === "tv") {
-        const activeEpisode = document.querySelector('.episode-item.active');
-        if (activeEpisode) {
-            console.log(`Active episode - Season: ${activeEpisode.dataset.seasonNumber}, Episode: ${activeEpisode.dataset.episodeNumber}`);
-        }
-    }
-});
-
-document.getElementById('server-selector').addEventListener('click', (e) => {
-  if (e.target !== document.getElementById('server')) {
-    document.getElementById('server-selector').style.display = 'none';
-  }
-});
-
-document.querySelector('.close-button').addEventListener('click', () => {
-  document.getElementById('server-selector').style.display = 'none';
-});
-
-// Function to create season dropdown items
-function createSeasonOptions(seasons) {
-    seasonSelect.innerHTML = '';
-    seasons.forEach(season => {
-        if (season.season_number > 0) {
-            const option = document.createElement('option');
-            option.value = season.season_number;
-            option.textContent = `Season ${season.season_number} (${season.episode_count} Episodes)`;
-            seasonSelect.appendChild(option);
-        }
+// Initialize server dropdown functionality
+function initializeServerDropdown() {
+    serverDropdownHeader?.addEventListener('click', () => {
+        serverDropdown?.classList.toggle('open');
     });
-    seasonSelect.addEventListener('change', function() {
-        const selectedSeason = this.value;
-        loadEpisodes(id, selectedSeason);
-    });
-    if (seasons.length > 0) {
-        const firstSeason = seasons.find(season => season.season_number > 0);
-        if (firstSeason) {
-            loadEpisodes(id, firstSeason.season_number);
-        }
-    }
-}
 
-// Function to create episode list items
-function createEpisodesList(episodes) {
-    episodesList.innerHTML = '';
-    episodes.forEach(episode => {
-        const episodeItem = document.createElement('div');
-        episodeItem.className = 'episode-item';
-        episodeItem.dataset.episodeNumber = episode.episode_number;
-        episodeItem.dataset.seasonNumber = episode.season_number;
-        const thumbnailContainer = document.createElement('div');
-        thumbnailContainer.className = 'thumbnail-container';
-        const thumbnail = document.createElement('img');
-        thumbnail.className = 'episode-thumbnail';
-        thumbnail.src = episode.still_path
-            ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
-            : 'https://via.placeholder.com/300x170?text=No+Image';
-        thumbnail.alt = `${episode.name} Thumbnail`;
-        const episodeNumber = document.createElement('div');
-        episodeNumber.className = 'episode-number';
-        episodeNumber.textContent = episode.episode_number;
-        thumbnailContainer.appendChild(thumbnail);
-        thumbnailContainer.appendChild(episodeNumber);
-        const episodeInfo = document.createElement('div');
-        episodeInfo.className = 'episode-info';
-        const episodeTitle = document.createElement('div');
-        episodeTitle.className = 'episode-title';
-        episodeTitle.textContent = episode.name;
-        const episodeDescription = document.createElement('div');
-        episodeDescription.className = 'episode-description';
-        episodeDescription.textContent = episode.overview || 'No description available.';
-        episodeInfo.appendChild(episodeTitle);
-        episodeInfo.appendChild(episodeDescription);
-        episodeItem.appendChild(thumbnailContainer);
-        episodeItem.appendChild(episodeInfo);
-        episodeItem.addEventListener('click', () => {
-            playEpisode(id, episode.season_number, episode.episode_number);
-        });
-        episodesList.appendChild(episodeItem);
-    });
-}
-
-// Function to load episodes for a specific season
-async function loadEpisodes(tvId, seasonNumber) {
-    try {
-        const episodes = await fetchSeasonEpisodes(tvId, seasonNumber);
-        createEpisodesList(episodes);
-    } catch (error) {
-        console.error('Error loading episodes:', error);
-        episodesList.innerHTML = '<p>Error loading episodes. Please try again.</p>';
-    }
-}
-
-// Add code to update player when source changes
-function loadMedia(embedURL, server) {
-    iframe.setAttribute('src', embedURL);
-    iframe.style.display = "block";
-    moviePoster.style.display = "none";
-    setTimeout(ensureControlsAccessible, 500);
-}
-
-// Function to handle video source change based on selected server
-async function changeServer() {
-    const server = document.getElementById('server').value;
-    const type = media === "movie" ? "movie" : (media === "anime" ? "anime" : "tv");
-    if (type === "tv" && seasonsContainer.style.display === "flex") {
-        const activeEpisode = document.querySelector('.episode-item.active');
-        if (activeEpisode) {
-            const seasonNumber = activeEpisode.dataset.seasonNumber;
-            const episodeNumber = activeEpisode.dataset.episodeNumber;
-            playEpisode(id, seasonNumber, episodeNumber);
-            return;
-        }
-    }
-    let embedURL = "";
-    if (type === "anime") {
-        switch (server) {
-            case "vidlink.pro":
-                embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-            case "vidsrc.cc":
-                embedURL = `https://vidsrc.cc/v2/embed/anime/${id}`;
-                break;
-            case "vidsrc.me":
-                embedURL = `https://vidsrc.net/embed/anime/?mal=${id}`;
-                break;
-            case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/anime/${id}`;
-                break;
-            case "vidsrc.vip":
-                embedURL = `https://vidsrc.vip/anime/${id}`;
-                break;
-            case "2embed":
-                embedURL = `https://www.2embed.cc/embed/anime/${id}`;
-                break;
-            case "movieapi.club":
-                embedURL = `https://moviesapi.club/anime/${id}`;
-                break;
-            default:
-                embedURL = `https://vidlink.pro/anime/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                break;
-        }
-    } else {
-        switch (server) {
-            case "vidlink.pro":
-                if (type === "tv") {
-                    embedURL = `https://vidlink.pro/tv/${id}/1/1?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                } else {
-                    embedURL = `https://vidlink.pro/movie/${id}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-                }
-                break;
-            case "iframe.pstream.org":
-                if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
-                } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
-                }
-                break;
-            case "vidsrc.cc":
-                embedURL = `https://vidsrc.cc/v2/embed/${type}/${id}`;
-                break;
-            case "vidsrc.me":
-                embedURL = `https://vidsrc.net/embed/${type}/?tmdb=${id}`;
-                break;
-            case "vidsrc.su":
-                embedURL = `https://vidsrc.su/embed/${type}/${id}`;
-                break;
-            case "vidsrc.vip":
-                embedURL = `https://vidsrc.vip/${type}/${id}`;
-                break;
-            case "2embed":
-                embedURL = `https://www.2embed.cc/embed/${id}`;
-                break;
-            case "movieapi.club":
-                embedURL = `https://moviesapi.club/${type}/${id}`;
-                break;
-            default:
-                if (type === "tv") {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${id}/1/1?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
-                } else {
-                    embedURL = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
-                }
-                break;
-        }
-    }
-    console.log(`Loading ${type} from: ${embedURL}`);
-    iframe.setAttribute('src', embedURL);
-    iframe.setAttribute('playsinline', '');
-    iframe.setAttribute('webkit-playsinline', 'true');
-    iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-    iframe.setAttribute('allowfullscreen', '');
-    let currentIndex = serverFallbackChain.indexOf(server);
-    iframe.onerror = () => {
-        const nextIndex = currentIndex + 1;
-        if (nextIndex < serverFallbackChain.length) {
-            const nextServer = serverFallbackChain[nextIndex];
-            document.getElementById('server').value = nextServer;
-            currentIndex = nextIndex;
-            changeServer();
-        }
-    };
-    iframe.style.display = "block";
-    moviePoster.style.display = "none";
-    setTimeout(ensureControlsAccessible, 500);
-}
-
-// Function to play a specific episode
-function playEpisode(tvId, seasonNumber, episodeNumber) {
-    const server = document.getElementById('server').value;
-    let embedURL = "";
-    switch (server) {
-        case "vidsrc.vip":
-            embedURL = `https://vidsrc.vip/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        case "vidlink.pro":
-            embedURL = `https://vidlink.pro/tv/${tvId}/${seasonNumber}/${episodeNumber}?primaryColor=63b8bc&iconColor=ffffff&autoplay=true`;
-            break;
-        case "iframe.pstream.org":
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
-            break;
-        case "vidsrc.cc":
-            embedURL = `https://vidsrc.cc/v2/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        case "vidsrc.me":
-            embedURL = `https://vidsrc.net/embed/tv/?tmdb=${tvId}&season=${seasonNumber}&episode=${episodeNumber}`;
-            break;
-        case "vidsrc.su":
-            embedURL = `https://vidsrc.su/embed/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        case "2embed":
-            embedURL = `https://www.2embed.cc/embedtv/${tvId}&s=${seasonNumber}&e=${episodeNumber}`;
-            break;
-        case "movieapi.club":
-            embedURL = `https://moviesapi.club/tv/${tvId}/${seasonNumber}/${episodeNumber}`;
-            break;
-        default:
-            embedURL = `https://iframe.pstream.org/embed/tmdb-tv-${tvId}/${seasonNumber}/${episodeNumber}?theme=purple&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
-            break;
-    }
-    if (embedURL) {
-        console.log(`Loading TV episode from: ${embedURL}`);
-        iframe.setAttribute('src', embedURL);
-        iframe.setAttribute('playsinline', '');
-        iframe.setAttribute('webkit-playsinline', 'true');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
-        iframe.setAttribute('allowfullscreen', '');
-        let epIndex = serverFallbackChain.indexOf(server);
-        iframe.onerror = () => {
-            const nextEp = epIndex + 1;
-            if (nextEp < serverFallbackChain.length) {
-                const nextSrv = serverFallbackChain[nextEp];
-                document.getElementById('server').value = nextSrv;
-                epIndex = nextEp;
-                changeServer();
-            }
-        };
-        iframe.style.display = "block";
-        moviePoster.style.display = "none";
-        setTimeout(ensureControlsAccessible, 500);
-        const episodes = document.querySelectorAll('.episode-item');
-        episodes.forEach(item => item.classList.remove('active'));
-        const currentEpisode = document.querySelector(`.episode-item[data-season-number="${seasonNumber}"][data-episode-number="${episodeNumber}"]`);
-        if (currentEpisode) {
-            currentEpisode.classList.add('active');
-            episodesList.scrollTop = currentEpisode.offsetTop - episodesList.offsetTop - 10;
-        }
-        if (window.innerWidth <= 740) {
-            window.scrollTo({
-                top: iframe.offsetTop - 20,
-                behavior: 'smooth'
-            });
-        }
-    }
-}
-
-// Function to display movie details on the page
-async function displayMovieDetails() {
-    try {
-        const movieDetails = await fetchMovieDetails(id);
-        var spokenlanguage = movieDetails.spoken_languages ? movieDetails.spoken_languages.map(language => language.english_name) : ['Unknown'];
-        language.textContent = spokenlanguage.join(', ');
-        var genreNames = movieDetails.genres ? movieDetails.genres.map(genre => genre.name) : ['Unknown'];
-        genre.innerText = genreNames.join(', ');
-        if (media === "anime" && movieDetails.overview === 'Unable to load anime details.') {
-            plot.textContent = "This anime is available for viewing. Click the Play button to start.";
-        } else if (movieDetails.overview && movieDetails.overview.length > 290) {
-            plot.textContent = `${movieDetails.overview.substring(0, 290)}...`;
-        } else {
-            plot.textContent = movieDetails.overview || 'No description available';
-        }
-        movieTitle.textContent = movieDetails.name || movieDetails.title;
-        if (movieDetails.backdrop_path) {
-            if (movieDetails.backdrop_path.startsWith('http')) {
-                moviePoster.src = movieDetails.backdrop_path;
-            } else {
-                moviePoster.src = `https://image.tmdb.org/t/p/w500${movieDetails.backdrop_path}`;
-            }
-        } else if (movieDetails.poster_path) {
-            if (movieDetails.poster_path.startsWith('http')) {
-                moviePoster.src = movieDetails.poster_path;
-            } else {
-                moviePoster.src = `https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`;
-            }
-        } else {
-            moviePoster.src = 'https://via.placeholder.com/500x281?text=No+Image+Available';
-        }
-        movieYear.textContent = `${movieDetails.release_date || movieDetails.first_air_date || 'Unknown'}`;
-        rating.textContent = movieDetails.vote_average || 'N/A';
-        if (media === "tv") {
-            const seasons = await fetchTVSeasons(id);
-            if (seasons && seasons.length > 0) {
-                createSeasonOptions(seasons);
-                seasonsContainer.style.display = "flex";
-            }
-        }
-        changeServer();
-        if (watchlist.some(favoriteMovie => favoriteMovie.id === movieDetails.id)) {
-            watchListBtn.textContent = "Remove From WatchList";
-        } else {
-            watchListBtn.textContent = "Add To WatchList";
-        }
-        watchListBtn.addEventListener('click', () => toggleFavorite(movieDetails));
-        downloadBtn.addEventListener('click', handleDownload);
-        loadRecommendations(movieDetails);
-    } catch (error) {
-        console.error('Error displaying movie details:', error);
-        movieTitle.textContent = "Details are not available right now! Please try after some time.";
-    }
-}
-
-// Function to toggle adding/removing from favorites
-function toggleFavorite(movieDetails) {
-    const index = watchlist.findIndex(movie => movie.id === movieDetails.id);
-    if (index !== -1) {
-        watchlist.splice(index, 1);
-        watchListBtn.textContent = "Add To WatchList";
-    } else {
-        watchlist.push(movieDetails);
-        watchListBtn.textContent = "Remove From WatchList";
-    }
-    localStorage.setItem('watchlist', JSON.stringify(watchlist));
-}
-
-// Enhanced server dropdown UI functionality
-function initServerDropdown() {
-    const serverDropdownHeader = document.querySelector('.server-dropdown-header');
-    const serverDropdownContent = document.querySelector('.server-dropdown-content');
-    const serverDropdown = document.querySelector('.server-dropdown');
-    const dropdownArrow = document.querySelector('.dropdown-arrow');
-    if (!serverDropdownHeader) return;
-    serverDropdownHeader.addEventListener('click', function(event) {
-        event.stopPropagation();
-        const isShowing = !serverDropdownContent.classList.contains('show');
-        serverDropdownContent.classList.toggle('show');
-        serverDropdownHeader.classList.toggle('active');
-        dropdownArrow.classList.toggle('up');
-        if (isShowing) {
-            serverDropdown.classList.add('has-open-dropdown');
-            setTimeout(() => {
-                const contentRect = serverDropdownContent.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
-                if (contentRect.bottom > viewportHeight) {
-                    window.scrollBy({
-                        top: Math.min(contentRect.height, contentRect.bottom - viewportHeight + 20),
-                        behavior: 'smooth'
-                    });
-                }
-            }, 50);
-        } else {
-            serverDropdown.classList.remove('has-open-dropdown');
-        }
-    });
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.server-dropdown')) {
-            serverDropdownContent.classList.remove('show');
-            serverDropdownHeader.classList.remove('active');
-            dropdownArrow.classList.remove('up');
-            serverDropdown.classList.remove('has-open-dropdown');
-        }
-    });
+    // Handle server selection
     const serverOptions = document.querySelectorAll('.server-option');
-    const selectedServerDisplay = document.querySelector('.selected-server');
     serverOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const serverValue = this.getAttribute('data-server');
-            document.getElementById('server').value = serverValue;
-            selectedServerDisplay.innerHTML = this.innerHTML;
-            serverOptions.forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            serverDropdownContent.classList.remove('show');
-            serverDropdownHeader.classList.remove('active');
-            dropdownArrow.classList.remove('up');
-            serverDropdown.classList.remove('has-open-dropdown');
-            changeServer();
-        });
-    });
-    const initialServer = document.getElementById('server').value;
-    const initialServerOption = document.querySelector(`.server-option[data-server="${initialServer}"]`);
-    if (initialServerOption) {
-        initialServerOption.classList.add('active');
-        selectedServerDisplay.innerHTML = initialServerOption.innerHTML;
-    }
-}
+        option.addEventListener('click', () => {
+            const server = option.dataset.server;
+            const serverName = option.querySelector('.server-name').textContent;
 
-document.getElementById('server').addEventListener('change', () => {
-    changeServer();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    ensureControlsAccessible();
-    window.addEventListener('resize', function() {
-        ensureControlsAccessible();
-    });
-    setTimeout(ensureControlsAccessible, 1000);
-    const downloadBtn = document.querySelector('.downloadBtn');
-    if (downloadBtn) {
-        downloadBtn.addEventListener('click', function(e) {
-            const ripple = document.createElement('span');
-            ripple.classList.add('ripple');
-            this.appendChild(ripple);
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
-            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-            ripple.classList.add('active');
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        });
-    }
-});
-
-window.addEventListener('load', function() {
-    const serverSelect = document.getElementById('server');
-    if (serverSelect && !serverSelect.value) {
-        serverSelect.value = "iframe.pstream.org";
-    }
-    initServerDropdown();
-    displayMovieDetails();
-    const banner = document.getElementById('server-notice-banner');
-    const bannerClose = document.getElementById('banner-close-btn');
-    if (banner) {
-        // Removed automatic scroll to bottom - let user stay at current position
-        banner.style.display = 'flex';
-        bannerClose.addEventListener('click', () => {
-            banner.style.display = 'none';
-        });
-        setTimeout(() => { banner.style.display = 'none'; }, 11000);
-    }
-});
-
-// --- Enhanced Multi-Category Recommendations System ---
-
-// Global variables for recommendations
-let currentMovieDetails = null;
-let loadedPages = {
-    recommendations: 1,
-    similar: 1,
-    trending: 1
-};
-let maxPages = 3; // Limit to prevent too many API calls
-
-// Function to load recommendations based on current movie/show
-async function loadRecommendations(currentItem) {
-    currentMovieDetails = currentItem;
-    Promise.all([
-        loadRecommendedForYou(),
-        loadSimilarContent(),
-        loadTrendingContent()
-    ]).then(() => {
-        setupLoadMoreButton();
-    }).catch(error => {
-        console.error('Error loading recommendations:', error);
-    });
-}
-
-// Function to load "Recommended For You" section
-async function loadRecommendedForYou() {
-    const grid = document.getElementById('recommendationsGrid');
-    const loading = document.getElementById('recommendationsLoading');
-    if (!grid || !loading) return;
-    try {
-        loading.classList.remove('hidden');
-        const recommendations = await fetchRecommendations();
-        displayContentInGrid(recommendations, grid, loading);
-    } catch (error) {
-        console.error('Error loading recommended content:', error);
-        loading.classList.add('hidden');
-    }
-}
-
-// Function to load "More Like This" section
-async function loadSimilarContent() {
-    const grid = document.getElementById('similarGrid');
-    const loading = document.getElementById('similarLoading');
-    if (!grid || !loading) return;
-    try {
-        loading.classList.remove('hidden');
-        const similar = await fetchSimilarMovies();
-        displayContentInGrid(similar, grid, loading);
-    } catch (error) {
-        console.error('Error loading similar content:', error);
-        loading.classList.add('hidden');
-    }
-}
-
-// Function to load "Trending Now" section
-async function loadTrendingContent() {
-    const grid = document.getElementById('trendingGrid');
-    const loading = document.getElementById('trendingLoading');
-    if (!grid || !loading) return;
-    try {
-        loading.classList.remove('hidden');
-        const trending = await fetchTrendingContent();
-        displayContentInGrid(trending, grid, loading);
-    } catch (error) {
-        console.error('Error loading trending content:', error);
-        loading.classList.add('hidden');
-    }
-}
-
-
-
-// Enhanced fetch functions for different content types
-async function fetchRecommendations() {
-    try {
-        const recommendations = [];
-
-        // Check if current content is actual anime (not just animation)
-        const isCurrentAnime = isCurrentContentAnime();
-
-        // If current content is anime, prioritize anime recommendations
-        if (isCurrentAnime) {
-            // Fetch anime from discover endpoint with animation genre AND Japanese language
-            const animeResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.recommendations}&sort_by=popularity.desc`);
-            const animeData = await animeResponse.json();
-            if (animeData.results && animeData.results.length > 0) {
-                const filteredAnime = animeData.results.filter(item =>
-                    item.id !== parseInt(id) && isActualAnime(item)
-                );
-                recommendations.push(...filteredAnime.slice(0, 12));
+            // Update selected server display
+            if (selectedServerName) {
+                selectedServerName.textContent = serverName;
             }
+
+            // Update server tags in header
+            const headerServerTags = document.querySelector('.selected-server');
+            const optionServerTags = option.innerHTML;
+            if (headerServerTags) {
+                headerServerTags.innerHTML = optionServerTags;
+            }
+
+            // Change server
+            currentServer = server;
+            resetServerIndex();
+            loadContent();
+
+            // Close dropdown
+            serverDropdown?.classList.remove('open');
+
+            showToast(`Switched to ${serverName} server`, 'success');
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!serverDropdown?.contains(e.target)) {
+            serverDropdown?.classList.remove('open');
+        }
+    });
+}
+
+// Load video content based on current selections
+function loadContent() {
+    let url = '';
+
+    // Special handling for iframe.pstream.org with proper TMDB format
+    if (currentServer === 'iframe.pstream.org') {
+        if (media === 'movie') {
+            url = `https://iframe.pstream.org/embed/tmdb-movie-${id}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+        } else if (media === 'tv') {
+            url = `https://iframe.pstream.org/embed/tmdb-tv-${id}/${currentSeason}/${currentEpisode}?theme=grape&language=en&logo=false&downloads=false&language-order=en%2Chi%2Cfr%2Cde%2Cnl%2Cpt&allinone=true&scale=1.0&backlink=https%3A%2F%2Ffreeflix.top&fedapi=false&interface-settings=false&tips=false&has-watchparty=false`;
+        }
+    } else {
+        // Default format for other servers
+        if (media === 'movie') {
+            url = `https://${currentServer}/embed/movie/${id}`;
+        } else if (media === 'tv') {
+            url = `https://${currentServer}/embed/tv/${id}/${currentSeason}/${currentEpisode}`;
+        }
+    }
+
+    if (iframe && url) {
+        iframe.src = url;
+        console.log(`Loading: ${url}`);
+
+
+
+        // Set loading timeout for iframe.pstream.org
+        let loadingTimeout;
+        if (currentServer === 'iframe.pstream.org') {
+            loadingTimeout = setTimeout(() => {
+                console.warn('iframe.pstream.org loading timeout, trying next server');
+                showToast('Server timeout. Trying next server...', 'error');
+                tryNextServer();
+            }, 10000); // 10 second timeout
         }
 
-        // Get regular recommendations
-        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/recommendations?api_key=${api_Key}&page=${loadedPages.recommendations}`);
+        // Add error handling for iframe loading
+        iframe.onload = function() {
+            console.log('Iframe loaded successfully');
+            clearTimeout(loadingTimeout);
+
+
+        };
+
+        iframe.onerror = function() {
+            console.error('Failed to load iframe content');
+            clearTimeout(loadingTimeout);
+            showToast('Failed to load content. Trying next server...', 'error');
+            tryNextServer();
+        };
+    }
+}
+
+// Try next server in fallback chain
+function tryNextServer() {
+    currentServerIndex++;
+    if (currentServerIndex < serverFallbackChain.length) {
+        const nextServer = serverFallbackChain[currentServerIndex];
+        currentServer = nextServer;
+
+        // Update UI to show current server
+        const selectedServerName = document.querySelector('.selected-server .server-name');
+        if (selectedServerName) {
+            const serverDisplayNames = {
+                'iframe.pstream.org': 'SHOUKO',
+                'vidsrc.su': 'SHINOMIYA',
+                'vidsrc.vip': 'MAFUYU',
+                'vidlink.pro': 'MIZUKI'
+            };
+            selectedServerName.textContent = serverDisplayNames[nextServer] || nextServer;
+        }
+
+        showToast(`Switching to ${nextServer}...`, 'info');
+        loadContent();
+    } else {
+        showToast('All servers failed to load content', 'error');
+        currentServerIndex = 0; // Reset for next try
+    }
+}
+
+// Reset server index when manually changing servers
+function resetServerIndex() {
+    const serverName = currentServer;
+    currentServerIndex = serverFallbackChain.indexOf(serverName);
+    if (currentServerIndex === -1) currentServerIndex = 0;
+}
+
+// Generate episode list in andoks.cc style
+function generateEpisodeList(seasonData) {
+    if (!episodesList || !seasonData?.episodes) return;
+
+    episodesList.innerHTML = '';
+
+    seasonData.episodes.forEach((episode, index) => {
+        const episodeDiv = document.createElement('div');
+        episodeDiv.className = 'episode-item';
+        episodeDiv.dataset.seasonNumber = seasonData.season_number;
+        episodeDiv.dataset.episodeNumber = episode.episode_number;
+
+        // Mark first episode as active initially
+        if (index === 0) {
+            episodeDiv.classList.add('active');
+        }
+
+        episodeDiv.innerHTML = `
+            <div class="episode-number">${episode.episode_number}</div>
+            <img src="https://image.tmdb.org/t/p/w300${episode.still_path || '/default-episode.jpg'}"
+                 alt="Episode ${episode.episode_number}"
+                 class="episode-thumbnail"
+                 onerror="this.src='https://via.placeholder.com/300x169/1a1a1a/ffffff?text=Episode+${episode.episode_number}'">
+            <div class="episode-info">
+                <div class="episode-title">${episode.name || `Episode ${episode.episode_number}`}</div>
+                <div class="episode-description">${episode.overview || 'No description available.'}</div>
+            </div>
+        `;
+
+        episodeDiv.addEventListener('click', () => {
+            // Remove active class from all episodes
+            document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
+
+            // Add active class to clicked episode
+            episodeDiv.classList.add('active');
+
+            // Update current episode
+            currentEpisode = episode.episode_number;
+
+            // Update play button text
+            if (playBtn) {
+                playBtn.textContent = `▶ Play S${seasonData.season_number}E${episode.episode_number}`;
+            }
+
+            // Load the episode
+            loadContent();
+
+            showToast(`Now playing: S${seasonData.season_number}E${episode.episode_number}`, 'success');
+        });
+
+        episodesList.appendChild(episodeDiv);
+    });
+}
+
+// Load recommendations in sidebar format
+async function loadRecommendations() {
+    if (!recommendationsList) return;
+
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/recommendations?api_key=${api_Key}`);
         const data = await response.json();
+
         if (data.results && data.results.length > 0) {
-            let filteredResults = data.results;
+            recommendationsList.innerHTML = '';
 
-            // If current content is anime, filter to prefer actual anime recommendations
-            if (isCurrentAnime) {
-                filteredResults = data.results.filter(item => isActualAnime(item));
+            // Show only first 10 recommendations for sidebar
+            data.results.slice(0, 10).forEach(item => {
+                const recDiv = document.createElement('div');
+                recDiv.className = 'recommendation-item';
+                recDiv.innerHTML = `
+                    <img src="https://image.tmdb.org/t/p/w200${item.poster_path}"
+                         alt="${item.title || item.name}"
+                         class="recommendation-poster"
+                         onerror="this.src='https://via.placeholder.com/200x300/1a1a1a/ffffff?text=No+Image'">
+                    <div class="recommendation-info">
+                        <div class="recommendation-title">${item.title || item.name}</div>
+                        <div class="recommendation-year">${(item.release_date || item.first_air_date)?.split('-')[0] || 'N/A'}</div>
+                        <div class="recommendation-rating">
+                            <span class="rating-star">⭐</span>
+                            <span class="rating-value">${item.vote_average?.toFixed(1) || 'N/A'}</span>
+                        </div>
+                    </div>
+                `;
 
-                // If no anime recommendations found, add some non-anime but keep it minimal
-                if (filteredResults.length < 5) {
-                    const nonAnime = data.results.filter(item => !isActualAnime(item)).slice(0, 3);
-                    filteredResults = [...filteredResults, ...nonAnime];
-                }
-            }
+                recDiv.addEventListener('click', () => {
+                    const mediaType = item.title ? 'movie' : 'tv';
+                    window.location.href = `movie_details.html?media=${mediaType}&id=${item.id}`;
+                });
 
-            const needed = 15 - recommendations.length;
-            recommendations.push(...filteredResults.slice(0, needed));
+                recommendationsList.appendChild(recDiv);
+            });
+        } else {
+            recommendationsList.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">No recommendations available</p>';
         }
-
-        // If still not enough and it's anime, get more anime content
-        if (recommendations.length < 10 && isCurrentAnime) {
-            const moreAnimeResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.recommendations + 1}&sort_by=vote_average.desc&vote_count.gte=100`);
-            const moreAnimeData = await moreAnimeResponse.json();
-            if (moreAnimeData.results && moreAnimeData.results.length > 0) {
-                const filteredMoreAnime = moreAnimeData.results.filter(item =>
-                    item.id !== parseInt(id) &&
-                    !recommendations.some(rec => rec.id === item.id) &&
-                    isActualAnime(item)
-                );
-                const needed = 15 - recommendations.length;
-                recommendations.push(...filteredMoreAnime.slice(0, needed));
-            }
-        }
-
-        // Fallback to similar content if still not enough
-        if (recommendations.length < 10) {
-            const similarResponse = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=1`);
-            const similarData = await similarResponse.json();
-            if (similarData.results && similarData.results.length > 0) {
-                let filteredSimilar = similarData.results;
-
-                // Filter for actual anime if current content is anime
-                if (isCurrentAnime) {
-                    filteredSimilar = similarData.results.filter(item => isActualAnime(item));
-
-                    // If no anime similar content, add limited non-anime
-                    if (filteredSimilar.length < 3) {
-                        const nonAnimeSimilar = similarData.results.filter(item => !isActualAnime(item)).slice(0, 2);
-                        filteredSimilar = [...filteredSimilar, ...nonAnimeSimilar];
-                    }
-                }
-
-                const alreadyAdded = recommendations.map(r => r.id);
-                const uniqueSimilar = filteredSimilar.filter(item => !alreadyAdded.includes(item.id));
-                const needed = 15 - recommendations.length;
-                recommendations.push(...uniqueSimilar.slice(0, needed));
-            }
-        }
-
-        return recommendations;
     } catch (error) {
-        console.error('Error fetching recommendations:', error);
-        return [];
+        console.error('Error loading recommendations:', error);
+        recommendationsList.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">Failed to load recommendations</p>';
     }
 }
 
-async function fetchSimilarMovies() {
+// Fetch movie/TV show details from TMDB API
+async function fetchMediaDetails() {
     try {
-        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}/similar?api_key=${api_Key}&page=${loadedPages.similar}`);
+        const response = await fetch(`https://api.themoviedb.org/3/${media}/${id}?api_key=${api_Key}`);
         const data = await response.json();
 
-        if (!data.results || data.results.length === 0) {
-            return [];
+        // Update basic info
+        if (movieTitle) movieTitle.textContent = data.title || data.name;
+        if (movieYear) movieYear.textContent = (data.release_date || data.first_air_date)?.split('-')[0] || 'N/A';
+        if (rating) rating.textContent = data.vote_average?.toFixed(1) || 'N/A';
+        if (genre) genre.textContent = data.genres?.[0]?.name || 'Unknown';
+        if (plot) plot.textContent = data.overview || 'No description available.';
+
+        // Update backdrop image
+        if (backdropImage && data.backdrop_path) {
+            backdropImage.src = `https://image.tmdb.org/t/p/w1280${data.backdrop_path}`;
         }
 
-        // Check if current content is actual anime (not just animation)
-        const isCurrentAnime = isCurrentContentAnime();
+        // TV Show specific updates
+        if (media === 'tv') {
+            // Show TV-specific elements
+            const tvOnlyElements = document.querySelectorAll('.tv-only');
+            const movieOnlyElements = document.querySelectorAll('.movie-only');
 
-        let filteredResults = data.results;
+            tvOnlyElements.forEach(el => el.style.display = 'flex');
+            movieOnlyElements.forEach(el => el.style.display = 'none');
 
-        // If current content is anime, prioritize actual anime similar content
-        if (isCurrentAnime) {
-            const animeResults = data.results.filter(item => isActualAnime(item));
+            if (seasonsCount) seasonsCount.textContent = data.number_of_seasons || 'N/A';
+            if (status) status.textContent = data.status || 'Unknown';
 
-            // If we have anime similar content, use primarily that
-            if (animeResults.length > 0) {
-                filteredResults = animeResults;
+            // Load season data
+            if (data.seasons && data.seasons.length > 0) {
+                seasonsData = data.seasons.filter(season => season.season_number > 0);
+                await loadSeasonSelector();
 
-                // If not enough anime similar content, add a few non-anime (max 3)
-                if (animeResults.length < 8) {
-                    const nonAnimeResults = data.results.filter(item => !isActualAnime(item)).slice(0, 3);
-                    filteredResults = [...animeResults, ...nonAnimeResults];
+                // Load first season episodes by default
+                if (seasonsData.length > 0) {
+                    await loadSeasonEpisodes(seasonsData[0].season_number);
                 }
-            } else {
-                // If no anime in similar results, fetch more anime content from discover with Japanese language
-                try {
-                    const animeDiscoverResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.similar}&sort_by=popularity.desc&vote_count.gte=50`);
-                    const animeDiscoverData = await animeDiscoverResponse.json();
-
-                    if (animeDiscoverData.results && animeDiscoverData.results.length > 0) {
-                        const animeContent = animeDiscoverData.results.filter(item =>
-                            item.id !== parseInt(id) && isActualAnime(item)
-                        );
-                        filteredResults = [...animeContent.slice(0, 10), ...data.results.slice(0, 5)];
-                    }
-                } catch (error) {
-                    console.log('Could not fetch additional anime content, using available similar content');
-                }
-            }
-        }
-
-        return filteredResults.slice(0, 15);
-    } catch (error) {
-        console.error('Error fetching similar movies:', error);
-        return [];
-    }
-}
-
-async function fetchTrendingContent() {
-    try {
-        // Check if current content is actual anime (not just animation)
-        const isCurrentAnime = isCurrentContentAnime();
-
-        let trendingContent = [];
-
-        // If current content is anime, fetch trending anime first
-        if (isCurrentAnime) {
-            // Fetch trending anime content with Japanese language filter
-            const trendingAnimeResponse = await fetch(`https://api.themoviedb.org/3/discover/tv?api_key=${api_Key}&with_genres=16&with_original_language=ja&page=${loadedPages.trending}&sort_by=popularity.desc&first_air_date.gte=2020-01-01`);
-            const trendingAnimeData = await trendingAnimeResponse.json();
-
-            if (trendingAnimeData.results && trendingAnimeData.results.length > 0) {
-                const animeFiltered = trendingAnimeData.results.filter(item =>
-                    item.id !== parseInt(id) && isActualAnime(item)
-                );
-                trendingContent.push(...animeFiltered.slice(0, 10));
-            }
-        }
-
-        // Get regular trending content
-        const response = await fetch(`https://api.themoviedb.org/3/trending/${media}/week?api_key=${api_Key}&page=${loadedPages.trending}`);
-        const data = await response.json();
-        const filtered = data.results ? data.results.filter(item => item.id !== parseInt(id)) : [];
-
-        if (isCurrentAnime) {
-            // For anime content, prioritize actual anime in trending results
-            const animeTrending = filtered.filter(item => isActualAnime(item));
-            const nonAnimeTrending = filtered.filter(item => !isActualAnime(item));
-
-            // Add anime trending first, then limited non-anime
-            trendingContent.push(...animeTrending);
-            const remainingSlots = 15 - trendingContent.length;
-            if (remainingSlots > 0) {
-                trendingContent.push(...nonAnimeTrending.slice(0, Math.min(remainingSlots, 3)));
             }
         } else {
-            // For non-anime content, use regular trending
-            trendingContent = filtered;
+            // Movie specific updates
+            const tvOnlyElements = document.querySelectorAll('.tv-only');
+            const movieOnlyElements = document.querySelectorAll('.movie-only');
+
+            tvOnlyElements.forEach(el => el.style.display = 'none');
+            movieOnlyElements.forEach(el => el.style.display = 'flex');
+
+            // Hide TV-specific elements for movies
+            const seasonSelector = document.querySelector('.season-selector');
+            if (seasonSelector) seasonSelector.style.display = 'none';
+
+            // Update movie-specific content
+            if (runtime) runtime.textContent = formatRuntime(data.runtime);
+            if (language) {
+                const primaryLanguage = data.spoken_languages?.[0]?.english_name || 'English';
+                language.textContent = primaryLanguage;
+            }
+            if (movieStatus) movieStatus.textContent = data.status || 'Released';
+
+            if (playBtn) playBtn.textContent = '▶ Play Movie';
         }
 
-        // Remove duplicates and limit results
-        const uniqueContent = trendingContent.filter((item, index, self) =>
-            index === self.findIndex(t => t.id === item.id)
-        );
+        // Load recommendations
+        await loadRecommendations();
 
-        return uniqueContent.slice(0, 15);
+        // Load initial content
+        loadContent();
+
     } catch (error) {
-        console.error('Error fetching trending content:', error);
-        return [];
+        console.error('Error fetching media details:', error);
+        showToast('Failed to load content details', 'error');
     }
 }
 
+// Load season selector dropdown
+async function loadSeasonSelector() {
+    if (!seasonSelect || !seasonsData.length) return;
 
+    seasonSelect.innerHTML = '';
 
-// Enhanced display function
-function displayContentInGrid(content, grid, loading) {
-    if (!grid || !loading) return;
-    loading.classList.add('hidden');
-    if (!content || content.length === 0) {
-        grid.style.display = 'none';
+    for (const season of seasonsData) {
+        const option = document.createElement('option');
+        option.value = season.season_number;
+        option.textContent = `Season ${season.season_number} (${season.episode_count} Episodes)`;
+        seasonSelect.appendChild(option);
+    }
+
+    // Add change event listener
+    seasonSelect.addEventListener('change', async () => {
+        const selectedSeason = parseInt(seasonSelect.value);
+        currentSeason = selectedSeason;
+        await loadSeasonEpisodes(selectedSeason);
+    });
+}
+
+// Load episodes for a specific season
+async function loadSeasonEpisodes(seasonNumber) {
+    try {
+        const response = await fetch(`https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}?api_key=${api_Key}`);
+        const seasonData = await response.json();
+
+        generateEpisodeList(seasonData);
+
+        // Reset to first episode of the season
+        currentEpisode = 1;
+        if (playBtn) {
+            playBtn.textContent = `▶ Play S${seasonNumber}E1`;
+        }
+
+    } catch (error) {
+        console.error('Error loading season episodes:', error);
+        showToast('Failed to load episodes', 'error');
+    }
+}
+
+// Button event listeners
+if (watchListBtn) {
+    watchListBtn.addEventListener('click', () => {
+        // Watchlist functionality
+        const isInWatchlist = watchlist.some(item => item.id === id);
+        if (isInWatchlist) {
+            showToast('Already in watchlist!', 'info');
+        } else {
+            watchlist.push({ id, media, title: movieTitle?.textContent || 'Unknown' });
+            localStorage.setItem('watchlist', JSON.stringify(watchlist));
+            showToast('Added to watchlist!', 'success');
+        }
+    });
+}
+
+if (downloadBtn) {
+    downloadBtn.addEventListener('click', handleDownload);
+}
+
+if (playBtn) {
+    playBtn.addEventListener('click', () => {
+        // Scroll to video player
+        const videoContainer = document.querySelector('.video-container');
+        if (videoContainer) {
+            videoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    });
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    if (!id || !media) {
+        showToast('Invalid content ID or media type', 'error');
         return;
     }
-    if (!grid.children.length) {
-        grid.innerHTML = '';
+
+    initializeServerDropdown();
+    fetchMediaDetails();
+});
+
+// Add some responsive behavior
+window.addEventListener('resize', () => {
+    // Handle any responsive adjustments if needed
+});
+
+console.log('FreeFlix Movie Details - andoks.cc Layout Loaded');
+
+// Mobile-specific functionality
+let isMobileCollapsed = false;
+const MOBILE_EPISODE_LIMIT = 3; // Show only first 3 episodes on mobile by default
+
+// Mobile navigation functions
+function scrollToSection(sectionName) {
+    let targetElement;
+
+    switch(sectionName) {
+        case 'overview':
+            targetElement = document.querySelector('.overview-section');
+            break;
+        case 'episodes':
+            targetElement = document.querySelector('.episodes-container');
+            break;
+        case 'recommendations':
+            targetElement = document.querySelector('.recommendations-sidebar');
+            break;
+        default:
+            return;
     }
-    content.forEach((item, index) => {
-        const card = createRecommendationCard(item);
-        card.style.animationDelay = `${(index % 8) * 0.1}s`;
-        grid.appendChild(card);
-    });
-    setTimeout(() => {
-        grid.classList.add('loaded');
-    }, 100);
+
+    if (targetElement) {
+        targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+        });
+
+        // Update active pill
+        document.querySelectorAll('.nav-pill').forEach(pill => pill.classList.remove('active'));
+        event.target.classList.add('active');
+    }
 }
 
-// Enhanced card creation with more details
-function createRecommendationCard(item) {
-    const card = document.createElement('div');
-    card.className = 'recommendation-card';
-    const title = item.title || item.name;
-    const releaseDate = item.release_date || item.first_air_date;
-    const year = releaseDate ? new Date(releaseDate).getFullYear() : 'N/A';
-    const rating = item.vote_average ? item.vote_average.toFixed(1) : 'N/A';
-    const overview = item.overview || 'No description available.';
-    const posterPath = item.poster_path
-        ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-        : 'https://via.placeholder.com/500x750/1a1a1a/666?text=No+Image';
-    let genreText = '';
-    if (item.genre_ids && item.genre_ids.length > 0) {
-        const genreMap = {
-            28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime',
-            99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History',
-            27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Sci-Fi',
-            10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western',
-            10759: 'Action & Adventure', 10762: 'Kids', 10763: 'News', 10764: 'Reality',
-            10765: 'Sci-Fi & Fantasy', 10766: 'Soap', 10767: 'Talk', 10768: 'War & Politics'
-        };
-        genreText = genreMap[item.genre_ids[0]] || (media === 'movie' ? 'Movie' : 'TV Show');
-    } else {
-        genreText = media === 'movie' ? 'Movie' : 'TV Show';
+// Enhanced episode list generation with mobile collapse functionality
+function generateEpisodeListMobile(seasonData) {
+    if (!episodesList || !seasonData?.episodes) return;
+
+    const episodesListContainer = document.getElementById('episodesListContainer');
+    const episodesCountInfo = document.getElementById('episodesCountInfo');
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesNavPill = document.getElementById('episodesNavPill');
+
+    if (!episodesListContainer) return;
+
+    episodesListContainer.innerHTML = '';
+
+    // Show episodes nav pill for TV shows
+    if (media === 'tv' && episodesNavPill) {
+        episodesNavPill.style.display = 'inline-block';
     }
-    card.innerHTML = `
-        <img src="${posterPath}" alt="${title}" class="recommendation-poster" loading="lazy">
-        <div class="recommendation-info">
-            <h3 class="recommendation-title">${title}</h3>
-            <div class="recommendation-meta">
-                <span class="recommendation-year">${year}</span>
-                <span class="recommendation-rating">${rating}</span>
+
+    // Show episode count info
+    if (episodesCountInfo && seasonData.episodes.length > MOBILE_EPISODE_LIMIT) {
+        episodesCountInfo.style.display = 'block';
+        episodesCountInfo.textContent = `${seasonData.episodes.length} episodes in this season`;
+    }
+
+    seasonData.episodes.forEach((episode, index) => {
+        const episodeDiv = document.createElement('div');
+        episodeDiv.className = 'episode-item';
+        episodeDiv.dataset.seasonNumber = seasonData.season_number;
+        episodeDiv.dataset.episodeNumber = episode.episode_number;
+
+        // Check if episode should be hidden on mobile initially
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile && index >= MOBILE_EPISODE_LIMIT) {
+            episodeDiv.classList.add('hidden-mobile');
+        }
+
+        // Mark first episode as active initially
+        if (index === 0) {
+            episodeDiv.classList.add('active');
+        }
+
+        episodeDiv.innerHTML = `
+            <div class="episode-number">${episode.episode_number}</div>
+            <img src="https://image.tmdb.org/t/p/w300${episode.still_path || '/default-episode.jpg'}"
+                 alt="Episode ${episode.episode_number}"
+                 class="episode-thumbnail"
+                 onerror="this.src='https://via.placeholder.com/300x169/1a1a1a/ffffff?text=Episode+${episode.episode_number}'">
+            <div class="episode-info">
+                <div class="episode-title">${episode.name || `Episode ${episode.episode_number}`}</div>
+                <div class="episode-description">${episode.overview || 'No description available.'}</div>
             </div>
-            <p class="recommendation-overview">${overview}</p>
-            <span class="recommendation-genre">${genreText}</span>
-        </div>
-    `;
-    card.addEventListener('click', () => {
-        const itemMedia = item.title ? 'movie' : 'tv';
-        window.location.href = `movie_details.html?id=${item.id}&media=${itemMedia}`;
-    });
-    return card;
-}
+        `;
 
-// Load more functionality
-function setupLoadMoreButton() {
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    if (!loadMoreBtn) return;
-    loadMoreBtn.addEventListener('click', async () => {
-        if (loadMoreBtn.classList.contains('loading')) return;
-        loadMoreBtn.classList.add('loading');
-        loadMoreBtn.querySelector('span').textContent = 'Loading...';
-        try {
-            Object.keys(loadedPages).forEach(key => {
-                if (loadedPages[key] < maxPages) {
-                    loadedPages[key]++;
-                }
-            });
-            await Promise.all([
-                loadMoreForCategory('recommendationsGrid', 'recommendationsLoading', fetchRecommendations),
-                loadMoreForCategory('similarGrid', 'similarLoading', fetchSimilarMovies),
-                loadMoreForCategory('trendingGrid', 'trendingLoading', fetchTrendingContent)
-            ]);
-            const allPagesLoaded = Object.values(loadedPages).every(page => page >= maxPages);
-            if (allPagesLoaded) {
-                loadMoreBtn.style.display = 'none';
+        episodeDiv.addEventListener('click', () => {
+            // Remove active class from all episodes
+            document.querySelectorAll('.episode-item').forEach(ep => ep.classList.remove('active'));
+
+            // Add active class to clicked episode
+            episodeDiv.classList.add('active');
+
+            // Update current episode
+            currentEpisode = episode.episode_number;
+
+            // Update play button text
+            if (playBtn) {
+                playBtn.textContent = `▶ Play S${seasonData.season_number}E${episode.episode_number}`;
             }
-        } catch (error) {
-            console.error('Error loading more content:', error);
-        } finally {
-            loadMoreBtn.classList.remove('loading');
-            loadMoreBtn.querySelector('span').textContent = 'Load More Recommendations';
-        }
+
+            // Load the episode
+            loadContent();
+
+            showToast(`Now playing: S${seasonData.season_number}E${episode.episode_number}`, 'success');
+        });
+
+        episodesListContainer.appendChild(episodeDiv);
     });
+
+    // Setup mobile collapse functionality
+    setupMobileEpisodeToggle(seasonData.episodes.length);
 }
 
-async function loadMoreForCategory(gridId, loadingId, fetchFunction) {
-    const grid = document.getElementById(gridId);
-    const loading = document.getElementById(loadingId);
-    if (!grid || !loading) return;
-    try {
-        const content = await fetchFunction();
-        if (content && content.length > 0) {
-            content.forEach((item, index) => {
-                const card = createRecommendationCard(item);
-                card.style.animationDelay = `${index * 0.1}s`;
-                grid.appendChild(card);
-            });
-        }
-    } catch (error) {
-        console.error(`Error loading more content for ${gridId}:`, error);
+// Setup mobile episode toggle functionality
+function setupMobileEpisodeToggle(totalEpisodes) {
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesListContainer = document.getElementById('episodesListContainer');
+
+    if (!episodesToggleBtn || !episodesListContainer) return;
+
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile && totalEpisodes > MOBILE_EPISODE_LIMIT) {
+        episodesToggleBtn.style.display = 'inline-block';
+        isMobileCollapsed = true;
+        episodesListContainer.classList.add('mobile-collapsed');
+        episodesToggleBtn.textContent = `Show All ${totalEpisodes} Episodes`;
+
+        episodesToggleBtn.addEventListener('click', toggleMobileEpisodes);
+    } else {
+        episodesToggleBtn.style.display = 'none';
+        episodesListContainer.classList.remove('mobile-collapsed');
     }
+}
+
+// Toggle mobile episodes visibility
+function toggleMobileEpisodes() {
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesListContainer = document.getElementById('episodesListContainer');
+    const hiddenEpisodes = document.querySelectorAll('.episode-item.hidden-mobile');
+
+    if (!episodesToggleBtn || !episodesListContainer) return;
+
+    if (isMobileCollapsed) {
+        // Show all episodes
+        episodesListContainer.classList.remove('mobile-collapsed');
+        hiddenEpisodes.forEach(episode => episode.style.display = 'flex');
+        episodesToggleBtn.textContent = 'Show Less';
+        isMobileCollapsed = false;
+    } else {
+        // Hide episodes beyond limit
+        episodesListContainer.classList.add('mobile-collapsed');
+        hiddenEpisodes.forEach(episode => episode.style.display = 'none');
+        const totalEpisodes = document.querySelectorAll('.episode-item').length;
+        episodesToggleBtn.textContent = `Show All ${totalEpisodes} Episodes`;
+        isMobileCollapsed = true;
+
+        // Scroll to episodes section
+        document.querySelector('.episodes-container').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+}
+
+// Override the original generateEpisodeList function
+const originalGenerateEpisodeList = generateEpisodeList;
+function generateEpisodeList(seasonData) {
+    // Use the mobile-enhanced version
+    generateEpisodeListMobile(seasonData);
+}
+
+// Handle window resize for mobile responsiveness
+window.addEventListener('resize', () => {
+    const isMobile = window.innerWidth <= 768;
+    const episodesToggleBtn = document.getElementById('episodesToggleBtn');
+    const episodesListContainer = document.getElementById('episodesListContainer');
+
+    if (isMobile) {
+        // Reset mobile collapse state when switching to mobile
+        const totalEpisodes = document.querySelectorAll('.episode-item').length;
+        if (totalEpisodes > MOBILE_EPISODE_LIMIT) {
+            setupMobileEpisodeToggle(totalEpisodes);
+        }
+    } else {
+        // Show all episodes on desktop
+        if (episodesToggleBtn) episodesToggleBtn.style.display = 'none';
+        if (episodesListContainer) episodesListContainer.classList.remove('mobile-collapsed');
+        document.querySelectorAll('.episode-item.hidden-mobile').forEach(episode => {
+            episode.style.display = 'flex';
+        });
+    }
+});
+
+// Add smooth scrolling behavior for better UX
+document.addEventListener('DOMContentLoaded', () => {
+    // Add smooth scrolling to all anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+
+// Global function to make it accessible from HTML onclick
+window.scrollToSection = scrollToSection;
+
+// Search functionality for header search
+const headerSearchInput = document.getElementById('header-search');
+
+// TMDB API key for search (use a different key for search as per edit)
+const searchApiKey = '84259f99204eeb7d45c7e3d8e36c6123';
+
+// Function to fetch search results from TMDB API
+async function fetchSearchResults(query) {
+    try {
+        // Use TMDB multi-search API to get results for everything including anime
+        const tmdbResponse = await fetch(`https://api.themoviedb.org/3/search/multi?api_key=${searchApiKey}&query=${encodeURIComponent(query)}`);
+        const tmdbData = await tmdbResponse.json();
+
+        // Also specifically search for anime with a dedicated request
+        const animeResponse = await fetch(`https://api.themoviedb.org/3/search/tv?api_key=${searchApiKey}&query=${encodeURIComponent(query)}&with_genres=16&with_keywords=210024`);
+        const animeData = await animeResponse.json();
+
+        // Format TMDB multi-search results
+        const tmdbResults = tmdbData.results.map(item => ({
+            id: item.id,
+            title: item.title || item.name,
+            year: item.release_date ? new Date(item.release_date).getFullYear() :
+                  item.first_air_date ? new Date(item.first_air_date).getFullYear() : 'N/A',
+            poster: item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'https://via.placeholder.com/200x300',
+            rating: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
+            type: item.media_type === 'movie' ? 'movie' : 'tv'
+        }));
+
+        // Format dedicated anime search results
+        const animeResults = animeData.results.map(item => ({
+            id: item.id,
+            title: item.name,
+            year: item.first_air_date ? new Date(item.first_air_date).getFullYear() : 'N/A',
+            poster: item.poster_path ? `https://image.tmdb.org/t/p/w200${item.poster_path}` : 'https://via.placeholder.com/200x300',
+            rating: item.vote_average ? item.vote_average.toFixed(1) : 'N/A',
+            type: 'tv'
+        }));
+
+        // Combine results and remove duplicates
+        const allResults = [...tmdbResults, ...animeResults];
+        const uniqueResults = allResults.filter((item, index, self) =>
+            index === self.findIndex(t => t.id === item.id && t.type === item.type)
+        );
+
+        return uniqueResults.slice(0, 8); // Limit to 8 results
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        return [];
+    }
+}
+
+// Function to create search results dropdown
+function createSearchDropdown() {
+    let dropdown = document.getElementById('search-dropdown');
+    if (!dropdown) {
+        dropdown = document.createElement('div');
+        dropdown.id = 'search-dropdown';
+        dropdown.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(16, 16, 17, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(141, 22, 201, 0.3);
+            border-radius: 15px;
+            margin-top: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        `;
+        headerSearchInput.parentElement.appendChild(dropdown);
+    }
+    return dropdown;
+}
+
+// Function to display search results
+function displaySearchResults(results) {
+    const dropdown = createSearchDropdown();
+    dropdown.innerHTML = '';
+
+    if (results.length === 0) {
+        dropdown.innerHTML = '<div style="padding: 20px; text-align: center; color: #888;">No results found</div>';
+        dropdown.style.display = 'block';
+        return;
+    }
+
+    results.forEach(item => {
+        const resultItem = document.createElement('div');
+        resultItem.style.cssText = `
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        `;
+
+        resultItem.innerHTML = `
+            <img src="${item.poster}" alt="${item.title}" style="
+                width: 40px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 6px;
+                flex-shrink: 0;
+            ">
+            <div style="flex: 1; min-width: 0;">
+                <div style="color: #fff; font-weight: 500; font-size: 14px; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    ${item.title}
+                </div>
+                <div style="color: #888; font-size: 12px;">
+                    ${item.year} • ${item.type === 'movie' ? 'Movie' : 'TV Show'} • ⭐ ${item.rating}
+                </div>
+            </div>
+        `;
+
+        resultItem.addEventListener('mouseenter', () => {
+            resultItem.style.backgroundColor = 'rgba(141, 22, 201, 0.2)';
+        });
+
+        resultItem.addEventListener('mouseleave', () => {
+            resultItem.style.backgroundColor = 'transparent';
+        });
+
+        resultItem.addEventListener('click', () => {
+            window.location.href = `../movie_details/movie_details.html?media=${item.type}&id=${item.id}`;
+        });
+
+        dropdown.appendChild(resultItem);
+    });
+
+    dropdown.style.display = 'block';
+}
+
+// Function to handle search input
+async function handleHeaderSearch() {
+    const query = headerSearchInput.value.trim();
+
+    if (query.length > 2) {
+        const results = await fetchSearchResults(query);
+        displaySearchResults(results);
+    } else {
+        const dropdown = document.getElementById('search-dropdown');
+        if (dropdown) {
+            dropdown.style.display = 'none';
+        }
+    }
+}
+
+// Add event listeners for search
+if (headerSearchInput) {
+    headerSearchInput.addEventListener('input', handleHeaderSearch);
+
+    headerSearchInput.addEventListener('focus', () => {
+        if (headerSearchInput.value.trim().length > 2) {
+            handleHeaderSearch();
+        }
+    });
+
+    headerSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleHeaderSearch();
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!headerSearchInput.parentElement.contains(e.target)) {
+            const dropdown = document.getElementById('search-dropdown');
+            if (dropdown) {
+                dropdown.style.display = 'none';
+            }
+        }
+    });
 }
