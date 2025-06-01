@@ -175,6 +175,14 @@ body {
     overflow: hidden;
 }
 
+@media (max-width: 768px) {
+    .backdrop-image {
+        height: 100%;
+        object-fit: cover;
+        object-position: center top; /* Focus on top of image for mobile */
+    }
+}
+
 .hero-backdrop {
     position: relative;
     width: 100%;
@@ -862,15 +870,22 @@ iframe {
     }
 
     .hero-section {
-        height: 100vh; /* Full viewport height */
-        min-height: 600px; /* Minimum height to ensure content fits */
+        height: auto; /* Allow content to determine height */
+        min-height: 500px; /* Reasonable minimum height */
+        max-height: 70vh; /* Limit maximum height on mobile */
     }
 
     .hero-overlay {
         padding: 20px;
-        padding-bottom: 40px; /* Extra bottom padding for buttons */
-        align-items: flex-end; /* Keep content at bottom like original */
-        justify-content: flex-start; /* Align to start */
+        padding-top: 60px; /* Add top padding to move content down from header */
+        padding-bottom: 30px; /* Bottom padding for buttons */
+        align-items: center; /* Center content vertically */
+        justify-content: center; /* Center content horizontally */
+    }
+
+    .hero-content {
+        width: 100%;
+        max-width: 100%;
     }
 
     .hero-title {
