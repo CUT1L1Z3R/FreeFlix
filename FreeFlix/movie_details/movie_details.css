@@ -177,9 +177,11 @@ body {
 
 @media (max-width: 768px) {
     .backdrop-image {
+        width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center top; /* Focus on top of image for mobile */
+        object-position: center; /* Center the image */
+        min-height: 500px; /* Ensure minimum coverage */
     }
 }
 
@@ -202,7 +204,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(16, 16, 17, 0.9) 0%, rgba(16, 16, 17, 0.7) 50%, rgba(16, 16, 17, 0.9) 100%);
+    background: linear-gradient(to bottom, rgba(16, 16, 17, 0.3) 0%, rgba(16, 16, 17, 0.6) 50%, rgba(16, 16, 17, 0.9) 100%);
     display: flex;
     align-items: flex-end;
     padding: 60px;
@@ -870,29 +872,47 @@ iframe {
     }
 
     .hero-section {
-        height: auto; /* Allow content to determine height */
+        height: 85vh; /* Good mobile height that shows content */
         min-height: 500px; /* Reasonable minimum height */
-        max-height: 70vh; /* Limit maximum height on mobile */
+        max-height: 700px; /* Prevent excessive height on large mobile screens */
     }
 
     .hero-overlay {
         padding: 20px;
-        padding-top: 60px; /* Add top padding to move content down from header */
-        padding-bottom: 30px; /* Bottom padding for buttons */
-        align-items: center; /* Center content vertically */
-        justify-content: center; /* Center content horizontally */
+        padding-top: 80px; /* Space for header and some breathing room */
+        padding-bottom: 40px; /* Bottom padding for buttons */
+        align-items: flex-start; /* Align content to start */
+        justify-content: flex-start; /* Align to start */
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
 
     .hero-content {
         width: 100%;
         max-width: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .hero-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding-bottom: 20px;
     }
 
     .hero-title {
-        font-size: 28px;
+        font-size: 26px;
         line-height: 1.2;
         margin-bottom: 15px;
-        text-align: left; /* Keep left alignment */
+        text-align: left;
+        color: #ffffff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        font-weight: 700;
     }
 
     .content-area {
