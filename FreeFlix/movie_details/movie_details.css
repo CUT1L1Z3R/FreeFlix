@@ -861,46 +861,71 @@ iframe {
         align-self: center;
     }
 
-   .hero-section {
-    height: 650px; /* Reduce height to compensate */
+    .hero-section {
+        height: 100vh; /* Full viewport height */
+        min-height: 600px; /* Minimum height to ensure content fits */
     }
 
     .hero-overlay {
-    padding: 30px 20px;
-    padding-top: 10px; /* Extra top padding for title visibility */
-    align-items: flex-start; /* Change from flex-end to flex-start */
-    justify-content: flex-start; /* Ensure content starts from top */
+        padding: 20px;
+        padding-bottom: 40px; /* Extra bottom padding for buttons */
+        align-items: flex-end; /* Keep content at bottom like original */
+        justify-content: flex-start; /* Align to start */
     }
 
     .hero-title {
-        font-size: 32px;
+        font-size: 28px;
+        line-height: 1.2;
+        margin-bottom: 15px;
+        text-align: left; /* Keep left alignment */
     }
 
     .content-area {
         flex-direction: column;
         padding: 20px;
         gap: 30px;
-        padding-bottom: 80px; /* Space for mobile nav pills */
+        padding-bottom: 100px; /* Extra space for mobile nav pills */
     }
 
     .left-content, .right-content {
         max-width: 100%;
     }
 
+    .hero-meta {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
     .hero-details {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .tmdb-score {
+        align-self: flex-start;
+    }
+
+    .source-info {
+        justify-content: flex-start;
+        margin-bottom: 25px;
     }
 
     .hero-actions {
         flex-direction: column;
         width: 100%;
+        gap: 12px;
+        margin-top: 20px;
     }
 
     .play-btn, .watchlist-btn, .download-btn {
         width: 100%;
         text-align: center;
+        padding: 14px 20px;
+        font-size: 14px;
+        border-radius: 8px;
     }
 
     iframe {
