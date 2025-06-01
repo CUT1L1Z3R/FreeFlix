@@ -879,8 +879,8 @@ iframe {
 
     .hero-overlay {
         padding: 20px;
-        padding-top: 40px; /* Reduced top padding to move content up */
-        padding-bottom: 20px; /* Reduced bottom padding for more space */
+        padding-top: 20px; /* Minimal top padding */
+        padding-bottom: 30px; /* Normal bottom padding */
         align-items: flex-start; /* Align content to start */
         justify-content: flex-start; /* Align to start */
         display: flex;
@@ -901,8 +901,9 @@ iframe {
         flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Center the content vertically */
-        padding-bottom: 10px; /* Reduced padding */
+        justify-content: flex-start; /* Move content to start (upward) */
+        padding-top: 80px; /* Add top padding to position content */
+        padding-bottom: 20px; /* Normal padding */
     }
 
     .hero-title {
@@ -929,14 +930,14 @@ iframe {
     .hero-meta {
         justify-content: flex-start;
         flex-wrap: wrap;
-        margin-bottom: 12px; /* Reduced margin */
+        margin-bottom: 20px; /* Back to normal spacing */
     }
 
     .hero-details {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px; /* Reduced gap */
-        margin-bottom: 12px; /* Reduced margin */
+        gap: 15px; /* Back to normal spacing */
+        margin-bottom: 20px; /* Back to normal spacing */
     }
 
     .tmdb-score {
@@ -945,22 +946,21 @@ iframe {
 
     .source-info {
         justify-content: flex-start;
-        margin-bottom: 15px; /* Reduced margin */
+        margin-bottom: 25px; /* Back to normal spacing */
     }
 
     .hero-actions {
         flex-direction: column;
         width: 100%;
-        gap: 10px; /* Reduced gap for tighter spacing */
-        margin-top: 15px; /* Reduced margin */
-        margin-bottom: 10px; /* Add bottom margin for spacing */
+        gap: 15px; /* Back to comfortable spacing */
+        margin-top: 20px; /* Back to normal margin */
     }
 
     .play-btn, .watchlist-btn, .download-btn {
         width: 100%;
         text-align: center;
-        padding: 12px 20px; /* Slightly reduced padding */
-        font-size: 14px;
+        padding: 15px 20px; /* Back to comfortable padding */
+        font-size: 16px; /* Back to readable size */
         border-radius: 8px;
     }
 
