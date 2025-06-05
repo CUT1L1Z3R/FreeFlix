@@ -355,13 +355,13 @@ function showBannerAtIndex(index) {
             newPlayButton.addEventListener(eventType, function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                window.location.href = `movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
+                window.location.href = `../movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
             }, {passive: false});
 
             newMoreInfoButton.addEventListener(eventType, function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                window.location.href = `movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
+                window.location.href = `../movie_details/movie_details.html?media=${item.mediaType}&id=${item.id}`;
             }, {passive: false});
         });
 
@@ -460,7 +460,7 @@ function fetchMedia(containerClass, endpoint, mediaType, usePosterPath = false) 
                     itemElement.addEventListener('click', () => {
                         const mediaId = movie.id;
                         const mediaToUse = mediaType || (movie.first_air_date ? 'tv' : 'movie');
-                        window.location.href = `movie_details/movie_details.html?media=${mediaToUse}&id=${mediaId}`;
+                        window.location.href = `../movie_details/movie_details.html?media=${mediaToUse}&id=${mediaId}`;
                     });
 
                     // Create overlay with title and rating
@@ -724,9 +724,9 @@ function fetchAnime(containerClass, genreOrKeyword) {
                     // Add click event to navigate to details page
                     itemElement.addEventListener('click', () => {
                         if (containerClass === 'anime-movie-container' || containerClass === 'top-rated-anime-movie-container') {
-                            window.location.href = `movie_details/movie_details.html?media=movie&id=${anime.id}`;
+                            window.location.href = `../movie_details/movie_details.html?media=movie&id=${anime.id}`;
                         } else {
-                            window.location.href = `movie_details/movie_details.html?media=tv&id=${anime.id}`;
+                            window.location.href = `../movie_details/movie_details.html?media=tv&id=${anime.id}`;
                         }
                     });
 
@@ -1128,17 +1128,17 @@ function displaySearchResults(results) {
         // Add event listener to navigate to details page
         thumbnail.addEventListener('click', () => {
             if (item.isAnime) {
-                window.location.href = `movie_details/movie_details.html?media=tv&id=${item.id}`;
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
             } else {
-                window.location.href = `movie_details/movie_details.html?media=${item.media_type}&id=${item.id}`;
+                window.location.href = `../movie_details/movie_details.html?media=${item.media_type}&id=${item.id}`;
             }
         });
 
         info.addEventListener('click', () => {
             if (item.isAnime) {
-                window.location.href = `movie_details/movie_details.html?media=tv&id=${item.id}`;
+                window.location.href = `../movie_details/movie_details.html?media=tv&id=${item.id}`;
             } else {
-                window.location.href = `movie_details/movie_details.html?media=${item.media_type}&id=${item.id}`;
+                window.location.href = `../movie_details/movie_details.html?media=${item.media_type}&id=${item.id}`;
             }
         });
 
