@@ -8,7 +8,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://freeflix.top/</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -18,10 +18,23 @@
     </image:image>
   </url>
 
+  <!-- Home Page -->
+  <url>
+    <loc>https://freeflix.top/home/</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://freeflix.top/assets/freeflix.png</image:loc>
+      <image:title>FreeFlix Home - Your Gateway to Free Entertainment</image:title>
+      <image:caption>Discover unlimited free movies, TV shows and anime on FreeFlix</image:caption>
+    </image:image>
+  </url>
+
   <!-- Main Category Pages -->
   <url>
     <loc>https://freeflix.top/movies/</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -33,7 +46,7 @@
 
   <url>
     <loc>https://freeflix.top/tvshows/</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -45,7 +58,7 @@
 
   <url>
     <loc>https://freeflix.top/anime/</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
@@ -58,7 +71,7 @@
   <!-- Movie Genre Pages -->
   <url>
     <loc>https://freeflix.top/movies/?genre=action</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -70,7 +83,7 @@
 
   <url>
     <loc>https://freeflix.top/movies/?genre=comedy</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -82,7 +95,7 @@
 
   <url>
     <loc>https://freeflix.top/movies/?genre=horror</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -94,7 +107,7 @@
 
   <url>
     <loc>https://freeflix.top/movies/?genre=thriller</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -107,7 +120,7 @@
   <!-- TV Show Genre Pages -->
   <url>
     <loc>https://freeflix.top/tvshows/?genre=drama</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -119,7 +132,7 @@
 
   <url>
     <loc>https://freeflix.top/tvshows/?genre=comedy</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -131,7 +144,7 @@
 
   <url>
     <loc>https://freeflix.top/tvshows/?genre=crime</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -144,7 +157,7 @@
   <!-- Anime Genre Pages -->
   <url>
     <loc>https://freeflix.top/anime/?genre=action</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -156,7 +169,7 @@
 
   <url>
     <loc>https://freeflix.top/anime/?genre=adventure</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -169,7 +182,7 @@
   <!-- Featured Content (Top Rated and Popular) -->
   <url>
     <loc>https://freeflix.top/movies/?filter=top_rated</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -181,7 +194,7 @@
 
   <url>
     <loc>https://freeflix.top/tvshows/?filter=top_rated</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -194,7 +207,7 @@
   <!-- Utility Pages -->
   <url>
     <loc>https://freeflix.top/movie_details/</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -205,7 +218,7 @@
 
   <url>
     <loc>https://freeflix.top/watchList/</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <image:image>
@@ -217,14 +230,14 @@
 
   <url>
     <loc>https://freeflix.top/sitemap.html</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://freeflix.top/404.html</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
@@ -232,7 +245,7 @@
   <!-- SEO Landing Pages -->
   <url>
     <loc>https://freeflix.top/free-movie-streaming.html</loc>
-    <lastmod>2025-05-17</lastmod>
+    <lastmod>2025-06-09</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
     <image:image>
