@@ -5,6 +5,7 @@ Allow: /movies/
 Allow: /tvshows/
 Allow: /anime/
 Allow: /genre/
+Allow: /category/
 Allow: /movie_details/
 Allow: /watchList/
 Allow: /sitemap.html
@@ -31,6 +32,7 @@ Allow: /movies/index.html
 Allow: /tvshows/index.html
 Allow: /anime/index.html
 Allow: /genre/index.html
+Allow: /category/index.html
 
 # Prevent search engines from indexing temporary files
 Disallow: /*.bak$
@@ -64,4 +66,5 @@ Sitemap: https://freeflix.top/movies-sitemap.xml
 Sitemap: https://freeflix.top/tvshows-sitemap.xml
 Sitemap: https://freeflix.top/anime-sitemap.xml
 Sitemap: https://freeflix.top/genre-sitemap.xml
+Sitemap: https://freeflix.top/sitemap-categories.xml
 Sitemap: https://freeflix.top/google-sitemap.xml
