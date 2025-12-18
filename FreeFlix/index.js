@@ -1093,7 +1093,7 @@ function displaySearchResults(results) {
         const shortenedTitle = item.title || 'Unknown Title';
         const date = item.release_date || '';
 
-        let buttonText = "Add to WatchList"; // Set default button text
+        let buttonText = "Add to WatchLists"; // Set default button text
 
         // Check if the movie is already in WatchList
         if (watchlist.find(watchlistItem => watchlistItem.id === item.id)) {
